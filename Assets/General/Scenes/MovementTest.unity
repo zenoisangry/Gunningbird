@@ -563,7 +563,7 @@ Transform:
   m_GameObject: {fileID: 2068238757}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.33429, y: 1.33, z: -6.93701}
+  m_LocalPosition: {x: 11.33429, y: 0.6, z: -7.35701}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -581,11 +581,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineThirdPersonFollow
-  Damping: {x: 1.5, y: 2, z: 1.5}
-  ShoulderOffset: {x: 0, y: 0.73, z: -2.58}
+  Damping: {x: 0, y: 1, z: 0.5}
+  ShoulderOffset: {x: 0, y: 0, z: 0}
   VerticalArmLength: 0.6
   CameraSide: 0.5
-  CameraDistance: 3
+  CameraDistance: 6
   AvoidObstacles:
     Enabled: 1
     CollisionFilter:
@@ -593,8 +593,8 @@ MonoBehaviour:
       m_Bits: 23
     IgnoreTag: 
     CameraRadius: 0.2
-    DampingIntoCollision: 0
-    DampingFromCollision: 0.5
+    DampingIntoCollision: 0.92
+    DampingFromCollision: 0.92
 --- !u!1 &2103457227
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,7 +683,7 @@ Transform:
   m_GameObject: {fileID: 2103457227}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.33429, y: 1.33, z: -6.93701}
+  m_LocalPosition: {x: 11.33429, y: 0.6, z: -7.35701}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -775,7 +775,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2116029318}
   - component: {fileID: 2116029317}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CameraTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -795,6 +795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AimPoint
   followTarget: {fileID: 37806188}
+  actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!4 &2116029318
 Transform:
   m_ObjectHideFlags: 0
