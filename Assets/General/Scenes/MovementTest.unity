@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 37806195}
   - component: {fileID: 37806191}
   - component: {fileID: 37806190}
+  - component: {fileID: 37806196}
   m_Layer: 3
   m_Name: Sphere
   m_TagString: Untagged
@@ -272,7 +273,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindPush
   windStrength: 0
-  windSpeed: 0
+  windSpeed: 30
+--- !u!114 &37806196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 37806188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5808deeb1dbf0eb4090d546a42739593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraStretcher
+  followCamera: {fileID: 2068238758}
+  followArm: {fileID: 2068238760}
+  cameraAccelCap: 1
 --- !u!1 &199023131
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +579,7 @@ Transform:
   m_GameObject: {fileID: 2068238757}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.33429, y: 0.6, z: -7.35701}
+  m_LocalPosition: {x: 11.33429, y: 0.6, z: -4.35701}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -581,11 +597,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625c14eee3ad46c99df7c7c891ef668a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineThirdPersonFollow
-  Damping: {x: 0, y: 1, z: 0.5}
+  Damping: {x: 0, y: 1, z: 0.2}
   ShoulderOffset: {x: 0, y: 0, z: 0}
   VerticalArmLength: 0.6
   CameraSide: 0.5
-  CameraDistance: 6
+  CameraDistance: 3
   AvoidObstacles:
     Enabled: 1
     CollisionFilter:
@@ -683,7 +699,7 @@ Transform:
   m_GameObject: {fileID: 2103457227}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.33429, y: 0.6, z: -7.35701}
+  m_LocalPosition: {x: 11.33429, y: 0.6, z: -4.35701}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
