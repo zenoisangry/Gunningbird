@@ -18,7 +18,6 @@ public class AimPoint : MonoBehaviour
     {
         transform.position = followTarget.transform.position;
         rotationDelta = rotate.ReadValue<Vector2>()/3;
-        Debug.Log(rotationDelta);
         transform.Rotate(new Vector3(-rotationDelta.y, 0, 0), Space.Self);
         transform.Rotate(new Vector3(0, rotationDelta.x, 0), Space.World);
     }
