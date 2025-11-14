@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7297834939568397312}
   - component: {fileID: 6927436020210127315}
   - component: {fileID: 3005528025446729338}
+  - component: {fileID: 3356892282649687311}
   m_Layer: 3
   m_Name: Sphere
   m_TagString: Untagged
@@ -107,8 +108,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WindPush
   windStrength: 0.2
   windSpeed: 30
+  jumpStrength: 1.5
   actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   lookDirection: {fileID: 0}
+  jumpCD: 0.5
+  jumpScaling: 0
 --- !u!135 &7297834939568397312
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -172,3 +176,24 @@ MonoBehaviour:
   followCamera: {fileID: 0}
   followArm: {fileID: 0}
   cameraAccelCap: 1
+--- !u!135 &3356892282649687311
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275236616648831790}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.51
+  m_Center: {x: 0, y: 0, z: 0}

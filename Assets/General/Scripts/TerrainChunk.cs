@@ -13,6 +13,26 @@ public class TerrainObjectSettings
     public Vector2 heightRange = new Vector2(0.2f, 0.8f);
 }
 
+[System.Serializable]
+public class TerrainShapeSettings
+{
+    [Header("Dimensione e risoluzione")]
+    public int resolution = 129;
+    public float scale = 60f;
+    public float heightMultiplier = 50f;
+    public float baseRoughness = 0.25f;
+
+    [Header("Montagne")]
+    [Tooltip("Frequenza delle montagne (più alto = più fitte)")]
+    public float mountainFrequency = 1.5f;
+
+    [Tooltip("Intensità della montagna rispetto al terreno base")]
+    public float mountainStrength = 0.6f;
+
+    [Tooltip("Soglia di attivazione della montagna (tra 0 e 1)")]
+    public float mountainThreshold = 0.55f;
+}
+
 public class TerrainChunk : MonoBehaviour
 {
     public Terrain terrain;
@@ -23,10 +43,12 @@ public class TerrainChunk : MonoBehaviour
     {
         this.coord = coord;
 
+        // Crea TerrainData
         terrainData = new TerrainData();
         terrainData.heightmapResolution = shape.resolution;
         terrainData.size = new Vector3(chunkSize, shape.heightMultiplier, chunkSize);
 
+        // Crea il Terrain
         terrain = Terrain.CreateTerrainGameObject(terrainData).GetComponent<Terrain>();
         terrain.transform.parent = transform;
         terrain.transform.localPosition = Vector3.zero;
@@ -38,9 +60,7 @@ public class TerrainChunk : MonoBehaviour
     void GenerateHeightmap(Vector2Int coord, float chunkSize, int seed, Vector2 offset, TerrainShapeSettings s)
     {
         float[,] heights = new float[s.resolution, s.resolution];
-
         float frequency = 1f / s.scale;
-
         float worldStartX = coord.x * (s.resolution - 1);
         float worldStartY = coord.y * (s.resolution - 1);
 
@@ -52,7 +72,6 @@ public class TerrainChunk : MonoBehaviour
                 float worldY = (worldStartY + y) * frequency + offset.y;
 
                 float baseNoise = Mathf.PerlinNoise(worldX + seed, worldY + seed) * s.baseRoughness;
-
                 float mountainNoise = Mathf.PerlinNoise((worldX + seed) * s.mountainFrequency, (worldY + seed) * s.mountainFrequency);
 
                 if (mountainNoise > s.mountainThreshold)

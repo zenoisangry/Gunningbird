@@ -61,7 +61,7 @@ Terrain:
   m_StaticShadowCaster: 0
   m_IgnoreQualitySettings: 0
   m_ReflectionProbeUsage: 1
-  m_MaterialTemplate: {fileID: 2100000, guid: 594ea882c5a793440b60ff72d896021e, type: 2}
+  m_MaterialTemplate: {fileID: 0}
   m_BakeLightProbesForTrees: 1
   m_PreserveTreePrototypeLayers: 0
   m_DeringLightProbesForTrees: 1
@@ -106,10 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7667a8cb5484ba346b4dbd190ac3fc0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainChunk
-  objectPrefabs:
-  - {fileID: 3527673721760613578, guid: 685c5358aac4fe448b4d3da97437c8b1, type: 3}
-  - {fileID: 4553347795794219947, guid: 5f11c8672c33cc64d903a0fc5f8233f8, type: 3}
-  objectsPerChunk: 40
-  minSpacing: 3
-  scaleRange: {x: 0.01, y: 3}
-  randomRotationY: 1
+  terrain: {fileID: 0}
+  terrainData: {fileID: 0}
+  coord: {x: 0, y: 0}

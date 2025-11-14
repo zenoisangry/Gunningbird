@@ -1,53 +1,41 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class TerrainShapeSettings
-{
-    [Header("Dimensione e risoluzione")]
-    public int resolution = 129;
-    public float scale = 60f;
-    public float heightMultiplier = 50f;
-    public float baseRoughness = 0.25f;
-
-    [Header("Montagne")]
-    [Tooltip("Frequenza delle montagne (più alto = più fitte)")]
-    public float mountainFrequency = 1.5f;
-
-    [Tooltip("Intensità della montagna rispetto al terreno base)")]
-    public float mountainStrength = 0.6f;
-
-    [Tooltip("Soglia di attivazione della montagna (tra 0 e 1)")]
-    public float mountainThreshold = 0.55f;
-}
-
 public class ChunkManager : MonoBehaviour
 {
-    [Header("Riferimenti principali")]
-    public Transform playerPrefab;
+    [Header("Player")]
+    public Transform playerParent;
+    public string playerChildLayerName = "Player";
+
+    private Transform player;
+
+    [Header("Chunk Settings")]
     public float chunkSize = 200f;
     public int viewDistance = 2;
-    public int worldSeed = 1234;
-
-    [Header("Impostazioni terreno")]
-    public TerrainShapeSettings shapeSettings;
-
-    [Header("Spawn oggetti")]
-    public TerrainObjectSettings objectSettings;
-
-    [Header("Prestazioni")]
-    [Tooltip("Distanza oltre la quale i chunk vengono distrutti")]
     public float unloadDistance = 800f;
 
+    [Header("Generation Settings")]
+    public int worldSeed = 1234;
+    public TerrainShapeSettings shapeSettings;
+    public TerrainObjectSettings objectSettings;
+
     private Dictionary<Vector2Int, TerrainChunk> activeChunks = new Dictionary<Vector2Int, TerrainChunk>();
-    private Transform player;
 
     void Start()
     {
-        if (playerPrefab != null)
-            player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        else
-            Debug.LogWarning("⚠️ Nessun playerPrefab assegnato al ChunkManager!");
+        if (playerParent == null)
+        {
+            Debug.LogError("Assegna il Parent del Player al ChunkManager");
+            return;
+        }
+
+        player = FindPlayerChild(playerParent);
+
+        if (player == null)
+        {
+            Debug.LogError("Nessun child del Player ha il layer 'Player'");
+            return;
+        }
 
         UpdateChunks(force: true);
         PositionPlayerOnTerrain();
@@ -55,7 +43,18 @@ public class ChunkManager : MonoBehaviour
 
     void Update()
     {
+        if (player == null) return;
         UpdateChunks();
+    }
+
+    Transform FindPlayerChild(Transform parent)
+    {
+        foreach (Transform child in parent.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.layer == LayerMask.NameToLayer(playerChildLayerName))
+                return child;
+        }
+        return null;
     }
 
     void PositionPlayerOnTerrain()
@@ -63,23 +62,21 @@ public class ChunkManager : MonoBehaviour
         if (player == null || activeChunks.Count == 0) return;
 
         Terrain firstTerrain = null;
-        foreach (var chunk in activeChunks.Values)
+        foreach (var c in activeChunks.Values)
         {
-            firstTerrain = chunk.terrain;
+            firstTerrain = c.terrain;
             break;
         }
 
         if (firstTerrain != null)
         {
-            float y = firstTerrain.SampleHeight(Vector3.zero) + firstTerrain.GetPosition().y + 5f;
-            player.position = new Vector3(0, y, 0);
+            float y = firstTerrain.SampleHeight(player.position) + firstTerrain.GetPosition().y + 1f;
+            playerParent.position = new Vector3(playerParent.position.x, y, playerParent.position.z);
         }
     }
 
     void UpdateChunks(bool force = false)
     {
-        if (player == null) return;
-
         Vector2Int playerCoord = new Vector2Int(
             Mathf.FloorToInt(player.position.x / chunkSize),
             Mathf.FloorToInt(player.position.z / chunkSize)
@@ -124,6 +121,7 @@ public class ChunkManager : MonoBehaviour
 
         TerrainChunk chunk = obj.AddComponent<TerrainChunk>();
         chunk.Initialize(coord, chunkSize, worldSeed, Vector2.zero, shapeSettings, objectSettings);
+
         activeChunks.Add(coord, chunk);
     }
 
@@ -132,6 +130,7 @@ public class ChunkManager : MonoBehaviour
         foreach (var kvp in activeChunks)
         {
             Vector2Int c = kvp.Key;
+
             Terrain left = activeChunks.ContainsKey(c + Vector2Int.left) ? activeChunks[c + Vector2Int.left].terrain : null;
             Terrain right = activeChunks.ContainsKey(c + Vector2Int.right) ? activeChunks[c + Vector2Int.right].terrain : null;
             Terrain top = activeChunks.ContainsKey(c + Vector2Int.up) ? activeChunks[c + Vector2Int.up].terrain : null;
