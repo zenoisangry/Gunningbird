@@ -357,17 +357,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1579254191249471263, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1579254191249471263, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1579254191249471263, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3297387338746638163, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: Lens.FieldOfView
-      value: 101.8134
+      value: 127.143
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432601887112746583, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4432601887112746583, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.97502995
+      value: 0.6000004
       objectReference: {fileID: 0}
     - target: {fileID: 4432601887112746583, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28.64225
+      value: -12.7143
       objectReference: {fileID: 0}
     - target: {fileID: 4626811628667889090, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: jumpScaling
@@ -377,9 +393,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5972772058721212628, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5972772058721212628, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5972772058721212628, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6184936650476841056, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: CameraDistance
-      value: 10.18134
+      value: 12.7143
       objectReference: {fileID: 0}
     - target: {fileID: 8298976533622235884, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: m_LocalPosition.x
@@ -387,7 +415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8298976533622235884, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8298976533622235884, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: m_LocalPosition.z
@@ -583,10 +611,10 @@ MonoBehaviour:
     mountainThreshold: 0.6
   objectSettings:
     prefabs:
-    - {fileID: 3527673721760613578, guid: 685c5358aac4fe448b4d3da97437c8b1, type: 3}
-    - {fileID: 4553347795794219947, guid: 5f11c8672c33cc64d903a0fc5f8233f8, type: 3}
+    - {fileID: 3128966082277272339, guid: b71672b8fc7f11a4bbdef536ce73d1ed, type: 3}
+    - {fileID: 2221620918861701896, guid: 1ea0301f9c6868a4fa2d0cd544a2643e, type: 3}
     countPerChunk: 40
-    heightRange: {x: 0.3, y: 0.8}
+    heightRange: {x: 0, y: 5}
   unloadDistance: 600
 --- !u!4 &1257142447
 Transform:
@@ -740,7 +768,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 101.8134
+  field of view: 127.143
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -767,7 +795,7 @@ Transform:
   m_GameObject: {fileID: 1280176492}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -33.14825, y: 15.97503, z: -28.64225}
+  m_LocalPosition: {x: 0, y: 20.6, z: -12.7143}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
