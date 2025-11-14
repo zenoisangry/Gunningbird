@@ -10,6 +10,7 @@ public class CameraStretcher : MonoBehaviour
     private float baseSpeed;
     private float targetSpeed;
     private float currentSpeed;
+    private float baseDistance;
     public float cameraAccelCap;
     private float cameraAcceleration;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,6 +18,7 @@ public class CameraStretcher : MonoBehaviour
     {
         body = GetComponent<Rigidbody>();
         baseSpeed = followCamera.Lens.FieldOfView;
+        baseDistance = followArm.CameraDistance;
         currentSpeed = baseSpeed;
         cameraAcceleration = cameraAccelCap / 20;
     }
@@ -48,6 +50,6 @@ public class CameraStretcher : MonoBehaviour
             }
         }
         followCamera.Lens.FieldOfView = currentSpeed;
-        followArm.CameraDistance = currentSpeed/10;
+        followArm.CameraDistance = baseDistance + currentSpeed/10 - 6;
     }
 }
