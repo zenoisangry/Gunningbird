@@ -1,85 +1,149 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class TerrainShapeSettings
+{
+    [Header("Dimensione e risoluzione")]
+    public int resolution = 129;
+    public float scale = 60f;
+    public float heightMultiplier = 50f;
+    public float baseRoughness = 0.3f;
+
+    [Header("Montagne")]
+    public float mountainFrequency = 1.5f;
+    public float mountainStrength = 0.6f;
+    public float mountainThreshold = 0.55f;
+}
+
 public class ChunkManager : MonoBehaviour
 {
-    [Header("Player")]
-    public Transform playerParent;
-    public string playerChildLayerName = "Player";
+    private static ChunkManager _instance;
+    public static ChunkManager instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = FindFirstObjectByType<ChunkManager>();
+            return _instance;
+        }
+    }
 
-    private Transform player;
+    [Header("References")]
+    public GameObject playerParent;
+    private Transform playerSphere;
 
-    [Header("Chunk Settings")]
+    [Header("World Settings")]
     public float chunkSize = 200f;
     public int viewDistance = 2;
-    public float unloadDistance = 800f;
+    public int worldSeed;
 
-    [Header("Generation Settings")]
-    public int worldSeed = 1234;
+    [Header("Terrain Settings")]
     public TerrainShapeSettings shapeSettings;
     public TerrainObjectSettings objectSettings;
+
+    [Header("Prestazioni")]
+    public float unloadDistance = 800f;
 
     private Dictionary<Vector2Int, TerrainChunk> activeChunks = new Dictionary<Vector2Int, TerrainChunk>();
 
     void Start()
     {
-        if (playerParent == null)
-        {
-            Debug.LogError("Assegna il Parent del Player al ChunkManager");
-            return;
-        }
+        worldSeed = GenerateValidSeed();
 
-        player = FindPlayerChild(playerParent);
+        Debug.Log("Generated World Seed: " + worldSeed);
 
-        if (player == null)
-        {
-            Debug.LogError("Nessun child del Player ha il layer 'Player'");
-            return;
-        }
-
+        FindPlayer();
         UpdateChunks(force: true);
         PositionPlayerOnTerrain();
     }
 
     void Update()
     {
-        if (player == null) return;
-        UpdateChunks();
+        if (playerSphere != null)
+            UpdateChunks();
     }
 
-    Transform FindPlayerChild(Transform parent)
+    // ---------------------------------------------------------
+    // PLAYER HANDLING
+    // ---------------------------------------------------------
+
+    void FindPlayer()
     {
-        foreach (Transform child in parent.GetComponentsInChildren<Transform>())
+        if (playerParent == null)
         {
-            if (child.gameObject.layer == LayerMask.NameToLayer(playerChildLayerName))
-                return child;
+            Debug.LogError("Player Parent non assegnato nel ChunkManager");
+            return;
         }
-        return null;
+
+        foreach (Transform child in playerParent.GetComponentsInChildren<Transform>())
+        {
+            if (child.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                playerSphere = child;
+                break;
+            }
+        }
+
+        if (playerSphere == null)
+            Debug.LogError("Nessun oggetto nel Player ha il layer 'Player'");
     }
 
     void PositionPlayerOnTerrain()
     {
-        if (player == null || activeChunks.Count == 0) return;
+        if (playerSphere == null || activeChunks.Count == 0) return;
 
-        Terrain firstTerrain = null;
+        Terrain t = null;
         foreach (var c in activeChunks.Values)
         {
-            firstTerrain = c.terrain;
+            t = c.terrain;
             break;
         }
 
-        if (firstTerrain != null)
+        if (t != null)
         {
-            float y = firstTerrain.SampleHeight(player.position) + firstTerrain.GetPosition().y + 1f;
-            playerParent.position = new Vector3(playerParent.position.x, y, playerParent.position.z);
+            float y = t.SampleHeight(Vector3.zero) + t.GetPosition().y + 3f;
+            playerParent.transform.position = new Vector3(0, y, 0);
         }
     }
 
+    // ---------------------------------------------------------
+    // SEED VALIDATION
+    // ---------------------------------------------------------
+
+    int GenerateValidSeed()
+    {
+        int attempts = 0;
+
+        while (attempts < 50)
+        {
+            int seed = Random.Range(0, int.MaxValue);
+
+            float test1 = Mathf.PerlinNoise(seed * 0.001f, seed * 0.001f);
+            float test2 = Mathf.PerlinNoise(seed * 0.002f, seed * 0.002f);
+
+            float variance = Mathf.Abs(test1 - test2);
+
+            if (variance > 0.1f)
+                return seed;
+
+            attempts++;
+        }
+
+        return Random.Range(0, int.MaxValue);
+    }
+
+    // ---------------------------------------------------------
+    // CHUNK HANDLING
+    // ---------------------------------------------------------
+
     void UpdateChunks(bool force = false)
     {
+        if (playerSphere == null) return;
+
         Vector2Int playerCoord = new Vector2Int(
-            Mathf.FloorToInt(player.position.x / chunkSize),
-            Mathf.FloorToInt(player.position.z / chunkSize)
+            Mathf.FloorToInt(playerSphere.position.x / chunkSize),
+            Mathf.FloorToInt(playerSphere.position.z / chunkSize)
         );
 
         HashSet<Vector2Int> needed = new HashSet<Vector2Int>();
@@ -99,15 +163,15 @@ public class ChunkManager : MonoBehaviour
         List<Vector2Int> toRemove = new List<Vector2Int>();
         foreach (var kvp in activeChunks)
         {
-            float dist = Vector3.Distance(player.position, kvp.Value.transform.position);
+            float dist = Vector3.Distance(playerSphere.position, kvp.Value.transform.position);
             if (dist > unloadDistance)
                 toRemove.Add(kvp.Key);
         }
 
-        foreach (var coord in toRemove)
+        foreach (var c in toRemove)
         {
-            Destroy(activeChunks[coord].gameObject);
-            activeChunks.Remove(coord);
+            Destroy(activeChunks[c].gameObject);
+            activeChunks.Remove(c);
         }
 
         UpdateNeighbors();
@@ -133,10 +197,10 @@ public class ChunkManager : MonoBehaviour
 
             Terrain left = activeChunks.ContainsKey(c + Vector2Int.left) ? activeChunks[c + Vector2Int.left].terrain : null;
             Terrain right = activeChunks.ContainsKey(c + Vector2Int.right) ? activeChunks[c + Vector2Int.right].terrain : null;
-            Terrain top = activeChunks.ContainsKey(c + Vector2Int.up) ? activeChunks[c + Vector2Int.up].terrain : null;
-            Terrain bottom = activeChunks.ContainsKey(c + Vector2Int.down) ? activeChunks[c + Vector2Int.down].terrain : null;
+            Terrain up = activeChunks.ContainsKey(c + Vector2Int.up) ? activeChunks[c + Vector2Int.up].terrain : null;
+            Terrain down = activeChunks.ContainsKey(c + Vector2Int.down) ? activeChunks[c + Vector2Int.down].terrain : null;
 
-            kvp.Value.terrain.SetNeighbors(left, top, right, bottom);
+            kvp.Value.terrain.SetNeighbors(left, up, right, down);
         }
     }
 }
