@@ -50,10 +50,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 883ff09fe38425f4b926af977257a893, type: 3}
       propertyPath: m_Name
-      value: shovel
+      value: PF_shovel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 883ff09fe38425f4b926af977257a893, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 566613570867975779}
   m_SourcePrefab: {fileID: 100100000, guid: 883ff09fe38425f4b926af977257a893, type: 3}
+--- !u!1 &5099817150373988349 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 883ff09fe38425f4b926af977257a893, type: 3}
+  m_PrefabInstance: {fileID: 5334330673953094316}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &566613570867975779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5099817150373988349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3028ebd27dd83d84288033a7217c0612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CuteObject
+  objectType: 5

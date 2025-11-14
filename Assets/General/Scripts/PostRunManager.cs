@@ -22,7 +22,7 @@ public class PostRunManager : MonoBehaviour
     }
     public List<GameObject> proxys;
     private Dictionary<EligibleObject, GameObject> proxyArchive = new Dictionary<EligibleObject, GameObject>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         foreach (GameObject proxy in proxys)
@@ -31,7 +31,6 @@ public class PostRunManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     public void SpawnDecoration (EligibleObject target, Vector3 positionOffset, Quaternion rotation, GameObject decorationType)
     {
         Object.Instantiate(decorationType, proxyArchive[target].transform.position + positionOffset, rotation, proxyArchive[target].transform);
@@ -39,7 +38,14 @@ public class PostRunManager : MonoBehaviour
 
     public enum EligibleObject
     {
+        barrel,
         cactus1,
-        cactus2
+        cactus2,
+        cactus3,
+        cowboyhat,
+        shovel,
+        tntbox,
+        pickaxe,
+        wheel
     }
 }
