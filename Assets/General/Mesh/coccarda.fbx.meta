@@ -1,9 +1,19 @@
 fileFormatVersion: 2
-guid: 23b61b2dd47db504ea333f42f4695c39
+guid: 7e4403acb5ce68542b1bd3be69066425
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coccarda1
+    second: {fileID: 2100000, guid: 594f29f8b1e23654aad33ab219babb72, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coccarda2
+    second: {fileID: 2100000, guid: 8aa8465d68cdecd4d928d02ec383b2c4, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

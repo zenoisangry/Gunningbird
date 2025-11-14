@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &5482610183561805395
+--- !u!1001 &2671342300616054560
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.035606
+      value: 5.7700996
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.594115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.131355
+      value: -1.9051054
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: dcfecb7f4900e79439ce658b3228b5f7, type: 2}
     - target: {fileID: 919132149155446097, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
       propertyPath: m_Name
       value: Cactus3
@@ -55,26 +59,5 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6033128570195049699}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
---- !u!1 &4672288041689072386 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 23b61b2dd47db504ea333f42f4695c39, type: 3}
-  m_PrefabInstance: {fileID: 5482610183561805395}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6033128570195049699
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4672288041689072386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3028ebd27dd83d84288033a7217c0612, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CuteObject
-  objectType: 0
