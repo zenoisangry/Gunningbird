@@ -47,6 +47,7 @@ public class WindPush : MonoBehaviour
             if (collider.gameObject.layer == 7 && currentDecoration == null)
             {
                 currentDecoration = collider.gameObject;
+                currentDecoration.GetComponent<BoxCollider>().enabled = false;
                 currentDecoration.layer = 0;
                 currentDecoration.transform.SetParent(transform, false);
                 currentDecoration.transform.localPosition = Vector3.zero;
