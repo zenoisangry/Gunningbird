@@ -85,7 +85,7 @@ public class PostRunManager : MonoBehaviour
         }
     }
 
-    void GoToPostRun()
+    public void GoToPostRun()
     {
         active = true;
         postRunCamera.enabled = true;
@@ -93,7 +93,7 @@ public class PostRunManager : MonoBehaviour
         postRunCamera.Follow = proxys[currentProxy].transform;
     }
 
-    void EndPostRun()
+    public void EndPostRun()
     {
         active = false;
         foreach (GameObject proxy in proxys)
