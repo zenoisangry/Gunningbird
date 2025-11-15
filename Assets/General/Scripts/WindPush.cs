@@ -60,24 +60,80 @@ public class WindPush : MonoBehaviour
             }
         }
 
-        //Detect cutifiable objects
+        bool found = false;
+        //Detect cutifiable objects below
         Physics.SphereCast(transform.position + 2*Vector3.up, cuteDetectionRange, downwardsCuteDetection*Vector3.down, out cuteTargets, 4f);
         if (cuteTargets.collider != null)
         {
-            Vector2 orientation = new Vector2 (transform.position.x, transform.position.z) - new Vector2 (cuteTargets.point.x, cuteTargets.point.z);
             if (cuteTargets.collider.gameObject.layer == 6)
             {
-                if (currentDecoration != null)
-                {
-                    cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(currentDecoration, cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
-
-                }
-                else
-                {
-                    //Prendi roba randomica
-                }
-                cuteTargets.collider.gameObject.layer = 0;
+                found = true;
             }
+        }
+        //Detect cutifiable objects in front
+        if (!found)
+        {
+            Physics.SphereCast(transform.position + 2 * Vector3.back, cuteDetectionRange, Vector3.forward, out cuteTargets, 4f);
+            if (cuteTargets.collider != null)
+            {
+                if (cuteTargets.collider.gameObject.layer == 6)
+                {
+                    found = true;
+                }
+            }
+        }
+        //Detect cutifiable objects on the left
+        if (!found)
+        {
+            Physics.SphereCast(transform.position + 2 * Vector3.right, cuteDetectionRange, Vector3.left, out cuteTargets, 4f);
+            if (cuteTargets.collider != null)
+            {
+                if (cuteTargets.collider.gameObject.layer == 6)
+                {
+                    found = true;
+                }
+            }
+        }
+        //Detect cutifiable objects on the right
+        if (!found)
+        {
+            Physics.SphereCast(transform.position + 2 * Vector3.left, cuteDetectionRange, Vector3.right, out cuteTargets, 4f);
+            if (cuteTargets.collider != null)
+            {
+                if (cuteTargets.collider.gameObject.layer == 6)
+                {
+                    found = true;
+                }
+            }
+        }
+        //Detect cutifiable objects on the back
+        if (!found)
+        {
+            Physics.SphereCast(transform.position + 2 * Vector3.forward, cuteDetectionRange, Vector3.back, out cuteTargets, 4f);
+            if (cuteTargets.collider != null)
+            {
+                if (cuteTargets.collider.gameObject.layer == 6)
+                {
+                    found = true;
+                }
+            }
+        }
+
+        if (found)
+        {
+            Vector2 orientation = new Vector2(transform.position.x, transform.position.z) - new Vector2(cuteTargets.point.x, cuteTargets.point.z);
+            Debug.Log("Cute target found");
+            if (currentDecoration != null)
+            {
+                cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(currentDecoration, cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
+                //distruggi decorazione dentro di te
+                currentDecoration = null;
+            }
+            else
+            {
+                cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(decorationList[Random.Range(0, 4)], cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
+            }
+            cuteTargets.collider.gameObject.layer = 0;
         }
     }
 

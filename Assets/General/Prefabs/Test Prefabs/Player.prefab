@@ -107,7 +107,11 @@ MonoBehaviour:
   cuteDetectionRange: 2
   downwardsCuteDetection: 2
   currentDecoration: {fileID: 0}
-  decorationList: []
+  decorationList:
+  - {fileID: 4252493272607042333, guid: e1a385fde35afd9468292407031c9780, type: 3}
+  - {fileID: 4130580445207772426, guid: 7067d7b5bce78f4499acd61780db924d, type: 3}
+  - {fileID: 769650232121923065, guid: 0a601a671d80a404a988753bb8e3f34e, type: 3}
+  - {fileID: 7124588113353270067, guid: 28f5a9422c42bed459896d32c98d89e6, type: 3}
 --- !u!114 &1279830126575301954
 MonoBehaviour:
   m_ObjectHideFlags: 0

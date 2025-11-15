@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7931631288330300251}
   - component: {fileID: 2103035371106344630}
+  - component: {fileID: 8796749402833581303}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -72,6 +73,26 @@ Terrain:
   m_EnableHeightmapRayTracing: 1
   m_EnableTreesAndDetailsRayTracing: 0
   m_TreeMotionVectorModeOverride: 3
+--- !u!154 &8796749402833581303
+TerrainCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662111806999167028}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_TerrainData: {fileID: 15600000, guid: 6cf00e747fb4ee640acd2eb2c5d774be, type: 2}
+  m_EnableTreeColliders: 1
 --- !u!1 &3356915513259569958
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +327,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Piccone
       objectReference: {fileID: 0}
+    - target: {fileID: 3573252828172547520, guid: 4397dfa852e397b41a2a5b106175c234, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4241667574096605050, guid: 4397dfa852e397b41a2a5b106175c234, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.289
@@ -468,6 +493,10 @@ PrefabInstance:
     - target: {fileID: 2508311251480818047, guid: 0cfff353182775a49a44dfec615bf1c8, type: 3}
       propertyPath: m_Name
       value: PF_Ruotadelcarro
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508311251480818047, guid: 0cfff353182775a49a44dfec615bf1c8, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2991691320165231557, guid: 0cfff353182775a49a44dfec615bf1c8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -709,6 +738,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Sediaadondolo
       objectReference: {fileID: 0}
+    - target: {fileID: 49458265632266279, guid: a720439444ee5294b8eed2673581e88d, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 856922714949517981, guid: a720439444ee5294b8eed2673581e88d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.22
@@ -912,6 +945,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Barile
       objectReference: {fileID: 0}
+    - target: {fileID: 9214567900767438046, guid: f5d8dc115c705ba46a21ed955b373f84, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -1829729552342445666, guid: f5d8dc115c705ba46a21ed955b373f84, type: 3}
     m_RemovedGameObjects: []
@@ -956,6 +993,10 @@ PrefabInstance:
     - target: {fileID: 2573734373652202597, guid: a318b92b3b0769c40b911e36576050b0, type: 3}
       propertyPath: m_Name
       value: PF_Cactus2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2573734373652202597, guid: a318b92b3b0769c40b911e36576050b0, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2953355759115624159, guid: a318b92b3b0769c40b911e36576050b0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1082,6 +1123,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Cactus1
       objectReference: {fileID: 0}
+    - target: {fileID: 5319701998274753506, guid: d25014880b885e54bb2d2f422cd7b30c, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8720900373590414859, guid: d25014880b885e54bb2d2f422cd7b30c, type: 3}
     m_RemovedGameObjects: []
@@ -1126,6 +1171,10 @@ PrefabInstance:
     - target: {fileID: 5099817150373988349, guid: d0c29174c24f0fb409d2e8b88fcb4955, type: 3}
       propertyPath: m_Name
       value: PF_shovel
+      objectReference: {fileID: 0}
+    - target: {fileID: 5099817150373988349, guid: d0c29174c24f0fb409d2e8b88fcb4955, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5588369008505969991, guid: d0c29174c24f0fb409d2e8b88fcb4955, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1251,6 +1300,10 @@ PrefabInstance:
     - target: {fileID: 3128966082277272339, guid: b71672b8fc7f11a4bbdef536ce73d1ed, type: 3}
       propertyPath: m_Name
       value: PF_TntBox
+      objectReference: {fileID: 0}
+    - target: {fileID: 3128966082277272339, guid: b71672b8fc7f11a4bbdef536ce73d1ed, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -8384732560552430691, guid: b71672b8fc7f11a4bbdef536ce73d1ed, type: 3}
@@ -1569,6 +1622,10 @@ PrefabInstance:
     - target: {fileID: 3014010388061416049, guid: 522050312b03a4b44849a53548af5aa7, type: 3}
       propertyPath: m_Name
       value: PF_Cactus3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3014010388061416049, guid: 522050312b03a4b44849a53548af5aa7, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1190670098916749543, guid: 522050312b03a4b44849a53548af5aa7, type: 3}
