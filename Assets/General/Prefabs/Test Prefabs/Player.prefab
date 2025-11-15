@@ -97,8 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 757361e9d7a32b84ea563c593ad7146a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindPush
-  windStrength: 0.2
-  windSpeed: 30
+  windStrength: 0.4
+  windSpeed: 35
   jumpStrength: 1.5
   actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   lookDirection: {fileID: 1579254191249471263}
