@@ -74,15 +74,6 @@ public class PostRunManager : MonoBehaviour
         {
             proxys[currentProxy].transform.Rotate(new Vector3(0, 100, 0) * Time.deltaTime);
         }
-
-        if (Keyboard.current[Key.P].wasPressedThisFrame)
-        {
-            SwitchAimPoint(true);
-        }
-        if (Keyboard.current[Key.O].wasPressedThisFrame)
-        {
-            SwitchAimPoint(false);
-        }
     }
 
     public void GoToPostRun()
