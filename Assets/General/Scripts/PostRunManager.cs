@@ -27,7 +27,7 @@ public class PostRunManager : MonoBehaviour
     {
         foreach (GameObject proxy in proxys)
         {
-            proxyArchive.Add(EligibleObject.cactus1, proxy);
+            proxyArchive.Add(proxy.GetComponent<ProxyHandler>().objectType, proxy);
         }
     }
 
