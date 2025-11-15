@@ -1,6 +1,8 @@
-using NUnit.Framework;
-using UnityEngine;
 using System.Collections.Generic;
+using NUnit.Framework;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PostRunManager : MonoBehaviour
 {
@@ -22,18 +24,81 @@ public class PostRunManager : MonoBehaviour
     }
     public List<GameObject> proxys;
     private Dictionary<EligibleObject, GameObject> proxyArchive = new Dictionary<EligibleObject, GameObject>();
+    public CinemachineCamera postRunCamera;
+    private int currentProxy = 0;
+    private List<GameObject> appliedDecorations = new List<GameObject>();
+    private bool active = false;
 
     void Start()
+    {
+        InitializePostRun();
+    }
+
+    public void InitializePostRun()
     {
         foreach (GameObject proxy in proxys)
         {
             proxyArchive.Add(proxy.GetComponent<ProxyHandler>().objectType, proxy);
         }
     }
-
     public void SpawnDecoration (EligibleObject target, Vector3 positionOffset, Quaternion rotation, GameObject decorationType)
     {
-        Object.Instantiate(decorationType, proxyArchive[target].transform.position + positionOffset, rotation, proxyArchive[target].transform);
+        proxyArchive[target].GetComponent<ProxyHandler>().UpdateDecorationNumber();
+        appliedDecorations.Add(Object.Instantiate(decorationType, proxyArchive[target].transform.position + positionOffset, rotation, proxyArchive[target].transform));
+    }
+
+    public void SwitchAimPoint(bool forwards)
+    {
+        Debug.Log(proxys);
+        Debug.Log(currentProxy);
+        if (forwards)
+        {
+            if (currentProxy < proxys.Count-1)
+            {
+                currentProxy += 1;
+            }
+        }
+        else
+        {
+            if (currentProxy > 0)
+            {
+                currentProxy -= 1;
+            }
+        }
+        Debug.Log("Next proxy = " + currentProxy);
+        postRunCamera.Follow = proxys[currentProxy].transform;
+    }
+
+    void Update()
+    {
+        if (active)
+        {
+            proxys[currentProxy].transform.Rotate(new Vector3(0, 100, 0) * Time.deltaTime);
+        }
+    }
+
+    void GoToPostRun()
+    {
+        active = true;
+        postRunCamera.enabled = true;
+        postRunCamera.Priority = 2;
+        postRunCamera.Follow = proxys[currentProxy].transform;
+    }
+
+    void EndPostRun()
+    {
+        active = false;
+        foreach (GameObject proxy in proxys)
+        {
+            proxy.GetComponent<ProxyHandler>().ResetDecorationNumber();
+        }
+        foreach (GameObject decoration in appliedDecorations)
+        {
+            Destroy(decoration);
+        }
+        appliedDecorations = new List<GameObject>();
+        postRunCamera.Priority = 0;
+        postRunCamera.enabled = false;
     }
 
     public enum EligibleObject
