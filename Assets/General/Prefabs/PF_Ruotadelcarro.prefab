@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 80912421c2d473d46a63aaaf28c0f3fd, type: 2}
     - target: {fileID: 919132149155446097, guid: 8f4cd596ad47fa34aba3c6a071884dcb, type: 3}
       propertyPath: m_Name
-      value: ruota del carro
+      value: PF_Ruotadelcarro
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -62,23 +62,48 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8f4cd596ad47fa34aba3c6a071884dcb, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -2246971106424993651}
+      addedObject: {fileID: -2965200384496978730}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8f4cd596ad47fa34aba3c6a071884dcb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2170223624519570920}
   m_SourcePrefab: {fileID: 100100000, guid: 8f4cd596ad47fa34aba3c6a071884dcb, type: 3}
---- !u!1 &9177036666368273418 stripped
+--- !u!1 &2508311251480818047 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8f4cd596ad47fa34aba3c6a071884dcb, type: 3}
-  m_PrefabInstance: {fileID: 8329983552801247579}
+  m_PrefabInstance: {fileID: 3318631871997021230}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-2246971106424993651
+--- !u!114 &-2965200384496978730
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9177036666368273418}
+  m_GameObject: {fileID: 2508311251480818047}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3028ebd27dd83d84288033a7217c0612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CuteObject
   objectType: 8
+--- !u!64 &-2170223624519570920
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2508311251480818047}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -969927092803316314, guid: 8f4cd596ad47fa34aba3c6a071884dcb, type: 3}

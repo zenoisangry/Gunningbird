@@ -40,6 +40,8 @@ public class PostRunManager : MonoBehaviour
         {
             proxyArchive.Add(proxy.GetComponent<ProxyHandler>().objectType, proxy);
         }
+        postRunCamera.Follow = proxys[currentProxy].transform;
+        active = true;
     }
     public void SpawnDecoration (EligibleObject target, Vector3 positionOffset, Quaternion rotation, GameObject decorationType)
     {
@@ -49,8 +51,6 @@ public class PostRunManager : MonoBehaviour
 
     public void SwitchAimPoint(bool forwards)
     {
-        Debug.Log(proxys);
-        Debug.Log(currentProxy);
         if (forwards)
         {
             if (currentProxy < proxys.Count-1)
@@ -65,7 +65,6 @@ public class PostRunManager : MonoBehaviour
                 currentProxy -= 1;
             }
         }
-        Debug.Log("Next proxy = " + currentProxy);
         postRunCamera.Follow = proxys[currentProxy].transform;
     }
 
@@ -74,6 +73,15 @@ public class PostRunManager : MonoBehaviour
         if (active)
         {
             proxys[currentProxy].transform.Rotate(new Vector3(0, 100, 0) * Time.deltaTime);
+        }
+
+        if (Keyboard.current[Key.P].wasPressedThisFrame)
+        {
+            SwitchAimPoint(true);
+        }
+        if (Keyboard.current[Key.O].wasPressedThisFrame)
+        {
+            SwitchAimPoint(false);
         }
     }
 
@@ -111,6 +119,7 @@ public class PostRunManager : MonoBehaviour
         shovel,
         tntbox,
         pickaxe,
-        wheel
+        wheel,
+        chair,
     }
 }

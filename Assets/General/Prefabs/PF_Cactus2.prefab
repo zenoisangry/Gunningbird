@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3806012698d071141ab89b17ff47073b, type: 3}
       propertyPath: m_Name
-      value: Cactus2
+      value: PF_Cactus2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -59,6 +59,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3806012698d071141ab89b17ff47073b, type: 3}
       insertIndex: -1
       addedObject: {fileID: -2498143421257103864}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3806012698d071141ab89b17ff47073b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6233186261840127965}
   m_SourcePrefab: {fileID: 100100000, guid: 3806012698d071141ab89b17ff47073b, type: 3}
 --- !u!1 &2573734373652202597 stripped
 GameObject:
@@ -78,3 +81,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CuteObject
   objectType: 0
+--- !u!64 &6233186261840127965
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2573734373652202597}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7969978266939365281, guid: 3806012698d071141ab89b17ff47073b, type: 3}
