@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e4403acb5ce68542b1bd3be69066425, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7071067
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e4403acb5ce68542b1bd3be69066425, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -46,11 +46,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e4403acb5ce68542b1bd3be69066425, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7e4403acb5ce68542b1bd3be69066425, type: 3}
       propertyPath: m_Name
-      value: coccarda
+      value: PF_Coccarda
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

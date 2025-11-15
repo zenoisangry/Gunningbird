@@ -4,13 +4,11 @@ using UnityEngine;
 [System.Serializable]
 public class TerrainShapeSettings
 {
-    [Header("Dimensione e risoluzione")]
     public int resolution = 129;
     public float scale = 60f;
     public float heightMultiplier = 50f;
     public float baseRoughness = 0.3f;
 
-    [Header("Montagne")]
     public float mountainFrequency = 1.5f;
     public float mountainStrength = 0.6f;
     public float mountainThreshold = 0.55f;
@@ -40,7 +38,10 @@ public class ChunkManager : MonoBehaviour
 
     [Header("Terrain Settings")]
     public TerrainShapeSettings shapeSettings;
-    public TerrainObjectSettings objectSettings;
+
+    public ObjectSpawnSettings gameObjectAmbient;
+    public ObjectSpawnSettings gameObjectCute;
+    public ObjectSpawnSettings gameObjectDecorations;
 
     [Header("Prestazioni")]
     public float unloadDistance = 800f;
@@ -50,12 +51,11 @@ public class ChunkManager : MonoBehaviour
     void Start()
     {
         worldSeed = GenerateValidSeed();
-
         Debug.Log("Generated World Seed: " + worldSeed);
 
         FindPlayer();
         UpdateChunks(force: true);
-        PositionPlayerOnTerrain();
+        PositionPlayerSafely();
     }
 
     void Update()
@@ -64,52 +64,45 @@ public class ChunkManager : MonoBehaviour
             UpdateChunks();
     }
 
-    // ---------------------------------------------------------
-    // PLAYER HANDLING
-    // ---------------------------------------------------------
-
     void FindPlayer()
     {
-        if (playerParent == null)
-        {
-            Debug.LogError("Player Parent non assegnato nel ChunkManager");
-            return;
-        }
+        playerSphere = null;
 
-        foreach (Transform child in playerParent.GetComponentsInChildren<Transform>())
+        Transform[] all = playerParent.GetComponentsInChildren<Transform>(true);
+
+        foreach (Transform t in all)
         {
-            if (child.gameObject.layer == LayerMask.NameToLayer("Player"))
+            if (t.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                playerSphere = child;
+                playerSphere = t;
                 break;
             }
         }
-
-        if (playerSphere == null)
-            Debug.LogError("Nessun oggetto nel Player ha il layer 'Player'");
     }
-
-    void PositionPlayerOnTerrain()
+        void PositionPlayerSafely()
     {
         if (playerSphere == null || activeChunks.Count == 0) return;
 
-        Terrain t = null;
+        Terrain closest = null;
+        float bestDist = float.MaxValue;
+
         foreach (var c in activeChunks.Values)
         {
-            t = c.terrain;
-            break;
+            float d = Vector3.Distance(Vector3.zero, c.terrain.transform.position);
+            if (d < bestDist)
+            {
+                bestDist = d;
+                closest = c.terrain;
+            }
         }
 
-        if (t != null)
+        if (closest != null)
         {
-            float y = t.SampleHeight(Vector3.zero) + t.GetPosition().y + 3f;
-            playerParent.transform.position = new Vector3(0, y, 0);
+            Vector3 pos = new Vector3(0, 500, 0);
+            float y = closest.SampleHeight(pos) + closest.GetPosition().y;
+            playerParent.transform.position = new Vector3(0, y + 3f, 0);
         }
     }
-
-    // ---------------------------------------------------------
-    // SEED VALIDATION
-    // ---------------------------------------------------------
 
     int GenerateValidSeed()
     {
@@ -132,10 +125,6 @@ public class ChunkManager : MonoBehaviour
 
         return Random.Range(0, int.MaxValue);
     }
-
-    // ---------------------------------------------------------
-    // CHUNK HANDLING
-    // ---------------------------------------------------------
 
     void UpdateChunks(bool force = false)
     {
@@ -184,7 +173,17 @@ public class ChunkManager : MonoBehaviour
         obj.transform.position = new Vector3(coord.x * chunkSize, 0, coord.y * chunkSize);
 
         TerrainChunk chunk = obj.AddComponent<TerrainChunk>();
-        chunk.Initialize(coord, chunkSize, worldSeed, Vector2.zero, shapeSettings, objectSettings);
+
+        chunk.Initialize(
+            coord,
+            chunkSize,
+            worldSeed,
+            Vector2.zero,
+            shapeSettings,
+            gameObjectAmbient,
+            gameObjectCute,
+            gameObjectDecorations
+        );
 
         activeChunks.Add(coord, chunk);
     }

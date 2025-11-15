@@ -1,11 +1,14 @@
 using UnityEngine;
 
 [System.Serializable]
-public class TerrainObjectSettings
+public class ObjectSpawnSettings
 {
     public GameObject[] prefabs;
-    public int countPerChunk = 20;
-    public Vector2 heightRange = new Vector2(0.2f, 0.8f);
+
+    public int countPerChunk = 10;
+
+    [Tooltip("Offset per evitare che spawnino sotto terra")]
+    public Vector3 positionOffset = new Vector3(0.5f, 0f, 0.5f);
 }
 
 public class TerrainChunk : MonoBehaviour
@@ -14,9 +17,26 @@ public class TerrainChunk : MonoBehaviour
     public TerrainData terrainData;
     public Vector2Int coord;
 
-    public void Initialize(Vector2Int coord, float chunkSize, int worldSeed, Vector2 noiseOffset, TerrainShapeSettings shape, TerrainObjectSettings objSettings)
+    [Header("Spawn Settings")]
+    public ObjectSpawnSettings gameObjectAmbient;
+    public ObjectSpawnSettings gameObjectCute;
+    public ObjectSpawnSettings gameObjectDecorations;
+
+    public void Initialize(
+        Vector2Int coord,
+        float chunkSize,
+        int worldSeed,
+        Vector2 noiseOffset,
+        TerrainShapeSettings shape,
+        ObjectSpawnSettings ambient,
+        ObjectSpawnSettings cute,
+        ObjectSpawnSettings decorations
+    )
     {
         this.coord = coord;
+        this.gameObjectAmbient = ambient;
+        this.gameObjectCute = cute;
+        this.gameObjectDecorations = decorations;
 
         terrainData = new TerrainData();
         terrainData.heightmapResolution = shape.resolution;
@@ -27,64 +47,87 @@ public class TerrainChunk : MonoBehaviour
         terrain.transform.localPosition = Vector3.zero;
 
         GenerateHeightmap(coord, chunkSize, worldSeed, noiseOffset, shape);
-        SpawnObjects(objSettings);
+
+        SpawnCategory(gameObjectAmbient);
+        SpawnCategory(gameObjectCute);
+        SpawnCategory(gameObjectDecorations);
     }
 
     void GenerateHeightmap(Vector2Int coord, float chunkSize, int seed, Vector2 offset, TerrainShapeSettings s)
     {
         float[,] heights = new float[s.resolution, s.resolution];
 
-        float frequency = 1f / s.scale;
-        float worldStartX = coord.x * (s.resolution - 1);
-        float worldStartY = coord.y * (s.resolution - 1);
+        float baseFreq = 1f / s.scale;
+
+        int worldXOffset = coord.x * (s.resolution - 1);
+        int worldYOffset = coord.y * (s.resolution - 1);
 
         for (int x = 0; x < s.resolution; x++)
         {
             for (int y = 0; y < s.resolution; y++)
             {
-                float worldX = (worldStartX + x) * frequency + offset.x + seed * 0.001f;
-                float worldY = (worldStartY + y) * frequency + offset.y + seed * 0.001f;
+                float wx = (worldXOffset + x) * baseFreq + offset.x;
+                float wy = (worldYOffset + y) * baseFreq + offset.y;
 
-                float baseNoise = Mathf.PerlinNoise(worldX, worldY) * s.baseRoughness;
+                float s1 = seed * 0.001f;
+                float s2 = seed * 0.002f;
+                float s3 = seed * 0.005f;
 
-                float mountainNoise = Mathf.PerlinNoise(worldX * s.mountainFrequency, worldY * s.mountainFrequency);
+                float low = Mathf.PerlinNoise(wx + s1, wy + s1) * 0.5f;
+                float mid = Mathf.PerlinNoise(wx * 2 + s2, wy * 2 + s2) * 0.3f;
+                float high = Mathf.PerlinNoise(wx * 8 + s3, wy * 8 + s3) * 0.1f;
 
-                if (mountainNoise > s.mountainThreshold)
-                    baseNoise += (mountainNoise - s.mountainThreshold) * s.mountainStrength;
+                float height = (low + mid + high) * s.baseRoughness;
 
-                heights[y, x] = Mathf.Clamp01(baseNoise);
+                float mountainMask = Mathf.PerlinNoise(
+                    (wx + seed) * s.mountainFrequency,
+                    (wy + seed) * s.mountainFrequency
+                );
+
+                if (mountainMask > s.mountainThreshold)
+                {
+                    float amount = (mountainMask - s.mountainThreshold);
+                    height += amount * amount * s.mountainStrength;
+                }
+
+                heights[y, x] = Mathf.Clamp01(height);
             }
         }
 
         terrainData.SetHeights(0, 0, heights);
     }
 
-    void SpawnObjects(TerrainObjectSettings objSettings)
+
+    void SpawnCategory(ObjectSpawnSettings settings)
     {
-        if (objSettings.prefabs == null || objSettings.prefabs.Length == 0)
+        if (settings == null || settings.prefabs == null || settings.prefabs.Length == 0)
             return;
 
-        GameObject container = new GameObject("SpawnedObjects");
+        GameObject container = new GameObject(settings.ToString());
         container.transform.SetParent(transform);
 
-        for (int i = 0; i < objSettings.countPerChunk; i++)
+        for (int i = 0; i < settings.countPerChunk; i++)
         {
-            Vector3 localPos = new Vector3(
+            Vector3 local = new Vector3(
                 Random.Range(0f, terrainData.size.x),
                 0f,
                 Random.Range(0f, terrainData.size.z)
             );
 
-            Vector3 worldPos = terrain.transform.position + localPos;
-            float height = terrain.SampleHeight(worldPos) + terrain.GetPosition().y;
-            worldPos.y = height;
+            Vector3 world = terrain.transform.position + local;
 
-            float normalizedHeight = height / terrainData.size.y;
-            if (normalizedHeight < objSettings.heightRange.x || normalizedHeight > objSettings.heightRange.y)
-                continue;
+            float groundY = terrain.SampleHeight(world) + terrain.GetPosition().y;
+            world.y = groundY;
+            world += settings.positionOffset;
 
-            GameObject prefab = objSettings.prefabs[Random.Range(0, objSettings.prefabs.Length)];
-            Instantiate(prefab, worldPos, Quaternion.identity, container.transform);
+            GameObject prefab = settings.prefabs[Random.Range(0, settings.prefabs.Length)];
+            Instantiate(prefab, world, Quaternion.identity, container.transform);
         }
+    }
+
+    public float GetSafeHeightAtWorldPos(Vector3 worldPos)
+    {
+        if (terrain == null) return 0;
+        return terrain.SampleHeight(worldPos) + terrain.GetPosition().y;
     }
 }

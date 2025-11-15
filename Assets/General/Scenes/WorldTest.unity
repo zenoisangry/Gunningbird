@@ -365,6 +365,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5655384124794064921, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6184936650476841056, guid: dd5cb919f45ea0b4c9f0195e39afea99, type: 3}
       propertyPath: CameraDistance
       value: 3
@@ -569,11 +573,48 @@ MonoBehaviour:
     mountainFrequency: 1.5
     mountainStrength: 0.7
     mountainThreshold: 0.6
-  objectSettings:
-    prefabs: []
-    countPerChunk: 40
-    heightRange: {x: 0, y: 5}
-  unloadDistance: 600
+  gameObjectAmbient:
+    prefabs:
+    - {fileID: 442777585154621531, guid: e369e5e6e9a9a7b408a6eb7c2e3a73ef, type: 3}
+    - {fileID: 8473568179861910837, guid: d4e12d5b60c3c824895a2ba084fc098f, type: 3}
+    - {fileID: 7870682720344710185, guid: 769c2bc6b405b684e8af449e555021a0, type: 3}
+    - {fileID: 2002229194726884990, guid: a853bd480961e704c8b62f0366e1ebb5, type: 3}
+    - {fileID: 8690081721129899373, guid: aedde28951afdc24690ef43f99a55114, type: 3}
+    - {fileID: 4663589470775849092, guid: 49d3b79636010ba4c95c60babfd3b3d8, type: 3}
+    - {fileID: 3972070836581743990, guid: 1247fd3aee993824bb6dabe1befd4502, type: 3}
+    countPerChunk: 10
+    positionOffset: {x: 0.5, y: 0, z: 0.5}
+  gameObjectCute:
+    prefabs:
+    - {fileID: 9214567900767438046, guid: f5d8dc115c705ba46a21ed955b373f84, type: 3}
+    - {fileID: 5319701998274753506, guid: d25014880b885e54bb2d2f422cd7b30c, type: 3}
+    - {fileID: 2573734373652202597, guid: a318b92b3b0769c40b911e36576050b0, type: 3}
+    - {fileID: 3014010388061416049, guid: 522050312b03a4b44849a53548af5aa7, type: 3}
+    - {fileID: 3573252828172547520, guid: 4397dfa852e397b41a2a5b106175c234, type: 3}
+    - {fileID: 2508311251480818047, guid: 0cfff353182775a49a44dfec615bf1c8, type: 3}
+    - {fileID: 49458265632266279, guid: a720439444ee5294b8eed2673581e88d, type: 3}
+    - {fileID: 5099817150373988349, guid: d0c29174c24f0fb409d2e8b88fcb4955, type: 3}
+    - {fileID: 6192338899697135972, guid: 612ab86d6c0dd584a975a3b8c66c4b0d, type: 3}
+    - {fileID: 3128966082277272339, guid: b71672b8fc7f11a4bbdef536ce73d1ed, type: 3}
+    countPerChunk: 10
+    positionOffset: {x: 0.5, y: 0, z: 0.5}
+  gameObjectDecorations:
+    prefabs:
+    - {fileID: 4252493272607042333, guid: e1a385fde35afd9468292407031c9780, type: 3}
+    - {fileID: 4130580445207772426, guid: 7067d7b5bce78f4499acd61780db924d, type: 3}
+    - {fileID: 769650232121923065, guid: 0a601a671d80a404a988753bb8e3f34e, type: 3}
+    - {fileID: 7124588113353270067, guid: 28f5a9422c42bed459896d32c98d89e6, type: 3}
+    - {fileID: 2304368875451515533, guid: 2dc8c7c8fbc33d84094e8a55cf79d8aa, type: 3}
+    - {fileID: 2221620918861701896, guid: 1ea0301f9c6868a4fa2d0cd544a2643e, type: 3}
+    - {fileID: 243299184869357272, guid: ab823d75fb685cd4facd73abfa10cf14, type: 3}
+    - {fileID: 5446460523283692373, guid: c9aa157fe69369840bc3a701b396329e, type: 3}
+    - {fileID: 6436276326081327745, guid: 341ce02274417204da180772cc95d7d9, type: 3}
+    - {fileID: 5947576527306250501, guid: 86871aaa59647a040a6f8ec071e03e4f, type: 3}
+    - {fileID: 426293997043270461, guid: 778fad2b7b106f443aabdb4457607086, type: 3}
+    - {fileID: 1623101894144043332, guid: 068477c440eab0c4ea532a54b3278add, type: 3}
+    countPerChunk: 10
+    positionOffset: {x: 0.5, y: 0, z: 0.5}
+  unloadDistance: 500
 --- !u!4 &1257142447
 Transform:
   m_ObjectHideFlags: 0
