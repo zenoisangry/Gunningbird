@@ -20,6 +20,7 @@ public class WindPush : MonoBehaviour
     private RaycastHit cuteTargets;
     public float cuteDetectionRange;
     public float downwardsCuteDetection;
+    private Collider[] nearbyObjects;
 
     private Vector2 movementDirection;
 
@@ -37,6 +38,19 @@ public class WindPush : MonoBehaviour
         if (jumpTimer > 0)
         {
             jumpTimer -= Time.deltaTime;
+        }
+
+        //Detect decorations in the environment
+        nearbyObjects = Physics.OverlapSphere(transform.position, cuteDetectionRange);
+        foreach (Collider collider in nearbyObjects)
+        {
+            if (collider.gameObject.layer == 7 && currentDecoration == null)
+            {
+                currentDecoration = collider.gameObject;
+                currentDecoration.layer = 0;
+                currentDecoration.transform.SetParent(transform, false);
+                currentDecoration.transform.localPosition = Vector3.zero;
+            }
         }
 
         //Wind movement
@@ -126,7 +140,7 @@ public class WindPush : MonoBehaviour
             if (currentDecoration != null)
             {
                 cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(currentDecoration, cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
-                //distruggi decorazione dentro di te
+                Destroy(currentDecoration);
                 currentDecoration = null;
             }
             else
