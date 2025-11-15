@@ -257,6 +257,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 8298976533622235884}
     m_Modifications:
     - target: {fileID: 378934246205651352, guid: d89c761790ec01a49ace0252aeaffa94, type: 3}
+      propertyPath: Priority.Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 378934246205651352, guid: d89c761790ec01a49ace0252aeaffa94, type: 3}
+      propertyPath: Priority.m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 378934246205651352, guid: d89c761790ec01a49ace0252aeaffa94, type: 3}
       propertyPath: Target.TrackingTarget
       value: 
       objectReference: {fileID: 1579254191249471263}
@@ -266,7 +274,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1514143022287716508, guid: d89c761790ec01a49ace0252aeaffa94, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.6000004
+      value: 0.5999999
       objectReference: {fileID: 0}
     - target: {fileID: 1514143022287716508, guid: d89c761790ec01a49ace0252aeaffa94, type: 3}
       propertyPath: m_LocalPosition.z
