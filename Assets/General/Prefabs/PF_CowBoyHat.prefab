@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 1254118233349124377}
   - component: {fileID: -7277924243266646833}
   - component: {fileID: 2092363140908346922}
-  m_Layer: 0
+  - component: {fileID: 8044568630172248535}
+  m_Layer: 7
   m_Name: PF_CowBoyHat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,6 +96,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8044568630172248535
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2221620918861701896}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.27234295, z: 1}
+  m_Center: {x: 0, y: 0.12642778, z: 0}
 --- !u!1001 &1422416653812751864
 PrefabInstance:
   m_ObjectHideFlags: 0

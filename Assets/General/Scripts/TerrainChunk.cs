@@ -4,9 +4,7 @@ using UnityEngine;
 public class ObjectSpawnSettings
 {
     public GameObject[] prefabs;
-
     public int countPerChunk = 10;
-
     [Tooltip("Offset per evitare che spawnino sotto terra")]
     public Vector3 positionOffset = new Vector3(0.5f, 0f, 0.5f);
 }
@@ -21,6 +19,9 @@ public class TerrainChunk : MonoBehaviour
     public ObjectSpawnSettings gameObjectAmbient;
     public ObjectSpawnSettings gameObjectCute;
     public ObjectSpawnSettings gameObjectDecorations;
+
+    [Header("Terrain Layers")]
+    public TerrainLayer[] terrainLayers;
 
     public void Initialize(
         Vector2Int coord,
@@ -46,6 +47,9 @@ public class TerrainChunk : MonoBehaviour
         terrain.transform.parent = transform;
         terrain.transform.localPosition = Vector3.zero;
 
+        if (terrainLayers != null && terrainLayers.Length > 0)
+            terrain.terrainData.terrainLayers = terrainLayers;
+
         GenerateHeightmap(coord, chunkSize, worldSeed, noiseOffset, shape);
 
         SpawnCategory(gameObjectAmbient);
@@ -56,9 +60,7 @@ public class TerrainChunk : MonoBehaviour
     void GenerateHeightmap(Vector2Int coord, float chunkSize, int seed, Vector2 offset, TerrainShapeSettings s)
     {
         float[,] heights = new float[s.resolution, s.resolution];
-
         float baseFreq = 1f / s.scale;
-
         int worldXOffset = coord.x * (s.resolution - 1);
         int worldYOffset = coord.y * (s.resolution - 1);
 
@@ -69,26 +71,15 @@ public class TerrainChunk : MonoBehaviour
                 float wx = (worldXOffset + x) * baseFreq + offset.x;
                 float wy = (worldYOffset + y) * baseFreq + offset.y;
 
-                float s1 = seed * 0.001f;
-                float s2 = seed * 0.002f;
-                float s3 = seed * 0.005f;
-
-                float low = Mathf.PerlinNoise(wx + s1, wy + s1) * 0.5f;
-                float mid = Mathf.PerlinNoise(wx * 2 + s2, wy * 2 + s2) * 0.3f;
-                float high = Mathf.PerlinNoise(wx * 8 + s3, wy * 8 + s3) * 0.1f;
+                float low = Mathf.PerlinNoise(wx + seed * 0.001f, wy + seed * 0.001f) * 0.5f;
+                float mid = Mathf.PerlinNoise(wx * 2 + seed * 0.002f, wy * 2 + seed * 0.002f) * 0.3f;
+                float high = Mathf.PerlinNoise(wx * 8 + seed * 0.005f, wy * 8 + seed * 0.005f) * 0.1f;
 
                 float height = (low + mid + high) * s.baseRoughness;
 
-                float mountainMask = Mathf.PerlinNoise(
-                    (wx + seed) * s.mountainFrequency,
-                    (wy + seed) * s.mountainFrequency
-                );
-
+                float mountainMask = Mathf.PerlinNoise((wx + seed) * s.mountainFrequency, (wy + seed) * s.mountainFrequency);
                 if (mountainMask > s.mountainThreshold)
-                {
-                    float amount = (mountainMask - s.mountainThreshold);
-                    height += amount * amount * s.mountainStrength;
-                }
+                    height += Mathf.Pow(mountainMask - s.mountainThreshold, 2f) * s.mountainStrength;
 
                 heights[y, x] = Mathf.Clamp01(height);
             }
@@ -96,7 +87,6 @@ public class TerrainChunk : MonoBehaviour
 
         terrainData.SetHeights(0, 0, heights);
     }
-
 
     void SpawnCategory(ObjectSpawnSettings settings)
     {

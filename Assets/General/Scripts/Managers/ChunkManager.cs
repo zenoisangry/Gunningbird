@@ -8,7 +8,6 @@ public class TerrainShapeSettings
     public float scale = 60f;
     public float heightMultiplier = 50f;
     public float baseRoughness = 0.3f;
-
     public float mountainFrequency = 1.5f;
     public float mountainStrength = 0.6f;
     public float mountainThreshold = 0.55f;
@@ -43,6 +42,9 @@ public class ChunkManager : MonoBehaviour
     public ObjectSpawnSettings gameObjectCute;
     public ObjectSpawnSettings gameObjectDecorations;
 
+    [Header("Terrain Layers")]
+    public TerrainLayer[] terrainLayers;
+
     [Header("Prestazioni")]
     public float unloadDistance = 800f;
 
@@ -67,10 +69,7 @@ public class ChunkManager : MonoBehaviour
     void FindPlayer()
     {
         playerSphere = null;
-
-        Transform[] all = playerParent.GetComponentsInChildren<Transform>(true);
-
-        foreach (Transform t in all)
+        foreach (Transform t in playerParent.GetComponentsInChildren<Transform>(true))
         {
             if (t.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
@@ -79,13 +78,13 @@ public class ChunkManager : MonoBehaviour
             }
         }
     }
-        void PositionPlayerSafely()
+
+    void PositionPlayerSafely()
     {
         if (playerSphere == null || activeChunks.Count == 0) return;
 
         Terrain closest = null;
         float bestDist = float.MaxValue;
-
         foreach (var c in activeChunks.Values)
         {
             float d = Vector3.Distance(Vector3.zero, c.terrain.transform.position);
@@ -107,22 +106,15 @@ public class ChunkManager : MonoBehaviour
     int GenerateValidSeed()
     {
         int attempts = 0;
-
         while (attempts < 50)
         {
             int seed = Random.Range(0, int.MaxValue);
-
             float test1 = Mathf.PerlinNoise(seed * 0.001f, seed * 0.001f);
             float test2 = Mathf.PerlinNoise(seed * 0.002f, seed * 0.002f);
-
-            float variance = Mathf.Abs(test1 - test2);
-
-            if (variance > 0.1f)
+            if (Mathf.Abs(test1 - test2) > 0.1f)
                 return seed;
-
             attempts++;
         }
-
         return Random.Range(0, int.MaxValue);
     }
 
@@ -136,7 +128,6 @@ public class ChunkManager : MonoBehaviour
         );
 
         HashSet<Vector2Int> needed = new HashSet<Vector2Int>();
-
         for (int x = -viewDistance; x <= viewDistance; x++)
         {
             for (int y = -viewDistance; y <= viewDistance; y++)
@@ -173,6 +164,7 @@ public class ChunkManager : MonoBehaviour
         obj.transform.position = new Vector3(coord.x * chunkSize, 0, coord.y * chunkSize);
 
         TerrainChunk chunk = obj.AddComponent<TerrainChunk>();
+        chunk.terrainLayers = terrainLayers;
 
         chunk.Initialize(
             coord,
@@ -193,12 +185,10 @@ public class ChunkManager : MonoBehaviour
         foreach (var kvp in activeChunks)
         {
             Vector2Int c = kvp.Key;
-
             Terrain left = activeChunks.ContainsKey(c + Vector2Int.left) ? activeChunks[c + Vector2Int.left].terrain : null;
             Terrain right = activeChunks.ContainsKey(c + Vector2Int.right) ? activeChunks[c + Vector2Int.right].terrain : null;
             Terrain up = activeChunks.ContainsKey(c + Vector2Int.up) ? activeChunks[c + Vector2Int.up].terrain : null;
             Terrain down = activeChunks.ContainsKey(c + Vector2Int.down) ? activeChunks[c + Vector2Int.down].terrain : null;
-
             kvp.Value.terrain.SetNeighbors(left, up, right, down);
         }
     }

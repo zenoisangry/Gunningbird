@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1978442673968901161}
-  m_Layer: 0
+  - component: {fileID: 5022479212264502441}
+  m_Layer: 7
   m_Name: PF_Pins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,6 +33,27 @@ Transform:
   - {fileID: 331225538521952120}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5022479212264502441
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6436276326081327745}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.42928073, y: 0.13404939, z: 0.21456285}
+  m_Center: {x: 0.0016534775, y: 0.018949032, z: -0.010364033}
 --- !u!1001 &221246625264044179
 PrefabInstance:
   m_ObjectHideFlags: 0
