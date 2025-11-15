@@ -21,6 +21,8 @@ public class PauseMenu : MonoBehaviour
     private bool isPauseMenuActive = false;
     private bool isSettingsActive = false;
 
+    private WindPush playerMovement;
+
     private void Awake()
     {
         LoadSettings();
@@ -28,24 +30,32 @@ public class PauseMenu : MonoBehaviour
         pauseDisplay.SetActive(false);
         settingsDisplay.SetActive(false);
 
+        playerMovement = Object.FindAnyObjectByType<WindPush>();
+
         if (returnButton != null)
-            returnButton.onClick.AddListener(ClosePauseMenu);
+            returnButton.onClick.AddListener(TogglePauseMenu);
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (Keyboard.current == null) return;
+
+        if (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame)
         {
-            if (!isPauseMenuActive)
-                OpenPauseMenu();
-            else
-                ClosePauseMenu();
+            TogglePauseMenu();
         }
     }
 
-    // ---------------------------------------------------------
-    // MENU PAUSA
-    // ---------------------------------------------------------
+    public void TogglePauseMenu()
+    {
+        if (isPauseMenuActive)
+            ResumeGame();
+        else
+            OpenPauseMenu();
+    }
 
     public void OpenPauseMenu()
     {
@@ -56,9 +66,14 @@ public class PauseMenu : MonoBehaviour
         settingsDisplay.SetActive(false);
 
         Time.timeScale = 0f;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        if (playerMovement != null)
+            playerMovement.PauseInput(true);
     }
 
-    public void ClosePauseMenu()
+    public void ResumeGame()
     {
         isPauseMenuActive = false;
         GameIsPaused = false;
@@ -67,6 +82,11 @@ public class PauseMenu : MonoBehaviour
         settingsDisplay.SetActive(false);
 
         Time.timeScale = 1f;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
+        if (playerMovement != null)
+            playerMovement.PauseInput(false);
     }
 
     public void OpenSettings()
@@ -82,10 +102,6 @@ public class PauseMenu : MonoBehaviour
         SaveSettings();
     }
 
-    // ---------------------------------------------------------
-    // IMPOSTAZIONI AUDIO
-    // ---------------------------------------------------------
-
     public void SetVolume()
     {
         float music = musicSlider.value;
@@ -97,10 +113,6 @@ public class PauseMenu : MonoBehaviour
         float sfx = SFXSlider.value;
         masterMixer.SetFloat("SoundEffects", Mathf.Log10(Mathf.Clamp(sfx, 0.001f, 1f)) * 20);
     }
-
-    // ---------------------------------------------------------
-    // SALVATAGGIO / CARICAMENTO
-    // ---------------------------------------------------------
 
     private void SaveSettings()
     {

@@ -1,7 +1,7 @@
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+
 public class WindPush : MonoBehaviour
 {
     public float windStrength;
@@ -26,21 +26,34 @@ public class WindPush : MonoBehaviour
 
     public GameObject currentDecoration;
     public List<GameObject> decorationList;
+
+    [Header("Pause Menu")]
+    public GameObject pauseMenuCanvas;
+
+    private bool isPaused = false;
+
     void Start()
     {
         body = GetComponent<Rigidbody>();
         actions.FindAction("Player/Jump").started += Jump;
+
+        if (pauseMenuCanvas != null)
+            pauseMenuCanvas.SetActive(false);
+
+        HideCursor();
     }
 
     void Update()
     {
-        //Detect ground
-        if (jumpTimer > 0)
-        {
-            jumpTimer -= Time.deltaTime;
-        }
+        HandlePauseInput();
 
-        //Detect decorations in the environment
+        if (isPaused) return;
+
+        // Detect ground
+        if (jumpTimer > 0)
+            jumpTimer -= Time.deltaTime;
+
+        // Detect decorations in the environment
         nearbyObjects = Physics.OverlapSphere(transform.position, cuteDetectionRange);
         foreach (Collider collider in nearbyObjects)
         {
@@ -54,18 +67,15 @@ public class WindPush : MonoBehaviour
             }
         }
 
-        //Wind movement
+        // Wind movement
         movementDirection = Quaternion.AngleAxis(lookDirection.eulerAngles.y, Vector3.back) * actions.FindAction("Player/Move").ReadValue<Vector2>();
         horizontalVelocity = new Vector2(body.linearVelocity.x, body.linearVelocity.z);
         if (horizontalVelocity.magnitude < windSpeed && movementDirection != Vector2.zero)
         {
             if (horizontalVelocity.magnitude > 1)
             {
-                calculatedDirection = (movementDirection.normalized + horizontalVelocity.normalized)/2;
-                //Get movementDirection, then add to horizontal velocity. get "forwards" part of the vector.
-                //if forward magnitude is 1 (same direction), full dampening is applied
-                velocityDampening = Mathf.Sqrt((windSpeed - horizontalVelocity.magnitude*calculatedDirection.magnitude)/windSpeed);
-                //Fai in modo che il magnitude diventi moltiplicatore "percentuale" dell'effetto del velocity dampening
+                calculatedDirection = (movementDirection.normalized + horizontalVelocity.normalized) / 2;
+                velocityDampening = Mathf.Sqrt((windSpeed - horizontalVelocity.magnitude * calculatedDirection.magnitude) / windSpeed);
                 movementDirection = movementDirection * windStrength * velocityDampening;
                 body.AddForce(new Vector3(movementDirection.x, 0f, movementDirection.y));
             }
@@ -75,69 +85,17 @@ public class WindPush : MonoBehaviour
             }
         }
 
+        // Detect cutifiable objects
         bool found = false;
-        //Detect cutifiable objects below
-        Physics.SphereCast(transform.position + 2*Vector3.up, cuteDetectionRange, downwardsCuteDetection*Vector3.down, out cuteTargets, 4f);
-        if (cuteTargets.collider != null)
-        {
-            if (cuteTargets.collider.gameObject.layer == 6)
-            {
-                found = true;
-            }
-        }
-        //Detect cutifiable objects in front
-        if (!found)
-        {
-            Physics.SphereCast(transform.position + 2 * Vector3.back, cuteDetectionRange, Vector3.forward, out cuteTargets, 4f);
-            if (cuteTargets.collider != null)
-            {
-                if (cuteTargets.collider.gameObject.layer == 6)
-                {
-                    found = true;
-                }
-            }
-        }
-        //Detect cutifiable objects on the left
-        if (!found)
-        {
-            Physics.SphereCast(transform.position + 2 * Vector3.right, cuteDetectionRange, Vector3.left, out cuteTargets, 4f);
-            if (cuteTargets.collider != null)
-            {
-                if (cuteTargets.collider.gameObject.layer == 6)
-                {
-                    found = true;
-                }
-            }
-        }
-        //Detect cutifiable objects on the right
-        if (!found)
-        {
-            Physics.SphereCast(transform.position + 2 * Vector3.left, cuteDetectionRange, Vector3.right, out cuteTargets, 4f);
-            if (cuteTargets.collider != null)
-            {
-                if (cuteTargets.collider.gameObject.layer == 6)
-                {
-                    found = true;
-                }
-            }
-        }
-        //Detect cutifiable objects on the back
-        if (!found)
-        {
-            Physics.SphereCast(transform.position + 2 * Vector3.forward, cuteDetectionRange, Vector3.back, out cuteTargets, 4f);
-            if (cuteTargets.collider != null)
-            {
-                if (cuteTargets.collider.gameObject.layer == 6)
-                {
-                    found = true;
-                }
-            }
-        }
+        CheckCuteTargets(ref found, transform.position + 2 * Vector3.up, Vector3.down);
+        if (!found) CheckCuteTargets(ref found, transform.position + 2 * Vector3.back, Vector3.forward);
+        if (!found) CheckCuteTargets(ref found, transform.position + 2 * Vector3.right, Vector3.left);
+        if (!found) CheckCuteTargets(ref found, transform.position + 2 * Vector3.left, Vector3.right);
+        if (!found) CheckCuteTargets(ref found, transform.position + 2 * Vector3.forward, Vector3.back);
 
         if (found)
         {
             Vector2 orientation = new Vector2(transform.position.x, transform.position.z) - new Vector2(cuteTargets.point.x, cuteTargets.point.z);
-            Debug.Log("Cute target found");
             if (currentDecoration != null)
             {
                 cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(currentDecoration, cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
@@ -152,6 +110,57 @@ public class WindPush : MonoBehaviour
         }
     }
 
+    void HandlePauseInput()
+    {
+        if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame))
+        {
+            TogglePause();
+        }
+    }
+
+    public void TogglePause()
+    {
+        SetPause(!isPaused);
+    }
+
+    public void SetPause(bool pause)
+    {
+        isPaused = pause;
+        Time.timeScale = pause ? 0f : 1f;
+
+        if (pauseMenuCanvas != null)
+            pauseMenuCanvas.SetActive(pause);
+
+        if (pause)
+            ShowCursor();
+        else
+            HideCursor();
+    }
+
+    private void HideCursor()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void ShowCursor()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void PauseInput(bool pause)
+    {
+        SetPause(pause);
+    }
+
+    void CheckCuteTargets(ref bool found, Vector3 origin, Vector3 direction)
+    {
+        Physics.SphereCast(origin, cuteDetectionRange, direction * downwardsCuteDetection, out cuteTargets, 4f);
+        if (cuteTargets.collider != null && cuteTargets.collider.gameObject.layer == 6)
+            found = true;
+    }
+
     void Jump(InputAction.CallbackContext ctx)
     {
         if (grounded && jumpTimer <= 0)
@@ -164,9 +173,7 @@ public class WindPush : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (jumpTimer<=0)
-        {
+        if (jumpTimer <= 0)
             grounded = true;
-        }
     }
 }

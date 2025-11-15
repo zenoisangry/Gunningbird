@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3028ebd27dd83d84288033a7217c0612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CuteObject
-  objectType: 0
+  objectType: 2
 --- !u!64 &6233186261840127965
 MeshCollider:
   m_ObjectHideFlags: 0
