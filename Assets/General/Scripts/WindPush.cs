@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 
 public class WindPush : MonoBehaviour
 {
@@ -30,10 +31,16 @@ public class WindPush : MonoBehaviour
     [Header("Pause Menu")]
     public GameObject pauseMenuCanvas;
 
+    [Header("Audio")]
+    public AudioClip getDecoration;
+    public AudioClip setDecoration;
+    private AudioSource source;
+
     private bool isPaused = false;
 
     void Start()
     {
+        source = GetComponent<AudioSource>();
         body = GetComponent<Rigidbody>();
         actions.FindAction("Player/Jump").started += Jump;
 
@@ -62,6 +69,8 @@ public class WindPush : MonoBehaviour
                 currentDecoration.layer = 0;
                 currentDecoration.transform.SetParent(transform, false);
                 currentDecoration.transform.localPosition = Vector3.zero;
+                source.clip = getDecoration;
+                source.Play();
             }
         }
 
@@ -102,6 +111,8 @@ public class WindPush : MonoBehaviour
             {
                 cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(decorationList[Random.Range(0, 4)], cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
             }
+            source.clip = setDecoration;
+            source.Play();
             cuteTargets.collider.gameObject.layer = 0;
         }
     }
