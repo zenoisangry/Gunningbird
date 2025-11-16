@@ -523,6 +523,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI
       objectReference: {fileID: 0}
+    - target: {fileID: 1443685548677181121, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+      propertyPath: returnButton
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1443685548677181121, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+      propertyPath: settingsDisplay
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1746997110819633029, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3653952963742292369, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -607,7 +619,15 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6978149922296658017, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -200
+      objectReference: {fileID: 0}
     - target: {fileID: 7263428901621141440, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8500358190876393966, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -618,6 +638,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7263428901621141440, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+    - {fileID: 7656074423562652740, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+    - {fileID: 1482641040555716270, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
+    - {fileID: 8500358190876393966, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82df2f02f44a5e74f9022ffd93678999, type: 3}

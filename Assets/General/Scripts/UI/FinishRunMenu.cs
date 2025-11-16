@@ -4,40 +4,20 @@ using UnityEngine.UI;
 
 public class FinishRunMenu : MonoBehaviour
 {
-    [Header("UI Buttons")]
     public Button leftButton;
     public Button rightButton;
     public Button exitButton;
 
-    private PauseMenu pauseMenu;
-
     private void Awake()
     {
-        pauseMenu = FindAnyObjectByType<PauseMenu>();
+        if (leftButton != null) leftButton.onClick.RemoveAllListeners();
+        if (rightButton != null) rightButton.onClick.RemoveAllListeners();
 
         if (leftButton != null)
-            leftButton.onClick.AddListener(PreviousProxy);
+            leftButton.onClick.AddListener(() => PostRunManager.Instance?.SwitchAimPoint(false));
 
         if (rightButton != null)
-            rightButton.onClick.AddListener(NextProxy);
-    }
-
-    private void OnEnable()
-    {
-        if (pauseMenu != null)
-            pauseMenu.FinishRun();
-    }
-
-    public void NextProxy()
-    {
-        if (PostRunManager.Instance != null)
-            PostRunManager.Instance.SwitchAimPoint(true);
-    }
-
-    public void PreviousProxy()
-    {
-        if (PostRunManager.Instance != null)
-            PostRunManager.Instance.SwitchAimPoint(false);
+            rightButton.onClick.AddListener(() => PostRunManager.Instance?.SwitchAimPoint(true));
     }
 
     public void LoadScene(string sceneName)

@@ -4,35 +4,31 @@ using System.Collections.Generic;
 
 public class WindPush : MonoBehaviour
 {
-    [Header("Movement")]
     public float windStrength;
     public float windSpeed;
     public float jumpStrength;
-    public float jumpCD;
-    public float jumpScaling;
-    public float cuteDetectionRange;
-    public float downwardsCuteDetection;
-
-    public InputActionAsset actions;
-    public Transform lookDirection;
-
     private Rigidbody body;
     private Vector2 horizontalVelocity;
     private Vector2 calculatedDirection;
     private float velocityDampening;
+    public InputActionAsset actions;
+    public Transform lookDirection;
     private bool grounded = true;
+    public float jumpCD;
     private float jumpTimer;
-    private Vector2 movementDirection;
+    public float jumpScaling;
     private RaycastHit cuteTargets;
+    public float cuteDetectionRange;
+    public float downwardsCuteDetection;
     private Collider[] nearbyObjects;
 
-    [Header("Decorations")]
+    private Vector2 movementDirection;
+
     public GameObject currentDecoration;
     public List<GameObject> decorationList;
 
-    [Header("Pause / Finish Run")]
+    [Header("Pause Menu")]
     public GameObject pauseMenuCanvas;
-    public GameObject finishRunCanvas;
 
     private bool isPaused = false;
 
@@ -51,20 +47,11 @@ public class WindPush : MonoBehaviour
     {
         HandlePauseInput();
 
-        if (finishRunCanvas != null && finishRunCanvas.activeInHierarchy)
-        {
-            isPaused = true;
-            ShowCursor();
-            return;
-        }
-
         if (isPaused) return;
 
-        // Timer salto
         if (jumpTimer > 0)
             jumpTimer -= Time.deltaTime;
 
-        // Raccogli decorazioni nell'ambiente
         nearbyObjects = Physics.OverlapSphere(transform.position, cuteDetectionRange);
         foreach (Collider collider in nearbyObjects)
         {
@@ -78,9 +65,7 @@ public class WindPush : MonoBehaviour
             }
         }
 
-        // Movimento del player con vento
-        movementDirection = Quaternion.AngleAxis(lookDirection.eulerAngles.y, Vector3.back) *
-                            actions.FindAction("Player/Move").ReadValue<Vector2>();
+        movementDirection = Quaternion.AngleAxis(lookDirection.eulerAngles.y, Vector3.back) * actions.FindAction("Player/Move").ReadValue<Vector2>();
         horizontalVelocity = new Vector2(body.linearVelocity.x, body.linearVelocity.z);
         if (horizontalVelocity.magnitude < windSpeed && movementDirection != Vector2.zero)
         {
@@ -97,7 +82,6 @@ public class WindPush : MonoBehaviour
             }
         }
 
-        // Controllo oggetti "cute" per aggiungere decorazioni
         bool found = false;
         CheckCuteTargets(ref found, transform.position + 2 * Vector3.up, Vector3.down);
         if (!found) CheckCuteTargets(ref found, transform.position + 2 * Vector3.back, Vector3.forward);
@@ -107,21 +91,16 @@ public class WindPush : MonoBehaviour
 
         if (found)
         {
-            Vector2 orientation = new Vector2(transform.position.x, transform.position.z) -
-                                  new Vector2(cuteTargets.point.x, cuteTargets.point.z);
+            Vector2 orientation = new Vector2(transform.position.x, transform.position.z) - new Vector2(cuteTargets.point.x, cuteTargets.point.z);
             if (currentDecoration != null)
             {
-                cuteTargets.collider.gameObject.GetComponent<CuteObject>()
-                    .AddDecoration(currentDecoration, cuteTargets.point,
-                    Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
+                cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(currentDecoration, cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
                 Destroy(currentDecoration);
                 currentDecoration = null;
             }
             else
             {
-                cuteTargets.collider.gameObject.GetComponent<CuteObject>()
-                    .AddDecoration(decorationList[Random.Range(0, 4)], cuteTargets.point,
-                    Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
+                cuteTargets.collider.gameObject.GetComponent<CuteObject>().AddDecoration(decorationList[Random.Range(0, 4)], cuteTargets.point, Quaternion.LookRotation(new Vector3(orientation.x, 0, orientation.y), Vector3.up));
             }
             cuteTargets.collider.gameObject.layer = 0;
         }
@@ -129,8 +108,7 @@ public class WindPush : MonoBehaviour
 
     void HandlePauseInput()
     {
-        if (Keyboard.current != null &&
-           (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame))
+        if (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame))
         {
             TogglePause();
         }
@@ -149,7 +127,7 @@ public class WindPush : MonoBehaviour
         if (pauseMenuCanvas != null)
             pauseMenuCanvas.SetActive(pause);
 
-        if (pause || (finishRunCanvas != null && finishRunCanvas.activeInHierarchy))
+        if (pause)
             ShowCursor();
         else
             HideCursor();
@@ -157,9 +135,6 @@ public class WindPush : MonoBehaviour
 
     private void HideCursor()
     {
-        if (finishRunCanvas != null && finishRunCanvas.activeInHierarchy)
-            return;
-
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -170,9 +145,18 @@ public class WindPush : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    public void PauseInput(bool pause)
+    public void PauseInput(bool pause, bool hideCursor = true, bool stopTime = true)
     {
-        SetPause(pause);
+        isPaused = pause;
+
+        if (stopTime)
+            Time.timeScale = pause ? 0f : 1f;
+
+        if (hideCursor)
+        {
+            if (pause) ShowCursor();
+            else HideCursor();
+        }
     }
 
     void CheckCuteTargets(ref bool found, Vector3 origin, Vector3 direction)
@@ -184,12 +168,17 @@ public class WindPush : MonoBehaviour
 
     void Jump(InputAction.CallbackContext ctx)
     {
+        if (body == null) return;
         if (grounded && jumpTimer <= 0)
         {
             jumpTimer = jumpCD;
             grounded = false;
             body.AddForce(Vector3.up * (20 + jumpStrength * body.linearVelocity.magnitude * jumpScaling));
         }
+    }
+    private void OnDestroy()
+    {
+        actions.FindAction("Player/Jump").started -= Jump;
     }
 
     private void OnTriggerStay(Collider other)

@@ -92,7 +92,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 8260199add70270428f034a848b53b96, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 6cf00e747fb4ee640acd2eb2c5d774be, type: 2}
   m_EnableTreeColliders: 1
 --- !u!114 &5077758680770204985
 MonoBehaviour:
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainChunk
   terrain: {fileID: 3478733060311555796}
-  terrainData: {fileID: 15600000, guid: 8260199add70270428f034a848b53b96, type: 2}
+  terrainData: {fileID: 15600000, guid: 6cf00e747fb4ee640acd2eb2c5d774be, type: 2}
   coord: {x: 0, y: 0}
   gameObjectAmbient:
     prefabs: []
@@ -121,3 +121,5 @@ MonoBehaviour:
     prefabs: []
     countPerChunk: 10
     positionOffset: {x: 0.5, y: 0, z: 0.5}
+  terrainLayers:
+  - {fileID: 8574412962073106934, guid: 5c01dfe19d7745c47af7bf19320c1712, type: 2}

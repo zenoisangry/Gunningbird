@@ -24,28 +24,48 @@ public class TerrainChunk : MonoBehaviour
     public TerrainLayer[] terrainLayers;
 
     public void Initialize(
-        Vector2Int coord,
-        float chunkSize,
-        int worldSeed,
-        Vector2 noiseOffset,
-        TerrainShapeSettings shape,
-        ObjectSpawnSettings ambient,
-        ObjectSpawnSettings cute,
-        ObjectSpawnSettings decorations
-    )
+    Vector2Int coord,
+    float chunkSize,
+    int worldSeed,
+    Vector2 noiseOffset,
+    TerrainShapeSettings shape,
+    ObjectSpawnSettings ambient,
+    ObjectSpawnSettings cute,
+    ObjectSpawnSettings decorations
+)
     {
+        if (shape == null)
+        {
+            Debug.LogError("TerrainShapeSettings is null!");
+            return;
+        }
+
+        if (shape.resolution < 3)
+        {
+            Debug.LogWarning("Resolution troppo bassa, impostata a 129 per sicurezza.");
+            shape.resolution = 129;
+        }
+
         this.coord = coord;
         this.gameObjectAmbient = ambient;
         this.gameObjectCute = cute;
         this.gameObjectDecorations = decorations;
 
         terrainData = new TerrainData();
-        terrainData.heightmapResolution = shape.resolution;
+        terrainData.heightmapResolution = shape.GetValidResolution();
         terrainData.size = new Vector3(chunkSize, shape.heightMultiplier, chunkSize);
 
-        terrain = Terrain.CreateTerrainGameObject(terrainData).GetComponent<Terrain>();
+        GameObject terrainGO = Terrain.CreateTerrainGameObject(terrainData);
+        if (terrainGO == null)
+        {
+            Debug.LogError("Creazione del Terrain GameObject fallita!");
+            return;
+        }
+
+        terrain = terrainGO.GetComponent<Terrain>();
         terrain.transform.parent = transform;
         terrain.transform.localPosition = Vector3.zero;
+        terrain.terrainData = terrainData;
 
         if (terrainLayers != null && terrainLayers.Length > 0)
             terrain.terrainData.terrainLayers = terrainLayers;
@@ -84,7 +104,6 @@ public class TerrainChunk : MonoBehaviour
                 heights[y, x] = Mathf.Clamp01(height);
             }
         }
-
         terrainData.SetHeights(0, 0, heights);
     }
 

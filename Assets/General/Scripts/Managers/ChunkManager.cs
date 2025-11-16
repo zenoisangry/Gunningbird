@@ -11,6 +11,11 @@ public class TerrainShapeSettings
     public float mountainFrequency = 1.5f;
     public float mountainStrength = 0.6f;
     public float mountainThreshold = 0.55f;
+
+    public int GetValidResolution()
+    {
+        return Mathf.ClosestPowerOfTwo(resolution - 1) + 1;
+    }
 }
 
 public class ChunkManager : MonoBehaviour
@@ -185,10 +190,19 @@ public class ChunkManager : MonoBehaviour
         foreach (var kvp in activeChunks)
         {
             Vector2Int c = kvp.Key;
-            Terrain left = activeChunks.ContainsKey(c + Vector2Int.left) ? activeChunks[c + Vector2Int.left].terrain : null;
-            Terrain right = activeChunks.ContainsKey(c + Vector2Int.right) ? activeChunks[c + Vector2Int.right].terrain : null;
-            Terrain up = activeChunks.ContainsKey(c + Vector2Int.up) ? activeChunks[c + Vector2Int.up].terrain : null;
-            Terrain down = activeChunks.ContainsKey(c + Vector2Int.down) ? activeChunks[c + Vector2Int.down].terrain : null;
+            Terrain left = activeChunks.ContainsKey(c + Vector2Int.left) && activeChunks[c + Vector2Int.left].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
+                ? activeChunks[c + Vector2Int.left].terrain
+                : null;
+            Terrain right = activeChunks.ContainsKey(c + Vector2Int.right) && activeChunks[c + Vector2Int.right].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
+                ? activeChunks[c + Vector2Int.right].terrain
+                : null;
+            Terrain up = activeChunks.ContainsKey(c + Vector2Int.up) && activeChunks[c + Vector2Int.up].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
+                ? activeChunks[c + Vector2Int.up].terrain
+                : null;
+            Terrain down = activeChunks.ContainsKey(c + Vector2Int.down) && activeChunks[c + Vector2Int.down].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
+                ? activeChunks[c + Vector2Int.down].terrain
+                : null;
+
             kvp.Value.terrain.SetNeighbors(left, up, right, down);
         }
     }
