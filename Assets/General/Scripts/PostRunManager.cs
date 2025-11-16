@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using NUnit.Framework;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PostRunManager : MonoBehaviour
 {

@@ -18,9 +18,6 @@ public class PauseMenu : MonoBehaviour
     [Header("Audio")]
     public AudioMixer masterMixer;
 
-    private bool isPauseMenuActive = false;
-    private bool isSettingsActive = false;
-
     private WindPush playerMovement;
 
     private void Awake()
@@ -30,58 +27,70 @@ public class PauseMenu : MonoBehaviour
         pauseDisplay.SetActive(false);
         settingsDisplay.SetActive(false);
 
-        playerMovement = Object.FindAnyObjectByType<WindPush>();
+        playerMovement = FindAnyObjectByType<WindPush>();
 
         if (returnButton != null)
-            returnButton.onClick.AddListener(TogglePauseMenu);
+            returnButton.onClick.AddListener(ResumeGame);
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        HideCursorGameplay();
     }
 
     private void Update()
     {
         if (Keyboard.current == null) return;
 
-        if (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame ||
+            Keyboard.current.pKey.wasPressedThisFrame)
         {
-            TogglePauseMenu();
+            if (GameIsPaused)
+                ResumeGame();
+            else
+                OpenPauseMenu();
         }
-    }
-
-    public void TogglePauseMenu()
-    {
-        if (isPauseMenuActive)
-            ResumeGame();
-        else
-            OpenPauseMenu();
     }
 
     public void OpenPauseMenu()
     {
-        isPauseMenuActive = true;
         GameIsPaused = true;
 
         pauseDisplay.SetActive(true);
         settingsDisplay.SetActive(false);
 
         Time.timeScale = 0f;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
-        if (playerMovement != null)
-            playerMovement.PauseInput(true);
+        ShowCursorMenu(true);
     }
 
     public void ResumeGame()
     {
-        isPauseMenuActive = false;
         GameIsPaused = false;
 
         pauseDisplay.SetActive(false);
         settingsDisplay.SetActive(false);
 
         Time.timeScale = 1f;
+
+        HideCursorGameplay();
+    }
+
+    public void FinishRun()
+    {
+        GameIsPaused = false;
+        Time.timeScale = 1f;
+
+        ShowCursorMenu(false);
+    }
+
+    void ShowCursorMenu(bool blockPlayer)
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        if (playerMovement != null)
+            playerMovement.PauseInput(blockPlayer);
+    }
+
+    void HideCursorGameplay()
+    {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -91,13 +100,11 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenSettings()
     {
-        isSettingsActive = true;
         settingsDisplay.SetActive(true);
     }
 
     public void CloseSettings()
     {
-        isSettingsActive = false;
         settingsDisplay.SetActive(false);
         SaveSettings();
     }
@@ -105,12 +112,11 @@ public class PauseMenu : MonoBehaviour
     public void SetVolume()
     {
         float music = musicSlider.value;
-        masterMixer.SetFloat("BackgroundMusic", Mathf.Log10(Mathf.Clamp(music, 0.001f, 1f)) * 20);
-
         float volume = volumeSlider.value;
-        masterMixer.SetFloat("VolumeMusic", Mathf.Log10(Mathf.Clamp(volume, 0.001f, 1f)) * 20);
-
         float sfx = SFXSlider.value;
+
+        masterMixer.SetFloat("BackgroundMusic", Mathf.Log10(Mathf.Clamp(music, 0.001f, 1f)) * 20);
+        masterMixer.SetFloat("VolumeMusic", Mathf.Log10(Mathf.Clamp(volume, 0.001f, 1f)) * 20);
         masterMixer.SetFloat("SoundEffects", Mathf.Log10(Mathf.Clamp(sfx, 0.001f, 1f)) * 20);
     }
 
@@ -124,9 +130,9 @@ public class PauseMenu : MonoBehaviour
 
     private void LoadSettings()
     {
-        float music = PlayerPrefs.GetFloat("BackgroundMusic", 1.0f);
-        float volume = PlayerPrefs.GetFloat("VolumeMusic", 1.0f);
-        float sfx = PlayerPrefs.GetFloat("SoundEffects", 1.0f);
+        float music = PlayerPrefs.GetFloat("BackgroundMusic", 1f);
+        float volume = PlayerPrefs.GetFloat("VolumeMusic", 1f);
+        float sfx = PlayerPrefs.GetFloat("SoundEffects", 1f);
 
         if (masterMixer != null)
         {
@@ -138,10 +144,5 @@ public class PauseMenu : MonoBehaviour
         musicSlider.value = music;
         volumeSlider.value = volume;
         SFXSlider.value = sfx;
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
     }
 }
