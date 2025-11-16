@@ -6,7 +6,7 @@ public class TerrainShapeSettings
 {
     public int resolution = 129;
     public float scale = 60f;
-    public float heightMultiplier = 50f;
+    public float heightMultiplier = 2f;
     public float baseRoughness = 0.3f;
     public float mountainFrequency = 1.5f;
     public float mountainStrength = 0.6f;
@@ -16,6 +16,14 @@ public class TerrainShapeSettings
     {
         return Mathf.ClosestPowerOfTwo(resolution - 1) + 1;
     }
+}
+
+[System.Serializable]
+public class ObjectSpawnSettings
+{
+    public GameObject[] prefabs;
+    public int countPerChunk = 10;
+    public Vector3 positionOffset = new Vector3(0.5f, 0f, 0.5f);
 }
 
 public class ChunkManager : MonoBehaviour
@@ -47,6 +55,9 @@ public class ChunkManager : MonoBehaviour
     public ObjectSpawnSettings gameObjectCute;
     public ObjectSpawnSettings gameObjectDecorations;
 
+    [Header("Terrain Prefab")]
+    public GameObject terrainPrefab;
+
     [Header("Terrain Layers")]
     public TerrainLayer[] terrainLayers;
 
@@ -61,7 +72,7 @@ public class ChunkManager : MonoBehaviour
         Debug.Log("Generated World Seed: " + worldSeed);
 
         FindPlayer();
-        UpdateChunks(force: true);
+        UpdateChunks(true);
         PositionPlayerSafely();
     }
 
@@ -164,25 +175,63 @@ public class ChunkManager : MonoBehaviour
 
     void CreateChunk(Vector2Int coord)
     {
-        GameObject obj = new GameObject($"Chunk_{coord.x}_{coord.y}");
-        obj.transform.parent = transform;
-        obj.transform.position = new Vector3(coord.x * chunkSize, 0, coord.y * chunkSize);
+        if (terrainPrefab == null)
+        {
+            Debug.LogError("Prefab del terrain non assegnato!");
+            return;
+        }
 
-        TerrainChunk chunk = obj.AddComponent<TerrainChunk>();
-        chunk.terrainLayers = terrainLayers;
+        GameObject terrainGO = Instantiate(terrainPrefab, transform);
+        terrainGO.name = $"Chunk_{coord.x}_{coord.y}";
+        terrainGO.transform.position = new Vector3(coord.x * chunkSize, 0, coord.y * chunkSize);
 
-        chunk.Initialize(
-            coord,
-            chunkSize,
-            worldSeed,
-            Vector2.zero,
-            shapeSettings,
-            gameObjectAmbient,
-            gameObjectCute,
-            gameObjectDecorations
-        );
+        Terrain terrain = terrainGO.GetComponent<Terrain>();
+        if (terrain == null)
+        {
+            Debug.LogError("Il prefab deve contenere un componente Terrain!");
+            return;
+        }
+
+        TerrainData terrainData = terrain.terrainData;
+
+        int resolution = shapeSettings.GetValidResolution();
+        terrainData.heightmapResolution = resolution;
+        terrainData.size = new Vector3(chunkSize, shapeSettings.heightMultiplier, chunkSize);
+
+        if (terrainLayers != null && terrainLayers.Length > 0)
+            terrain.terrainData.terrainLayers = terrainLayers;
+
+        GenerateHeights(terrainData, coord, shapeSettings, worldSeed);
+
+        TerrainChunk chunk = terrainGO.GetComponent<TerrainChunk>();
+        if (chunk == null)
+            chunk = terrainGO.AddComponent<TerrainChunk>();
+
+        chunk.terrain = terrain;
+        chunk.terrainData = terrainData;
+        chunk.coord = coord;
+
+        chunk.SpawnCategory(gameObjectAmbient);
+        chunk.SpawnCategory(gameObjectCute);
+        chunk.SpawnCategory(gameObjectDecorations);
 
         activeChunks.Add(coord, chunk);
+    }
+
+    void GenerateHeights(TerrainData terrainData, Vector2Int coord, TerrainShapeSettings s, int seed)
+    {
+        int res = terrainData.heightmapResolution;
+        float[,] heights = new float[res, res];
+
+        for (int x = 0; x < res; x++)
+        {
+            for (int y = 0; y < res; y++)
+            {
+                heights[y, x] = 0f;
+            }
+        }
+
+        terrainData.SetHeights(0, 0, heights);
     }
 
     void UpdateNeighbors()
@@ -190,20 +239,14 @@ public class ChunkManager : MonoBehaviour
         foreach (var kvp in activeChunks)
         {
             Vector2Int c = kvp.Key;
-            Terrain left = activeChunks.ContainsKey(c + Vector2Int.left) && activeChunks[c + Vector2Int.left].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
-                ? activeChunks[c + Vector2Int.left].terrain
-                : null;
-            Terrain right = activeChunks.ContainsKey(c + Vector2Int.right) && activeChunks[c + Vector2Int.right].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
-                ? activeChunks[c + Vector2Int.right].terrain
-                : null;
-            Terrain up = activeChunks.ContainsKey(c + Vector2Int.up) && activeChunks[c + Vector2Int.up].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
-                ? activeChunks[c + Vector2Int.up].terrain
-                : null;
-            Terrain down = activeChunks.ContainsKey(c + Vector2Int.down) && activeChunks[c + Vector2Int.down].terrain.terrainData.heightmapResolution == kvp.Value.terrain.terrainData.heightmapResolution
-                ? activeChunks[c + Vector2Int.down].terrain
-                : null;
+            TerrainChunk chunk = kvp.Value;
 
-            kvp.Value.terrain.SetNeighbors(left, up, right, down);
+            Terrain left = activeChunks.ContainsKey(c + Vector2Int.left) ? activeChunks[c + Vector2Int.left].terrain : null;
+            Terrain right = activeChunks.ContainsKey(c + Vector2Int.right) ? activeChunks[c + Vector2Int.right].terrain : null;
+            Terrain up = activeChunks.ContainsKey(c + Vector2Int.up) ? activeChunks[c + Vector2Int.up].terrain : null;
+            Terrain down = activeChunks.ContainsKey(c + Vector2Int.down) ? activeChunks[c + Vector2Int.down].terrain : null;
+
+            chunk.terrain.SetNeighbors(left, up, right, down);
         }
     }
 }
