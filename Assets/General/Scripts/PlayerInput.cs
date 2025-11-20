@@ -53,6 +53,7 @@ public class PlayerInput : MonoBehaviour
             {
                 flying = false;
                 currentSpeed = groundSpeed;
+                body.useGravity = true;
             }
         }
         else
@@ -79,18 +80,20 @@ public class PlayerInput : MonoBehaviour
         Debug.Log("called switch");
         if (flying)
         {
-            body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y - jumpStrength * 5, sideMovement.y);
+            body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y - jumpStrength * 10, sideMovement.y);
             flying = false;
+            body.useGravity = true;
         }
         else
         {
             flying = true;
             currentSpeed = flightSpeed;
+            body.useGravity = false;
             //Jump if grounded
             if (grounded)
             {
                 StartCoroutine(Jump());
-                body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y + jumpStrength * 10, sideMovement.y);
+                body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y + jumpStrength * 6, sideMovement.y);
             }
             grounded = false;
         }
