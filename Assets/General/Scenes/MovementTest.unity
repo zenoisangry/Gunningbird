@@ -258,7 +258,7 @@ GameObject:
   - component: {fileID: 961640124}
   - component: {fileID: 961640123}
   - component: {fileID: 961640126}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 1509547255}
   - component: {fileID: 1509547254}
   - component: {fileID: 1509547253}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -633,8 +633,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
   actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   groundSpeed: 25
-  flightSpeed: 15
+  flightSpeed: 10
   jumpStrength: 1
+  jumpTimer: 0.6
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
