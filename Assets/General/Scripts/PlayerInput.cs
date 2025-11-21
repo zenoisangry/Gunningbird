@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rigidbody2D;
@@ -23,7 +24,6 @@ public class PlayerInput : MonoBehaviour
     private float verticalMovement = 0;
 
     private Rigidbody body;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
