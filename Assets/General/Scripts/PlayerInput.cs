@@ -117,7 +117,22 @@ public class PlayerInput : MonoBehaviour
     {
         transform.Rotate(new Vector3(0, ctx.ReadValue<Vector2>().x*camSensitivity, 0));
         cameraPosition.Rotate(new Vector3(-ctx.ReadValue<Vector2>().y * camSensitivity, 0, 0));
-        //Manca clamp
+        if (Vector3.Angle(transform.forward, cameraPosition.forward) > 90)
+        {
+            Debug.Log(cameraPosition.rotation.eulerAngles);
+            //Come capire se l'angolo è verso l'alto o verso il basso? Guardo componente x?
+            if (cameraPosition.rotation.eulerAngles.x > 270)
+            {
+                cameraPosition.rotation = transform.rotation;
+                cameraPosition.Rotate (new Vector3 (-90, 0, 0));
+            }
+            else
+            {
+                cameraPosition.rotation = transform.rotation;
+                cameraPosition.Rotate(new Vector3(90, 0, 0));
+            }
+        }
+        //If angle is higher than 90 degrees, set rotation to identical components but 90 degrees positive or negative.
     }
 
     void SideMove()
