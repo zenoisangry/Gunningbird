@@ -61,7 +61,7 @@ Material:
     - _Star_Edge: 0.08
     - _Star_Scale: 670
     m_Colors:
-    - _Bottom_Color: {r: 0.14320368, g: 0.08718398, b: 0.2981131, a: 1}
+    - _Bottom_Color: {r: 0.10352829, g: 0.086274505, b: 0.29803923, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _Moon_Color: {r: 1, g: 1, b: 1, a: 1}
     - _Star_Color: {r: 1, g: 1, b: 1, a: 1}
