@@ -72,8 +72,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 4, y: 2, z: 0}
-  m_EndPoint: {x: 3.5, y: 2.5, z: 0}
+  m_StartPoint: {x: 4, y: 2.3, z: -0.0000003695481}
+  m_EndPoint: {x: 3.8, y: 2.5, z: -0.00000039415517}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -130,8 +130,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 4, y: -2, z: 0}
-  m_EndPoint: {x: 4.5, y: -2.5, z: 0}
+  m_StartPoint: {x: 4.0000024, y: -2.3, z: 0.0000008225448}
+  m_EndPoint: {x: 4.2, y: -2.5, z: 0.0000007900181}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -155,8 +155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 4, y: 2, z: 0}
-  m_EndPoint: {x: 3.5, y: 2.5, z: 0}
+  m_StartPoint: {x: 4.0000024, y: 2.3, z: 0.0000008225448}
+  m_EndPoint: {x: 3.8, y: 2.5, z: 0.0000008732473}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -329,8 +329,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 5, y: 2, z: 0}
-  m_EndPoint: {x: 4.5, y: 2.5, z: 0}
+  m_StartPoint: {x: 5, y: 2.3, z: 0}
+  m_EndPoint: {x: 4.8, y: 2.5, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -354,8 +354,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 5, y: -2, z: 0}
-  m_EndPoint: {x: 5.5, y: -2.5, z: 0}
+  m_StartPoint: {x: 5, y: -2.3, z: 0}
+  m_EndPoint: {x: 5.2, y: -2.5, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -414,8 +414,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 5, y: -2, z: 0}
-  m_EndPoint: {x: 5.5, y: -2.5, z: 0}
+  m_StartPoint: {x: 5, y: -2.3, z: 0}
+  m_EndPoint: {x: 5.2, y: -2.5, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -439,8 +439,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 5, y: 5, z: 0}
-  m_EndPoint: {x: 4.5, y: 5.5, z: 0}
+  m_StartPoint: {x: 5, y: 5.3, z: 0}
+  m_EndPoint: {x: 4.8, y: 5.5, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -464,8 +464,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 4, y: 5, z: 0}
-  m_EndPoint: {x: 4.5, y: 5.5, z: 0}
+  m_StartPoint: {x: 4, y: 5.3, z: 0}
+  m_EndPoint: {x: 4.2, y: 5.5, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -489,8 +489,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: 4, y: 3, z: 0}
-  m_EndPoint: {x: 3.5, y: 2.5, z: 0}
+  m_StartPoint: {x: 4, y: 2.7, z: 0}
+  m_EndPoint: {x: 3.8, y: 2.5, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
