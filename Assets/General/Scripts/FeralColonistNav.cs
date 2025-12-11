@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FeralColonistAI : MonoBehaviour
+public class FeralColonistNav : MonoBehaviour
 {
-    public Transform playerPosition;
+    public PlayerInput player;
     private NavMeshAgent navigation;
-    public GameObject body;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,11 +14,14 @@ public class FeralColonistAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        navigation.SetDestination(playerPosition.position);
+        navigation.SetDestination(player.projectedPosition);
     }
 
-    private void LateUpdate()
+    public enum FeralColonistBehavior
     {
-        //body.transform.localRotation = Quaternion.Inverse(transform.localRotation);
+        Idle,
+        Closing,
+        Attacking,
+        Escaping
     }
 }

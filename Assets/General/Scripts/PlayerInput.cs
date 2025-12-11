@@ -4,11 +4,14 @@ using JetBrains.Annotations;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.Rigidbody2D;
 
 public class PlayerInput : MonoBehaviour
 {
     public InputActionAsset actions;
+
+    [Header("Camera")]
+    public float camSensitivity;
+    public Transform cameraPosition;
 
     [Header("Movement")]
     public float groundSpeed;
@@ -22,6 +25,11 @@ public class PlayerInput : MonoBehaviour
     private bool grounded = true;
     private Vector2 sideMovement = Vector2.zero;
     private float verticalMovement = 0;
+
+    [Header("Projected position for pathfinding")]
+    public Vector3 projectedPosition = Vector3.zero;
+    public float height;
+    private RaycastHit projectionHit;
 
     private Rigidbody body;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -37,7 +45,6 @@ public class PlayerInput : MonoBehaviour
         actions["Player/SwitchMovement"].started += SwitchMovement;
         actions["Player/Look"].performed += Look;
     }
-
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -61,8 +68,8 @@ public class PlayerInput : MonoBehaviour
             grounded = false;
         }
 
-            //Get Inputs
-            SideMove();
+        //Get Inputs
+        SideMove();
         if (flying && !jumping)
         {
             VerticalMove();
@@ -73,6 +80,13 @@ public class PlayerInput : MonoBehaviour
         }
         //Update Movement
         body.linearVelocity = Quaternion.LookRotation(transform.forward, Vector3.up) * new Vector3(sideMovement.x, verticalMovement, sideMovement.y);
+
+        //Update projected position
+        if (Physics.Raycast(transform.position, Vector3.down, out projectionHit, 100f,  LayerMask.NameToLayer("Player")))
+        {
+            projectedPosition = projectionHit.point;
+            height = projectionHit.distance;
+        }
     }
 
     void SwitchMovement(InputAction.CallbackContext ctx)
@@ -101,7 +115,9 @@ public class PlayerInput : MonoBehaviour
 
     void Look(InputAction.CallbackContext ctx)
     {
-        transform.Rotate(new Vector3(0, ctx.ReadValue<Vector2>().x, 0));
+        transform.Rotate(new Vector3(0, ctx.ReadValue<Vector2>().x*camSensitivity, 0));
+        cameraPosition.Rotate(new Vector3(-ctx.ReadValue<Vector2>().y * camSensitivity, 0, 0));
+        //Manca clamp
     }
 
     void SideMove()
