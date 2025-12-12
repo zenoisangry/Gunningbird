@@ -61,10 +61,10 @@ Material:
     - _Star_Edge: 0.08
     - _Star_Scale: 670
     m_Colors:
-    - _Bottom_Color: {r: 0.10352829, g: 0.086274505, b: 0.29803923, a: 1}
+    - _Bottom_Color: {r: 0.04798746, g: 0.035948712, b: 0.19245279, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _Moon_Color: {r: 1, g: 1, b: 1, a: 1}
     - _Star_Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Top_Color: {r: 0.05322175, g: 0.060334828, b: 0.24528301, a: 1}
+    - _Top_Color: {r: 0.11433956, g: 0.1202031, b: 0.381132, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
