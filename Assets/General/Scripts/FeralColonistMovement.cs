@@ -12,18 +12,24 @@ public class FeralColonistMovement : MonoBehaviour
 
     private Vector2 horizontalShift;
     private float verticalShift;
+    private Vector3 navmeshResetPoint;
+
+    private bool navmeshFollow = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        navmeshResetPoint = new Vector3 (0,-verticalOffset,0.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        FollowNavAgent();
-        transform.position += new Vector3(horizontalShift.x, verticalShift, horizontalShift.y);
+        if (navmeshFollow)
+        {
+            FollowNavAgent();
+            transform.position += new Vector3(horizontalShift.x, verticalShift, horizontalShift.y);
+        }
     }
     private void FollowNavAgent()
     {
@@ -37,5 +43,21 @@ public class FeralColonistMovement : MonoBehaviour
         {
             horizontalShift = Vector2.zero;
         }
+    }
+
+    public void EnableNavmeshFollow()
+    {
+        navmeshFollow = true;
+        ResetNavAgent();
+    }
+
+    public void DisableNavmeshFollow()
+    {
+        navmeshFollow = false;
+    }
+
+    public void ResetNavAgent()
+    {
+        navAimPoint.transform.position = transform.position + navmeshResetPoint;
     }
 }

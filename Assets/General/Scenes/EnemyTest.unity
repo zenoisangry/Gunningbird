@@ -1422,6 +1422,34 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1842956918}
+    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+      propertyPath: jumpRange
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+      propertyPath: jumpSpeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+      propertyPath: jumpStrength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+      propertyPath: jumpChargeTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+      propertyPath: meleeAttackRange
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+      propertyPath: jumpOvershootLength
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4278019014520587685, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: m_Name
       value: Enemy
