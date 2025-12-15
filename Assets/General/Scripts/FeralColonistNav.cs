@@ -12,6 +12,7 @@ public class FeralColonistNav : MonoBehaviour
     private Rigidbody jumpRB;
     private FeralColonistMovement movementScript;
     private NavMeshAgent navigation;
+    private float playerDistance;
 
     [Header("AI variables")]
     public float aggroRange;
@@ -21,11 +22,8 @@ public class FeralColonistNav : MonoBehaviour
     public float jumpChargeTime;
     public float meleeAttackRange;
 
-    private FeralColonistBehavior currentBehavior = FeralColonistBehavior.Idle;
-
-    
-    private float playerDistance;
-    
+    public FeralColonistBehavior currentBehavior = FeralColonistBehavior.Idle;
+    private bool checkForGround = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -62,9 +60,10 @@ public class FeralColonistNav : MonoBehaviour
             if ((player.height > meleeAttackRange+1) && playerDistance <= jumpRange)
             {
                 //Second check = la distanza del giocatore dal terreno è maggiore della distanza del feral colonist dal punto proiettato (aka l'angolo del salto è >45)
-                if (player.height > playerDistance){
+                if (player.height > ((player.transform.position - new Vector3(0, player.height,0)) - transform.position).magnitude){
                     currentBehavior = FeralColonistBehavior.Jumping;
                     navigation.SetDestination(transform.position);
+                    navigation.updatePosition = false;
                     StartCoroutine(Jump());
                 }
             }
@@ -73,9 +72,17 @@ public class FeralColonistNav : MonoBehaviour
         }
 
         //Fai tornare il feral colonist post-salto in idle/closing
-        if (currentBehavior == FeralColonistBehavior.Jumping)
+        if (currentBehavior == FeralColonistBehavior.Jumping && checkForGround)
         {
-            //Check per il grounded state (che due palle)
+            //Check per il grounded state
+            if (Physics.Raycast(body.transform.position, Vector3.down, 1.1f))
+            {
+                movementScript.EnableNavmeshFollow();
+                navigation.Warp(transform.position);
+                navigation.updatePosition = true;
+                checkForGround = false;
+                currentBehavior = FeralColonistBehavior.Closing;
+            }
         }
     }
 
@@ -85,7 +92,6 @@ public class FeralColonistNav : MonoBehaviour
         movementScript.DisableNavmeshFollow();
         while (timer < jumpChargeTime)
         {
-            Debug.Log("Charging jump");
             timer += Time.deltaTime;
             yield return null;
         }
@@ -95,6 +101,10 @@ public class FeralColonistNav : MonoBehaviour
         Vector2 horizontalForce = new Vector2((player.transform.position.x - transform.position.x)/jumpDuration, (player.transform.position.z - transform.position.z)/jumpDuration);
         
         jumpRB.linearVelocity = new Vector3(horizontalForce.x, targetVerticalVelocity, horizontalForce.y);
+
+        yield return null;
+
+        checkForGround = true;
     }
 
     private bool CheckLOS()

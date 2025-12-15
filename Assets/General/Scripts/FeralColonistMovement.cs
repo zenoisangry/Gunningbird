@@ -23,7 +23,7 @@ public class FeralColonistMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (navmeshFollow)
         {
@@ -58,6 +58,7 @@ public class FeralColonistMovement : MonoBehaviour
 
     public void ResetNavAgent()
     {
+        Debug.Log("New position = " + transform.position + navmeshResetPoint);
         navAimPoint.transform.position = transform.position + navmeshResetPoint;
     }
 }
