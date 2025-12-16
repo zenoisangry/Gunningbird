@@ -180,18 +180,20 @@ public class PlayerInput : MonoBehaviour
     void Look(InputAction.CallbackContext ctx)
     {
         Vector2 look = ctx.ReadValue<Vector2>();
-
-        transform.Rotate(0, look.x * camSensitivity, 0);
         cameraPosition.Rotate(-look.y * camSensitivity, 0, 0);
 
         if (Vector3.Angle(transform.forward, cameraPosition.forward) > 90)
         {
-            cameraPosition.localRotation = Quaternion.Euler(
-                Mathf.Clamp(cameraPosition.localRotation.eulerAngles.x, -90f, 90f),
-                0,
-                0
-            );
+            if (Vector3.Angle(Vector3.up, cameraPosition.forward) > Vector3.Angle(Vector3.down, cameraPosition.forward))
+            {
+                cameraPosition.localRotation = Quaternion.Euler(90, 0, 0);
+            }
+            else
+            {
+                cameraPosition.localRotation = Quaternion.Euler(-90, 0, 0);
+            }
         }
+        transform.Rotate(0, look.x * camSensitivity, 0);
     }
 
     void SideMove()
