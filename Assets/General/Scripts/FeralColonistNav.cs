@@ -110,7 +110,7 @@ public class FeralColonistNav : MonoBehaviour
                 //Go back to closing on landing
                 if (checkForGround)
                 {
-                    if (Physics.BoxCast(body.transform.position, new Vector3(0.5f,0.5f,0.5f), Vector3.down, Quaternion.identity, 0.51f))
+                    if (Physics.BoxCast(body.transform.position, new Vector3(0.5f,0.5f,0.5f), Vector3.down, Quaternion.identity, 0.51f, LayerMask.GetMask("Default")))
                     {
                         movementScript.EnableNavmeshFollow();
                         navigation.Warp(transform.position);
