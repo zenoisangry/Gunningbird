@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeralColonistAI
   player: {fileID: 0}
   body: {fileID: 6493743809459716190}
-  aggroRange: 20
+  aggroRange: 10
   losAggroRange: 50
   jumpRange: 20
   jumpOvershootSpeed: -1
@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 2858734588182124337}
   - component: {fileID: 4278019014520587685}
   - component: {fileID: 6082911699488717224}
+  - component: {fileID: 1848178760946453551}
   m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
@@ -246,6 +247,27 @@ Rigidbody:
   m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!65 &6082911699488717224
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493743809459716190}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &1848178760946453551
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

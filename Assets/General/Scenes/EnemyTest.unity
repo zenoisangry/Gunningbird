@@ -119,32 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &18257764 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6493743809459716190, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-  m_PrefabInstance: {fileID: 1270207101}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &18257765
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 18257764}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &42866967 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6493743809459716190, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
@@ -722,54 +696,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1842956918}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpRange
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpSpeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpStrength
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpAbortTimer
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpChargeTime
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: meleeAttackRange
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpOvershootSpeed
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpOvershootLength
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4278019014520587685, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: m_Name
       value: Enemy (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4307741153633557616, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6493743809459716190, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 18257765}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
 --- !u!1001 &1305732050
 PrefabInstance:
