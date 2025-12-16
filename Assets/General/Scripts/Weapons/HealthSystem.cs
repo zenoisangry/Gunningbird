@@ -10,9 +10,9 @@ public class HealthSystem : MonoBehaviour, IDamageable
 
     [Header("Regeneration")]
     [SerializeField] protected bool enableRegeneration = true;
-    [SerializeField] protected float regenerationDelay = 3f; // Time after damage before regen starts
-    [SerializeField] protected float regenerationRate = 5f; // Health per second
-    [SerializeField] protected float regenerationPercentage = 0.5f; // Regenerate up to 50% of max health
+    [SerializeField] protected float regenerationDelay = 3f;
+    [SerializeField] protected float regenerationRate = 5f;
+    [SerializeField] protected float regenerationPercentage = 0.5f;
 
     [Header("Damage Resistance")]
     [SerializeField] protected float bulletResistance = 0f;
@@ -41,28 +41,22 @@ public class HealthSystem : MonoBehaviour, IDamageable
         if (isDead) return;
 
         float finalDamage = CalculateDamage(damage, damageType);
-        currentHealth = Mathf.Max(0, currentHealth - finalDamage);
 
+        currentHealth = Mathf.Max(0, currentHealth - finalDamage);
         lastDamageTime = Time.time;
 
         if (regenerationCoroutine != null)
-        {
             StopCoroutine(regenerationCoroutine);
-        }
 
         if (enableRegeneration && currentHealth > 0)
-        {
             regenerationCoroutine = StartCoroutine(RegenerationRoutine());
-        }
 
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
         OnDamageTaken?.Invoke();
         OnDamageReceived?.Invoke(finalDamage);
 
         if (currentHealth <= 0 && !isDead)
-        {
             Die();
-        }
     }
 
     protected virtual float CalculateDamage(float damage, DamageType damageType)
@@ -71,24 +65,12 @@ public class HealthSystem : MonoBehaviour, IDamageable
 
         switch (damageType)
         {
-            case DamageType.Bullet:
-                resistance = bulletResistance;
-                break;
-            case DamageType.Melee:
-                resistance = meleeResistance;
-                break;
-            case DamageType.Explosion:
-                resistance = explosionResistance;
-                break;
-            case DamageType.Fire:
-                resistance = fireResistance;
-                break;
-            case DamageType.ArmorPiercing:
-                resistance = 0f; // Armor piercing ignores resistance
-                break;
-            default:
-                resistance = genericResistance;
-                break;
+            case DamageType.Bullet: resistance = bulletResistance; break;
+            case DamageType.Melee: resistance = meleeResistance; break;
+            case DamageType.Explosion: resistance = explosionResistance; break;
+            case DamageType.Fire: resistance = fireResistance; break;
+            case DamageType.ArmorPiercing: resistance = 0f; break;
+            default: resistance = genericResistance; break;
         }
 
         return damage * (1f - resistance);
@@ -98,8 +80,8 @@ public class HealthSystem : MonoBehaviour, IDamageable
     {
         yield return new WaitForSeconds(regenerationDelay);
 
-        float maxRegenerationAmount = maxHealth * regenerationPercentage;
-        float targetHealth = Mathf.Min(maxHealth, currentHealth + maxRegenerationAmount);
+        float maxRegenAmount = maxHealth * regenerationPercentage;
+        float targetHealth = Mathf.Min(maxHealth, currentHealth + maxRegenAmount);
 
         while (currentHealth < targetHealth && !isDead)
         {
@@ -119,7 +101,6 @@ public class HealthSystem : MonoBehaviour, IDamageable
     public virtual void Heal(float amount)
     {
         if (isDead) return;
-
         currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
         OnHealed?.Invoke();
@@ -131,22 +112,16 @@ public class HealthSystem : MonoBehaviour, IDamageable
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (currentHealth <= 0 && !isDead)
-        {
             Die();
-        }
     }
 
     protected virtual void Die()
     {
         if (isDead) return;
-
         isDead = true;
         OnDeath?.Invoke();
-
         if (regenerationCoroutine != null)
-        {
             StopCoroutine(regenerationCoroutine);
-        }
     }
 
     public virtual void Revive(float healthPercentage = 1f)
@@ -156,61 +131,11 @@ public class HealthSystem : MonoBehaviour, IDamageable
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (enableRegeneration)
-        {
             regenerationCoroutine = StartCoroutine(RegenerationRoutine());
-        }
     }
 
     public virtual float GetHealth() => currentHealth;
     public virtual float GetMaxHealth() => maxHealth;
     public virtual bool IsDead() => isDead;
     public virtual float GetHealthPercentage() => currentHealth / maxHealth;
-
-    public virtual void SetMaxHealth(float newMaxHealth)
-    {
-        maxHealth = newMaxHealth;
-        currentHealth = Mathf.Min(currentHealth, maxHealth);
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-    }
-
-    public virtual void SetRegenerationSettings(bool enabled, float delay, float rate, float percentage)
-    {
-        enableRegeneration = enabled;
-        regenerationDelay = delay;
-        regenerationRate = rate;
-        regenerationPercentage = percentage;
-
-        if (enableRegeneration && !isDead && currentHealth < maxHealth)
-        {
-            if (regenerationCoroutine != null)
-            {
-                StopCoroutine(regenerationCoroutine);
-            }
-            regenerationCoroutine = StartCoroutine(RegenerationRoutine());
-        }
-    }
-
-    public virtual void SetResistance(DamageType damageType, float resistance)
-    {
-        resistance = Mathf.Clamp01(resistance);
-
-        switch (damageType)
-        {
-            case DamageType.Bullet:
-                bulletResistance = resistance;
-                break;
-            case DamageType.Melee:
-                meleeResistance = resistance;
-                break;
-            case DamageType.Explosion:
-                explosionResistance = resistance;
-                break;
-            case DamageType.Fire:
-                fireResistance = resistance;
-                break;
-            default:
-                genericResistance = resistance;
-                break;
-        }
-    }
 }

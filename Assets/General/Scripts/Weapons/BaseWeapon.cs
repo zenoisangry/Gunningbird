@@ -101,7 +101,6 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
     public virtual void Holster()
     {
-        // Stop any ongoing actions
         isFiring = false;
         isSecondaryFiring = false;
     }
@@ -157,14 +156,10 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
         animator.SetTrigger(weaponData.shootAnimationTrigger);
     }
 
-    protected virtual void PlaySecondaryFireEffects()
-    {
-        // Override in derived classes
-    }
+    protected virtual void PlaySecondaryFireEffects(){}
 
     protected virtual void Update()
     {
-        // Decrease spread over time
         if (currentSpread > 0)
         {
             currentSpread = Mathf.Max(0, currentSpread - weaponData.spreadDecreaseSpeed * Time.deltaTime);

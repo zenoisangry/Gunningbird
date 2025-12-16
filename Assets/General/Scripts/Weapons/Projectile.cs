@@ -3,170 +3,70 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [Header("Projectile Settings")]
-    [SerializeField] protected float speed = 50f;
-    [SerializeField] protected float lifetime = 5f;
-    [SerializeField] protected float damage = 25f;
-    [SerializeField] protected bool destroyOnImpact = true;
-    [SerializeField] protected LayerMask hitLayers;
-    [SerializeField] protected GameObject impactEffect;
-    [SerializeField] protected GameObject trailEffect;
+    [SerializeField] private float speed = 50f;
+    [SerializeField] private float lifetime = 5f;
+    [SerializeField] private float damage = 25f;
+    [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private GameObject impactEffect;
+    private IWeaponOwner owner;
+    private float headshotMultiplier = 2f;
+    private Rigidbody rb;
 
-    [Header("Physics")]
-    [SerializeField] protected bool useGravity = false;
-    [SerializeField] protected float explosionRadius = 0f;
-    [SerializeField] protected float penetrationCount = 0f;
-
-    protected IWeaponOwner owner;
-    protected Rigidbody rb;
-    protected Vector3 lastPosition;
-    protected int currentPenetrations;
-
-    public virtual void Initialize(float projectileDamage, IWeaponOwner projectileOwner, Vector3 direction = default)
+    public void Initialize(float projectileDamage, IWeaponOwner projectileOwner, Vector3 direction, float projectileHeadshotMultiplier = 2f)
     {
         damage = projectileDamage;
         owner = projectileOwner;
+        headshotMultiplier = projectileHeadshotMultiplier;
 
         rb = GetComponent<Rigidbody>();
-        if (rb == null)
-            rb = gameObject.AddComponent<Rigidbody>();
+        if (rb == null) rb = gameObject.AddComponent<Rigidbody>();
 
-        rb.useGravity = useGravity;
-        rb.constraints = RigidbodyConstraints.FreezeRotation;
-
-        if (direction != default)
-        {
-            rb.linearVelocity = direction * speed;
-        }
-        else
-        {
-            rb.linearVelocity = transform.forward * speed;
-        }
-
-        lastPosition = transform.position;
-
-        // Create trail effect
-        if (trailEffect != null)
-        {
-            GameObject trail = Instantiate(trailEffect, transform.position, Quaternion.identity);
-            trail.transform.parent = transform;
-        }
+        rb.useGravity = false;
+        rb.linearVelocity = direction.normalized * speed;
 
         Destroy(gameObject, lifetime);
     }
 
-    protected virtual void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        // Check for hit between frames
-        Vector3 currentPosition = transform.position;
-        Vector3 direction = (currentPosition - lastPosition).normalized;
-        float distance = Vector3.Distance(lastPosition, currentPosition);
+        Debug.Log($"[Projectile] Hit object: {collision.gameObject.name}");
 
-        if (Physics.Raycast(lastPosition, direction, out RaycastHit hit, distance, hitLayers))
+        if ((hitLayers.value & (1 << collision.gameObject.layer)) == 0)
         {
-            ProcessHit(hit);
-            if (destroyOnImpact && currentPenetrations >= penetrationCount)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                currentPenetrations++;
-                // Reduce damage after penetration
-                damage *= 0.7f;
-            }
+            Debug.Log("[Projectile] Hit layer ignored");
+            return;
         }
 
-        lastPosition = currentPosition;
-    }
-
-    protected virtual void ProcessHit(RaycastHit hit)
-    {
-        IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-
-        if (damageable != null)
+        IDamageable damageable = collision.collider.GetComponentInParent<IDamageable>();
+        if (damageable == null)
         {
-            damageable.TakeDamage(damage, DamageType.Bullet);
+            Debug.Log("[Projectile] No IDamageable found on hit object");
         }
-
-        // Create impact effect
-        if (impactEffect != null)
+        else
         {
-            GameObject impact = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-            Destroy(impact, 2f);
-        }
+            bool isHeadshot = collision.collider.CompareTag("Head");
+            float finalDamage = damage * (isHeadshot ? headshotMultiplier : 1f);
 
-        // Handle explosion
-        if (explosionRadius > 0f)
-        {
-            CreateExplosion(hit.point);
-        }
-    }
+            Debug.Log(
+                $"[Projectile] DAMAGE APPLIED" +
+                $"Target: {collision.collider.name}" +
+                $"Headshot: {isHeadshot}" +
+                $"Damage: {finalDamage}"
+            );
 
-    protected virtual void CreateExplosion(Vector3 position)
-    {
-        Collider[] colliders = Physics.OverlapSphere(position, explosionRadius, hitLayers);
-
-        foreach (Collider collider in colliders)
-        {
-            IDamageable damageable = collider.GetComponent<IDamageable>();
-            if (damageable != null)
-            {
-                float distance = Vector3.Distance(position, collider.transform.position);
-                float explosionDamage = damage * (1f - distance / explosionRadius);
-                damageable.TakeDamage(explosionDamage, DamageType.Explosion);
-            }
-
-            // Apply explosion force
-            Rigidbody rb = collider.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddExplosionForce(500f, position, explosionRadius);
-            }
-        }
-    }
-
-    protected virtual void OnCollisionEnter(Collision collision)
-    {
-        if (hitLayers == (hitLayers | (1 << collision.gameObject.layer)))
-        {
-            RaycastHit hit = new RaycastHit
-            {
-                point = collision.contacts[0].point,
-                normal = collision.contacts[0].normal
-            };
-
-            ProcessHitWithCollider(hit, collision.collider);
-
-            if (destroyOnImpact && currentPenetrations >= penetrationCount)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                currentPenetrations++;
-                damage *= 0.7f;
-            }
-        }
-    }
-
-    protected virtual void ProcessHitWithCollider(RaycastHit hit, Collider collider)
-    {
-        IDamageable damageable = collider.GetComponent<IDamageable>();
-
-        if (damageable != null)
-        {
-            damageable.TakeDamage(damage, DamageType.Bullet);
+            damageable.TakeDamage(finalDamage, DamageType.Bullet);
         }
 
         if (impactEffect != null)
         {
-            GameObject impact = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+            GameObject impact = Instantiate(
+                impactEffect,
+                collision.contacts[0].point,
+                Quaternion.LookRotation(collision.contacts[0].normal)
+            );
             Destroy(impact, 2f);
         }
 
-        if (explosionRadius > 0f)
-        {
-            CreateExplosion(hit.point);
-        }
+        Destroy(gameObject);
     }
 }

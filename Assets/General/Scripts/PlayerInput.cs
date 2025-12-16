@@ -41,7 +41,10 @@ public class PlayerInput : MonoBehaviour
     private InputAction fireAction;
     private InputAction secondaryFireAction;
     private InputAction reloadAction;
-    private InputAction switchWeaponAction;
+    private InputAction slot1Action;
+    private InputAction slot2Action;
+    private InputAction slot3Action;
+    private InputAction slot4Action;
 
     void Awake()
     {
@@ -55,7 +58,11 @@ public class PlayerInput : MonoBehaviour
         fireAction = actions["Player/Fire"];
         secondaryFireAction = actions["Player/SecondaryFire"];
         reloadAction = actions["Player/Reload"];
-        switchWeaponAction = actions["Player/SwitchWeapon"];
+
+        slot1Action = actions["Player/Weapon1"];
+        slot2Action = actions["Player/Weapon2"];
+        slot3Action = actions["Player/Weapon3"];
+        slot4Action = actions["Player/Weapon4"];
     }
 
     void OnEnable()
@@ -65,10 +72,14 @@ public class PlayerInput : MonoBehaviour
         flyAction.Enable();
         switchMovementAction.Enable();
 
-        fireAction?.Enable();
-        secondaryFireAction?.Enable();
-        reloadAction?.Enable();
-        switchWeaponAction?.Enable();
+        fireAction.Enable();
+        secondaryFireAction.Enable();
+        reloadAction.Enable();
+
+        slot1Action.Enable();
+        slot2Action.Enable();
+        slot3Action.Enable();
+        slot4Action.Enable();
 
         switchMovementAction.started += SwitchMovement;
         lookAction.performed += Look;
@@ -76,7 +87,11 @@ public class PlayerInput : MonoBehaviour
         fireAction.performed += Fire;
         secondaryFireAction.performed += SecondaryFire;
         reloadAction.performed += Reload;
-        switchWeaponAction.performed += SwitchWeapon;
+
+        slot1Action.performed += _ => weaponManager.EquipWeapon(0);
+        slot2Action.performed += _ => weaponManager.EquipWeapon(1);
+        slot3Action.performed += _ => weaponManager.EquipWeapon(2);
+        slot4Action.performed += _ => weaponManager.EquipWeapon(3);
     }
 
     void OnDisable()
@@ -87,30 +102,29 @@ public class PlayerInput : MonoBehaviour
         fireAction.performed -= Fire;
         secondaryFireAction.performed -= SecondaryFire;
         reloadAction.performed -= Reload;
-        switchWeaponAction.performed -= SwitchWeapon;
 
         moveAction.Disable();
         lookAction.Disable();
         flyAction.Disable();
         switchMovementAction.Disable();
 
-        fireAction?.Disable();
-        secondaryFireAction?.Disable();
-        reloadAction?.Disable();
-        switchWeaponAction?.Disable();
+        fireAction.Disable();
+        secondaryFireAction.Disable();
+        reloadAction.Disable();
+
+        slot1Action.Disable();
+        slot2Action.Disable();
+        slot3Action.Disable();
+        slot4Action.Disable();
     }
 
-    void Start()
-    {
-        currentSpeed = groundSpeed;
-    }
+    void Start() => currentSpeed = groundSpeed;
 
     void FixedUpdate()
     {
         if (Physics.Raycast(transform.position, Vector3.down, 1.1f))
         {
-            if (!grounded && !flying)
-                currentSpeed = groundSpeed;
+            if (!grounded && !flying) currentSpeed = groundSpeed;
 
             grounded = true;
 
@@ -121,17 +135,12 @@ public class PlayerInput : MonoBehaviour
                 body.useGravity = true;
             }
         }
-        else
-        {
-            grounded = false;
-        }
+        else grounded = false;
 
         SideMove();
 
-        if (flying && !jumping)
-            VerticalMove();
-        else
-            verticalMovement = body.linearVelocity.y;
+        if (flying && !jumping) VerticalMove();
+        else verticalMovement = body.linearVelocity.y;
 
         body.linearVelocity =
             Quaternion.LookRotation(transform.forward, Vector3.up) *
@@ -153,7 +162,6 @@ public class PlayerInput : MonoBehaviour
                 body.linearVelocity.y - jumpStrength * 10,
                 sideMovement.y
             );
-
             flying = false;
             body.useGravity = true;
         }
@@ -185,71 +193,44 @@ public class PlayerInput : MonoBehaviour
         if (Vector3.Angle(transform.forward, cameraPosition.forward) > 90)
         {
             if (Vector3.Angle(Vector3.up, cameraPosition.forward) > Vector3.Angle(Vector3.down, cameraPosition.forward))
-            {
                 cameraPosition.localRotation = Quaternion.Euler(90, 0, 0);
-            }
             else
-            {
                 cameraPosition.localRotation = Quaternion.Euler(-90, 0, 0);
-            }
         }
+
         transform.Rotate(0, look.x * camSensitivity, 0);
     }
 
-    void SideMove()
-    {
-        sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
-    }
-
-    void VerticalMove()
-    {
-        verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
-    }
+    void SideMove() => sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
+    void VerticalMove() => verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
 
     IEnumerator Jump()
     {
         jumping = true;
         float t = 0f;
-
         while (t < jumpTimer)
         {
             t += Time.deltaTime;
             yield return null;
         }
-
         jumping = false;
     }
 
     void Fire(InputAction.CallbackContext ctx)
     {
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
-        if (weapon && weapon.CanFire())
-            weapon.PrimaryFire();
+        if (weapon != null && weapon.CanFire()) weapon.PrimaryFire();
     }
 
     void SecondaryFire(InputAction.CallbackContext ctx)
     {
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
-        if (weapon && weapon.CanSecondaryFire())
-            weapon.SecondaryFire();
+        if (weapon != null && weapon.CanSecondaryFire()) weapon.SecondaryFire();
     }
 
     void Reload(InputAction.CallbackContext ctx)
     {
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
-        if (weapon && weapon.CanReload())
-            weapon.Reload();
-    }
-
-    void SwitchWeapon(InputAction.CallbackContext ctx)
-    {
-        float value = ctx.ReadValue<float>();
-
-        if (Mathf.Abs(value) < 0.1f) return;
-
-        if (value > 0)
-            weaponManager.EquipWeapon(1);
-        else
-            weaponManager.EquipWeapon(0);
+        if (weapon != null && weapon.CanReload()) weapon.Reload();
     }
 }

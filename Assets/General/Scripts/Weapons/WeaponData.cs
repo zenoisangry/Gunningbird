@@ -11,6 +11,7 @@ public class WeaponData : ScriptableObject
     public Sprite weaponIcon;
     public GameObject weaponPrefab;
     public GameObject pickupPrefab;
+    public GameObject bulletPrefab;
 
     [Header("Visual & Audio")]
     public AudioClip shootSound;
@@ -40,6 +41,7 @@ public class WeaponData : ScriptableObject
     public bool isFullAutoSecondary = false;
 
     [Header("Ammo")]
+    public bool usesAmmo = true;
     public int magazineSize = 30;
     public int totalAmmo = 120;
     public float reloadTime = 2.5f;

@@ -264,7 +264,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""WeaponSlot1"",
+                    ""name"": ""Weapon1"",
                     ""type"": ""Button"",
                     ""id"": ""ca767381-39d8-4172-a200-8b86b2897b9d"",
                     ""expectedControlType"": """",
@@ -273,7 +273,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""WeaponSlot2"",
+                    ""name"": ""Weapon2"",
                     ""type"": ""Button"",
                     ""id"": ""3c1d1615-7c26-4cd7-b9ba-ed12be8b6385"",
                     ""expectedControlType"": """",
@@ -282,7 +282,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""WeaponSlot3"",
+                    ""name"": ""Weapon3"",
                     ""type"": ""Button"",
                     ""id"": ""4b2d2823-a5f5-4560-8ee0-a7292e6e05c7"",
                     ""expectedControlType"": """",
@@ -291,7 +291,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""WeaponSlot4"",
+                    ""name"": ""Weapon4"",
                     ""type"": ""Button"",
                     ""id"": ""c4bff010-8b2a-4b7b-ac1d-0a8361f2bf97"",
                     ""expectedControlType"": """",
@@ -858,7 +858,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSlot1"",
+                    ""action"": ""Weapon1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -869,7 +869,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSlot2"",
+                    ""action"": ""Weapon2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -880,7 +880,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSlot3"",
+                    ""action"": ""Weapon3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -891,7 +891,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSlot4"",
+                    ""action"": ""Weapon4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1498,10 +1498,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_SwitchWeapon = m_Player.FindAction("SwitchWeapon", throwIfNotFound: true);
         m_Player_NextWeapon = m_Player.FindAction("NextWeapon", throwIfNotFound: true);
         m_Player_PreviousWeapon = m_Player.FindAction("PreviousWeapon", throwIfNotFound: true);
-        m_Player_WeaponSlot1 = m_Player.FindAction("WeaponSlot1", throwIfNotFound: true);
-        m_Player_WeaponSlot2 = m_Player.FindAction("WeaponSlot2", throwIfNotFound: true);
-        m_Player_WeaponSlot3 = m_Player.FindAction("WeaponSlot3", throwIfNotFound: true);
-        m_Player_WeaponSlot4 = m_Player.FindAction("WeaponSlot4", throwIfNotFound: true);
+        m_Player_Weapon1 = m_Player.FindAction("Weapon1", throwIfNotFound: true);
+        m_Player_Weapon2 = m_Player.FindAction("Weapon2", throwIfNotFound: true);
+        m_Player_Weapon3 = m_Player.FindAction("Weapon3", throwIfNotFound: true);
+        m_Player_Weapon4 = m_Player.FindAction("Weapon4", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1614,10 +1614,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SwitchWeapon;
     private readonly InputAction m_Player_NextWeapon;
     private readonly InputAction m_Player_PreviousWeapon;
-    private readonly InputAction m_Player_WeaponSlot1;
-    private readonly InputAction m_Player_WeaponSlot2;
-    private readonly InputAction m_Player_WeaponSlot3;
-    private readonly InputAction m_Player_WeaponSlot4;
+    private readonly InputAction m_Player_Weapon1;
+    private readonly InputAction m_Player_Weapon2;
+    private readonly InputAction m_Player_Weapon3;
+    private readonly InputAction m_Player_Weapon4;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1706,21 +1706,21 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @PreviousWeapon => m_Wrapper.m_Player_PreviousWeapon;
         /// <summary>
-        /// Provides access to the underlying input action "Player/WeaponSlot1".
+        /// Provides access to the underlying input action "Player/Weapon1".
         /// </summary>
-        public InputAction @WeaponSlot1 => m_Wrapper.m_Player_WeaponSlot1;
+        public InputAction @Weapon1 => m_Wrapper.m_Player_Weapon1;
         /// <summary>
-        /// Provides access to the underlying input action "Player/WeaponSlot2".
+        /// Provides access to the underlying input action "Player/Weapon2".
         /// </summary>
-        public InputAction @WeaponSlot2 => m_Wrapper.m_Player_WeaponSlot2;
+        public InputAction @Weapon2 => m_Wrapper.m_Player_Weapon2;
         /// <summary>
-        /// Provides access to the underlying input action "Player/WeaponSlot3".
+        /// Provides access to the underlying input action "Player/Weapon3".
         /// </summary>
-        public InputAction @WeaponSlot3 => m_Wrapper.m_Player_WeaponSlot3;
+        public InputAction @Weapon3 => m_Wrapper.m_Player_Weapon3;
         /// <summary>
-        /// Provides access to the underlying input action "Player/WeaponSlot4".
+        /// Provides access to the underlying input action "Player/Weapon4".
         /// </summary>
-        public InputAction @WeaponSlot4 => m_Wrapper.m_Player_WeaponSlot4;
+        public InputAction @Weapon4 => m_Wrapper.m_Player_Weapon4;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1804,18 +1804,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PreviousWeapon.started += instance.OnPreviousWeapon;
             @PreviousWeapon.performed += instance.OnPreviousWeapon;
             @PreviousWeapon.canceled += instance.OnPreviousWeapon;
-            @WeaponSlot1.started += instance.OnWeaponSlot1;
-            @WeaponSlot1.performed += instance.OnWeaponSlot1;
-            @WeaponSlot1.canceled += instance.OnWeaponSlot1;
-            @WeaponSlot2.started += instance.OnWeaponSlot2;
-            @WeaponSlot2.performed += instance.OnWeaponSlot2;
-            @WeaponSlot2.canceled += instance.OnWeaponSlot2;
-            @WeaponSlot3.started += instance.OnWeaponSlot3;
-            @WeaponSlot3.performed += instance.OnWeaponSlot3;
-            @WeaponSlot3.canceled += instance.OnWeaponSlot3;
-            @WeaponSlot4.started += instance.OnWeaponSlot4;
-            @WeaponSlot4.performed += instance.OnWeaponSlot4;
-            @WeaponSlot4.canceled += instance.OnWeaponSlot4;
+            @Weapon1.started += instance.OnWeapon1;
+            @Weapon1.performed += instance.OnWeapon1;
+            @Weapon1.canceled += instance.OnWeapon1;
+            @Weapon2.started += instance.OnWeapon2;
+            @Weapon2.performed += instance.OnWeapon2;
+            @Weapon2.canceled += instance.OnWeapon2;
+            @Weapon3.started += instance.OnWeapon3;
+            @Weapon3.performed += instance.OnWeapon3;
+            @Weapon3.canceled += instance.OnWeapon3;
+            @Weapon4.started += instance.OnWeapon4;
+            @Weapon4.performed += instance.OnWeapon4;
+            @Weapon4.canceled += instance.OnWeapon4;
         }
 
         /// <summary>
@@ -1884,18 +1884,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @PreviousWeapon.started -= instance.OnPreviousWeapon;
             @PreviousWeapon.performed -= instance.OnPreviousWeapon;
             @PreviousWeapon.canceled -= instance.OnPreviousWeapon;
-            @WeaponSlot1.started -= instance.OnWeaponSlot1;
-            @WeaponSlot1.performed -= instance.OnWeaponSlot1;
-            @WeaponSlot1.canceled -= instance.OnWeaponSlot1;
-            @WeaponSlot2.started -= instance.OnWeaponSlot2;
-            @WeaponSlot2.performed -= instance.OnWeaponSlot2;
-            @WeaponSlot2.canceled -= instance.OnWeaponSlot2;
-            @WeaponSlot3.started -= instance.OnWeaponSlot3;
-            @WeaponSlot3.performed -= instance.OnWeaponSlot3;
-            @WeaponSlot3.canceled -= instance.OnWeaponSlot3;
-            @WeaponSlot4.started -= instance.OnWeaponSlot4;
-            @WeaponSlot4.performed -= instance.OnWeaponSlot4;
-            @WeaponSlot4.canceled -= instance.OnWeaponSlot4;
+            @Weapon1.started -= instance.OnWeapon1;
+            @Weapon1.performed -= instance.OnWeapon1;
+            @Weapon1.canceled -= instance.OnWeapon1;
+            @Weapon2.started -= instance.OnWeapon2;
+            @Weapon2.performed -= instance.OnWeapon2;
+            @Weapon2.canceled -= instance.OnWeapon2;
+            @Weapon3.started -= instance.OnWeapon3;
+            @Weapon3.performed -= instance.OnWeapon3;
+            @Weapon3.canceled -= instance.OnWeapon3;
+            @Weapon4.started -= instance.OnWeapon4;
+            @Weapon4.performed -= instance.OnWeapon4;
+            @Weapon4.canceled -= instance.OnWeapon4;
         }
 
         /// <summary>
@@ -2330,33 +2330,33 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPreviousWeapon(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "WeaponSlot1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Weapon1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWeaponSlot1(InputAction.CallbackContext context);
+        void OnWeapon1(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "WeaponSlot2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Weapon2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWeaponSlot2(InputAction.CallbackContext context);
+        void OnWeapon2(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "WeaponSlot3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Weapon3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWeaponSlot3(InputAction.CallbackContext context);
+        void OnWeapon3(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "WeaponSlot4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Weapon4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnWeaponSlot4(InputAction.CallbackContext context);
+        void OnWeapon4(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

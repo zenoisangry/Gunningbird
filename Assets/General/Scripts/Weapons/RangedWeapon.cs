@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class RangedWeapon : BaseWeapon
 {
@@ -29,6 +30,16 @@ public class RangedWeapon : BaseWeapon
         Transform cameraTransform = owner.GetCameraTransform();
         Vector3 fireDirection = CalculateSpreadDirection(cameraTransform.forward);
 
+        if (weaponData.bulletPrefab != null)
+        {
+            GameObject projectileGO = Instantiate(weaponData.bulletPrefab, firePoint.position, Quaternion.LookRotation(fireDirection));
+            Projectile projectile = projectileGO.GetComponent<Projectile>();
+            if (projectile != null)
+            {
+                projectile.Initialize(weaponData.damage, owner, fireDirection);
+            }
+        }
+
         if (weaponData.bulletTrailPrefab != null)
         {
             CreateBulletTrail(firePoint.position, firePoint.position + fireDirection * maxDistance);
@@ -42,7 +53,7 @@ public class RangedWeapon : BaseWeapon
 
     protected virtual void FireShotgun()
     {
-        int pelletCount = 8; // Can be added to WeaponData
+        int pelletCount = 8;
         Transform cameraTransform = owner.GetCameraTransform();
 
         for (int i = 0; i < pelletCount; i++)
@@ -53,17 +64,28 @@ public class RangedWeapon : BaseWeapon
             {
                 ProcessHit(hit, fireDirection, weaponData.damage / pelletCount);
             }
+
+            if (weaponData.bulletPrefab != null)
+            {
+                GameObject projGO = Instantiate(weaponData.bulletPrefab, firePoint.position, Quaternion.LookRotation(fireDirection));
+                Projectile proj = projGO.GetComponent<Projectile>();
+                if (proj != null)
+                    proj.Initialize(weaponData.damage / pelletCount, owner, fireDirection);
+            }
         }
     }
 
     protected virtual void FireSniper()
     {
         Transform cameraTransform = owner.GetCameraTransform();
-        Vector3 fireDirection = cameraTransform.forward; // No spread for sniper
+        Vector3 fireDirection = cameraTransform.forward;
 
-        if (weaponData.bulletTrailPrefab != null)
+        if (weaponData.bulletPrefab != null)
         {
-            CreateBulletTrail(firePoint.position, firePoint.position + fireDirection * maxDistance);
+            GameObject projGO = Instantiate(weaponData.bulletPrefab, firePoint.position, Quaternion.LookRotation(fireDirection));
+            Projectile proj = projGO.GetComponent<Projectile>();
+            if (proj != null)
+                proj.Initialize(weaponData.damage, owner, fireDirection);
         }
 
         if (Physics.Raycast(cameraTransform.position, fireDirection, out RaycastHit hit, maxDistance, hitLayers))
@@ -80,7 +102,6 @@ public class RangedWeapon : BaseWeapon
                 FireBurst();
                 break;
             case SecondaryFireType.Zoom:
-                // Handle zoom in player controller
                 break;
             case SecondaryFireType.Grenade:
                 FireGrenade();
@@ -108,12 +129,16 @@ public class RangedWeapon : BaseWeapon
     protected virtual void FireGrenade()
     {
         Transform cameraTransform = owner.GetCameraTransform();
-        GameObject grenade = CreateProjectile(cameraTransform.position, cameraTransform.forward);
-
-        Rigidbody rb = grenade.GetComponent<Rigidbody>();
-        if (rb != null)
+        if (weaponData.bulletPrefab != null)
         {
-            rb.AddForce(cameraTransform.forward * bulletForce);
+            GameObject grenade = Instantiate(weaponData.bulletPrefab, firePoint.position, Quaternion.LookRotation(cameraTransform.forward));
+            Projectile proj = grenade.GetComponent<Projectile>();
+            if (proj != null)
+                proj.Initialize(weaponData.damage, owner, cameraTransform.forward);
+
+            Rigidbody rb = grenade.GetComponent<Rigidbody>();
+            if (rb != null)
+                rb.AddForce(cameraTransform.forward * bulletForce);
         }
     }
 
@@ -134,57 +159,45 @@ public class RangedWeapon : BaseWeapon
         Transform cameraTransform = owner.GetCameraTransform();
         Vector3 fireDirection = cameraTransform.forward;
 
-        // Armor piercing goes through multiple targets
         RaycastHit[] hits = Physics.RaycastAll(cameraTransform.position, fireDirection, maxDistance, hitLayers);
 
-        for (int i = 0; i < hits.Length; i++)
+        foreach (var hit in hits)
         {
-            ProcessHit(hits[i], fireDirection, weaponData.secondaryFireDamage * 0.7f); // Reduced damage after penetration
+            ProcessHit(hit, fireDirection, weaponData.secondaryFireDamage * 0.7f);
         }
     }
 
     protected virtual void ProcessHit(RaycastHit hit, Vector3 fireDirection, float damageMultiplier = 1f, bool ignoreArmor = false)
     {
         IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-
         if (damageable != null)
         {
             float finalDamage = weaponData.damage * damageMultiplier;
-
-            // Check for headshot
             if (hit.collider.CompareTag("Head"))
-            {
                 finalDamage *= weaponData.headshotMultiplier;
-            }
 
             if (ignoreArmor)
-            {
                 damageable.TakeDamage(finalDamage, DamageType.ArmorPiercing);
-            }
             else
-            {
                 damageable.TakeDamage(finalDamage, DamageType.Bullet);
-            }
         }
 
-        // Create bullet hole
         if (weaponData.bulletHolePrefab != null)
         {
             GameObject bulletHole = Instantiate(weaponData.bulletHolePrefab, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
             bulletHole.transform.parent = hit.transform;
-
-            Destroy(bulletHole, 30f); // Clean up after 30 seconds
+            Destroy(bulletHole, 30f);
         }
     }
 
     protected virtual void CreateBulletTrail(Vector3 start, Vector3 end)
     {
+        if (weaponData.bulletTrailPrefab == null) return;
+
         GameObject trail = Instantiate(weaponData.bulletTrailPrefab, start, Quaternion.identity);
         TrailRenderer trailRenderer = trail.GetComponent<TrailRenderer>();
-
         if (trailRenderer != null)
         {
-            // Configure trail renderer
             trailRenderer.time = 0.1f;
             trailRenderer.startWidth = 0.05f;
             trailRenderer.endWidth = 0.01f;
@@ -193,7 +206,7 @@ public class RangedWeapon : BaseWeapon
         StartCoroutine(MoveBulletTrail(trail, start, end));
     }
 
-    protected virtual System.Collections.IEnumerator MoveBulletTrail(GameObject trail, Vector3 start, Vector3 end)
+    protected virtual IEnumerator MoveBulletTrail(GameObject trail, Vector3 start, Vector3 end)
     {
         float duration = 0.1f;
         float elapsed = 0f;
@@ -209,32 +222,10 @@ public class RangedWeapon : BaseWeapon
         Destroy(trail, 0.5f);
     }
 
-    protected virtual GameObject CreateProjectile(Vector3 position, Vector3 direction)
-    {
-        // Create a simple projectile - can be enhanced with actual projectile prefabs
-        GameObject projectile = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        projectile.transform.position = position;
-        projectile.transform.localScale = Vector3.one * 0.1f;
-
-        Rigidbody rb = projectile.AddComponent<Rigidbody>();
-        rb.useGravity = false;
-
-        projectile.AddComponent<Projectile>().Initialize(weaponData.secondaryFireDamage, owner);
-
-        Destroy(projectile, 5f);
-        return projectile;
-    }
-
     protected virtual void CreateExplosion(Vector3 position)
     {
-        // Create explosion effect and deal area damage
-        GameObject explosion = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        explosion.transform.position = position;
-        explosion.transform.localScale = Vector3.one * 3f;
-
-        // Deal area damage
         Collider[] colliders = Physics.OverlapSphere(position, 3f, hitLayers);
-        foreach (Collider col in colliders)
+        foreach (var col in colliders)
         {
             IDamageable damageable = col.GetComponent<IDamageable>();
             if (damageable != null)
@@ -244,7 +235,5 @@ public class RangedWeapon : BaseWeapon
                 damageable.TakeDamage(damage, DamageType.Explosion);
             }
         }
-
-        Destroy(explosion, 0.5f);
     }
 }

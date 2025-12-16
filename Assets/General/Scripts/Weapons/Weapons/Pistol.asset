@@ -15,9 +15,10 @@ MonoBehaviour:
   weaponName: Pistola
   description: 
   weaponType: 0
-  weaponIcon: {fileID: 21300000, guid: 55a796724b7b13c4f863f69741645f67, type: 3}
+  weaponIcon: {fileID: 21300000, guid: c2f64ac25c371b64893906ebb705a741, type: 3}
   weaponPrefab: {fileID: 7797442051283886472, guid: 7f9183f4b03271e40b11d6ac469fcff3, type: 3}
   pickupPrefab: {fileID: 7797442051283886472, guid: 7f9183f4b03271e40b11d6ac469fcff3, type: 3}
+  bulletPrefab: {fileID: 8058749452768088809, guid: 684f4c5c9a2c9aa4190fb75f2aedb9ec, type: 3}
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   emptySound: {fileID: 0}

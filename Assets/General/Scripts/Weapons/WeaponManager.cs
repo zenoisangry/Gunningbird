@@ -6,6 +6,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private Transform weaponHolder;
     [SerializeField] private WeaponController weaponOwner;
     [SerializeField] private WeaponData[] startingWeapons;
+    [SerializeField] private WeaponUI weaponUI;
 
     private BaseWeapon[] slots;
     private int currentIndex = -1;
@@ -19,9 +20,7 @@ public class WeaponManager : MonoBehaviour
     private void EquipStartingWeapons()
     {
         for (int i = 0; i < startingWeapons.Length; i++)
-        {
             AddWeapon(startingWeapons[i], i);
-        }
 
         EquipWeapon(0);
     }
@@ -49,16 +48,12 @@ public class WeaponManager : MonoBehaviour
 
         weapon.Initialize(data, weaponOwner);
         weaponGO.SetActive(false);
-
         slots[slot] = weapon;
-
-        Debug.Log($"[WeaponManager] Weapon added to slot {slot}: {data.name}");
     }
 
     public void EquipWeapon(int index)
     {
-        if (index < 0 || index >= slots.Length || slots[index] == null)
-            return;
+        if (index < 0 || index >= slots.Length || slots[index] == null) return;
 
         if (currentIndex >= 0)
             slots[currentIndex].gameObject.SetActive(false);
@@ -67,12 +62,12 @@ public class WeaponManager : MonoBehaviour
         slots[currentIndex].gameObject.SetActive(true);
         slots[currentIndex].Draw();
 
-        Debug.Log($"[WeaponManager] Equipped slot {index}");
+        if (weaponUI != null)
+            weaponUI.SetWeaponIcon(slots[currentIndex].GetWeaponData().weaponIcon);
     }
 
-    public BaseWeapon GetCurrentWeapon()
-    {
-        if (currentIndex < 0) return null;
-        return slots[currentIndex];
-    }
+    public void NextWeapon() => EquipWeapon((currentIndex + 1) % slots.Length);
+    public void PreviousWeapon() => EquipWeapon((currentIndex - 1 + slots.Length) % slots.Length);
+
+    public BaseWeapon GetCurrentWeapon() => currentIndex < 0 ? null : slots[currentIndex];
 }

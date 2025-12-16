@@ -178,7 +178,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WeaponSlot1",
+                    "name": "Weapon1",
                     "type": "Button",
                     "id": "ca767381-39d8-4172-a200-8b86b2897b9d",
                     "expectedControlType": "",
@@ -187,7 +187,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WeaponSlot2",
+                    "name": "Weapon2",
                     "type": "Button",
                     "id": "3c1d1615-7c26-4cd7-b9ba-ed12be8b6385",
                     "expectedControlType": "",
@@ -196,7 +196,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WeaponSlot3",
+                    "name": "Weapon3",
                     "type": "Button",
                     "id": "4b2d2823-a5f5-4560-8ee0-a7292e6e05c7",
                     "expectedControlType": "",
@@ -205,7 +205,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WeaponSlot4",
+                    "name": "Weapon4",
                     "type": "Button",
                     "id": "c4bff010-8b2a-4b7b-ac1d-0a8361f2bf97",
                     "expectedControlType": "",
@@ -772,7 +772,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSlot1",
+                    "action": "Weapon1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -783,7 +783,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSlot2",
+                    "action": "Weapon2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -794,7 +794,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSlot3",
+                    "action": "Weapon3",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -805,7 +805,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSlot4",
+                    "action": "Weapon4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
