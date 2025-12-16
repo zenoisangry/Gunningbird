@@ -4,7 +4,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 {
     [Header("Components")]
     [SerializeField] protected WeaponData weaponData;
-    protected WeaponOwner owner;
+    protected IWeaponOwner owner;
     protected Animator animator;
 
     [Header("State")]
@@ -21,7 +21,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     [Header("Audio")]
     [SerializeField] protected AudioSource audioSource;
 
-    public virtual void Initialize(WeaponData data, WeaponOwner weaponOwner)
+    public virtual void Initialize(WeaponData data, IWeaponOwner weaponOwner)
     {
         weaponData = data;
         owner = weaponOwner;

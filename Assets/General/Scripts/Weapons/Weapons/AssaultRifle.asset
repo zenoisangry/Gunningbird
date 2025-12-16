@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36226041ef227214d88cab4f1cba0852, type: 3}
+  m_Name: AssaultRifle
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponData
+  weaponName: 
+  description: 
+  weaponType: 0
+  weaponIcon: {fileID: 0}
+  weaponPrefab: {fileID: 0}
+  pickupPrefab: {fileID: 0}
+  shootSound: {fileID: 0}
+  reloadSound: {fileID: 0}
+  emptySound: {fileID: 0}
+  muzzleFlash: {fileID: 0}
+  bulletHolePrefab: {fileID: 0}
+  bulletTrailPrefab: {fileID: 0}
+  shootAnimationTrigger: Shoot
+  reloadAnimationTrigger: Reload
+  drawAnimationTrigger: Draw
+  meleeAnimationTrigger: Melee
+  damage: 25
+  headshotMultiplier: 2
+  meleeDamage: 50
+  meleeInstaKillThreshold: 30
+  fireRate: 600
+  secondaryFireRate: 300
+  isFullAuto: 1
+  isFullAutoSecondary: 0
+  magazineSize: 30
+  totalAmmo: 120
+  reloadTime: 2.5
+  ammoType: 0
+  hasInfiniteAmmo: 0
+  baseSpread: 0
+  maxSpread: 5
+  spreadIncreasePerShot: 0.5
+  spreadDecreaseSpeed: 2
+  recoilPattern: {x: 1, y: 1}
+  recoilRecoverySpeed: 5
+  secondaryFireType: 0
+  secondaryFireDamage: 50
+  secondaryFireCooldown: 1
+  secondaryFireAmmoCost: 1
+  meleeRange: 2
+  meleeCooldown: 0.5
+  meleeAngle: 90

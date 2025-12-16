@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,6 +16,9 @@ public class PlayerInput : MonoBehaviour
     public float jumpStrength;
     public float jumpTimer;
 
+    [Header("Weapons")]
+    [SerializeField] private WeaponManager weaponManager;
+
     private float currentSpeed;
     private bool flying = false;
     private bool jumping = false;
@@ -32,30 +32,88 @@ public class PlayerInput : MonoBehaviour
     private RaycastHit projectionHit;
 
     private Rigidbody body;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        //Set variables
-        currentSpeed = groundSpeed;
 
-        //Get component references
+    private InputAction moveAction;
+    private InputAction lookAction;
+    private InputAction flyAction;
+    private InputAction switchMovementAction;
+
+    private InputAction fireAction;
+    private InputAction secondaryFireAction;
+    private InputAction reloadAction;
+    private InputAction switchWeaponAction;
+
+    void Awake()
+    {
         body = GetComponent<Rigidbody>();
 
-        //Set actions
-        actions["Player/SwitchMovement"].started += SwitchMovement;
-        actions["Player/Look"].performed += Look;
+        moveAction = actions["Player/Move"];
+        lookAction = actions["Player/Look"];
+        flyAction = actions["Player/Fly"];
+        switchMovementAction = actions["Player/SwitchMovement"];
+
+        fireAction = actions["Player/Fire"];
+        secondaryFireAction = actions["Player/SecondaryFire"];
+        reloadAction = actions["Player/Reload"];
+        switchWeaponAction = actions["Player/SwitchWeapon"];
     }
-    // Update is called once per frame
+
+    void OnEnable()
+    {
+        moveAction.Enable();
+        lookAction.Enable();
+        flyAction.Enable();
+        switchMovementAction.Enable();
+
+        fireAction?.Enable();
+        secondaryFireAction?.Enable();
+        reloadAction?.Enable();
+        switchWeaponAction?.Enable();
+
+        switchMovementAction.started += SwitchMovement;
+        lookAction.performed += Look;
+
+        fireAction.performed += Fire;
+        secondaryFireAction.performed += SecondaryFire;
+        reloadAction.performed += Reload;
+        switchWeaponAction.performed += SwitchWeapon;
+    }
+
+    void OnDisable()
+    {
+        switchMovementAction.started -= SwitchMovement;
+        lookAction.performed -= Look;
+
+        fireAction.performed -= Fire;
+        secondaryFireAction.performed -= SecondaryFire;
+        reloadAction.performed -= Reload;
+        switchWeaponAction.performed -= SwitchWeapon;
+
+        moveAction.Disable();
+        lookAction.Disable();
+        flyAction.Disable();
+        switchMovementAction.Disable();
+
+        fireAction?.Disable();
+        secondaryFireAction?.Disable();
+        reloadAction?.Disable();
+        switchWeaponAction?.Disable();
+    }
+
+    void Start()
+    {
+        currentSpeed = groundSpeed;
+    }
+
     void FixedUpdate()
     {
-        //Check if grounded
-        if (Physics.Raycast(transform.position, Vector3.down, 1.1f, LayerMask.NameToLayer("Player")))
+        if (Physics.Raycast(transform.position, Vector3.down, 1.1f))
         {
             if (!grounded && !flying)
-            {
                 currentSpeed = groundSpeed;
-            }
+
             grounded = true;
+
             if (flying && !jumping)
             {
                 flying = false;
@@ -68,21 +126,18 @@ public class PlayerInput : MonoBehaviour
             grounded = false;
         }
 
-        //Get Inputs
         SideMove();
-        if (flying && !jumping)
-        {
-            VerticalMove();
-        }
-        else
-        {
-            verticalMovement = body.linearVelocity.y;
-        }
-        //Update Movement
-        body.linearVelocity = Quaternion.LookRotation(transform.forward, Vector3.up) * new Vector3(sideMovement.x, verticalMovement, sideMovement.y);
 
-        //Update projected position
-        if (Physics.Raycast(transform.position, Vector3.down, out projectionHit, 100f,  LayerMask.NameToLayer("Player")))
+        if (flying && !jumping)
+            VerticalMove();
+        else
+            verticalMovement = body.linearVelocity.y;
+
+        body.linearVelocity =
+            Quaternion.LookRotation(transform.forward, Vector3.up) *
+            new Vector3(sideMovement.x, verticalMovement, sideMovement.y);
+
+        if (Physics.Raycast(transform.position, Vector3.down, out projectionHit, 100f))
         {
             projectedPosition = projectionHit.point;
             height = projectionHit.distance;
@@ -91,10 +146,14 @@ public class PlayerInput : MonoBehaviour
 
     void SwitchMovement(InputAction.CallbackContext ctx)
     {
-        Debug.Log("called switch");
         if (flying)
         {
-            body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y - jumpStrength * 10, sideMovement.y);
+            body.linearVelocity = new Vector3(
+                sideMovement.x,
+                body.linearVelocity.y - jumpStrength * 10,
+                sideMovement.y
+            );
+
             flying = false;
             body.useGravity = true;
         }
@@ -103,57 +162,92 @@ public class PlayerInput : MonoBehaviour
             flying = true;
             currentSpeed = flightSpeed;
             body.useGravity = false;
-            //Jump if grounded
+
             if (grounded)
             {
                 StartCoroutine(Jump());
-                body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y + jumpStrength * 6, sideMovement.y);
+                body.linearVelocity = new Vector3(
+                    sideMovement.x,
+                    body.linearVelocity.y + jumpStrength * 6,
+                    sideMovement.y
+                );
             }
+
             grounded = false;
         }
     }
 
     void Look(InputAction.CallbackContext ctx)
     {
-        //Ruota il corpo solo orizzontalmente per tenere il movimento allineato a destra
-        transform.Rotate(new Vector3(0, ctx.ReadValue<Vector2>().x*camSensitivity, 0));
+        Vector2 look = ctx.ReadValue<Vector2>();
 
-        //Ruota il camera holder figlio del player verticalmente per regolare l'inclinazione verticale
-        cameraPosition.Rotate(new Vector3(-ctx.ReadValue<Vector2>().y * camSensitivity, 0, 0));
+        transform.Rotate(0, look.x * camSensitivity, 0);
+        cameraPosition.Rotate(-look.y * camSensitivity, 0, 0);
+
         if (Vector3.Angle(transform.forward, cameraPosition.forward) > 90)
         {
-            if (cameraPosition.rotation.eulerAngles.x > 270)
-            {
-                cameraPosition.rotation = transform.rotation;
-                cameraPosition.Rotate (new Vector3 (-90, 0, 0));
-            }
-            else
-            {
-                cameraPosition.rotation = transform.rotation;
-                cameraPosition.Rotate(new Vector3(90, 0, 0));
-            }
+            cameraPosition.localRotation = Quaternion.Euler(
+                Mathf.Clamp(cameraPosition.localRotation.eulerAngles.x, -90f, 90f),
+                0,
+                0
+            );
         }
     }
 
     void SideMove()
     {
-        sideMovement = actions["Player/Move"].ReadValue<Vector2>() * currentSpeed;
+        sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
     }
 
     void VerticalMove()
     {
-        verticalMovement = actions["Player/Fly"].ReadValue<float>() * (currentSpeed/3)*2;
+        verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
     }
 
     IEnumerator Jump()
     {
         jumping = true;
-        float timeElapsed = 0;
-        while (timeElapsed < jumpTimer)
+        float t = 0f;
+
+        while (t < jumpTimer)
         {
-            timeElapsed += Time.deltaTime;
-            yield return true;
+            t += Time.deltaTime;
+            yield return null;
         }
+
         jumping = false;
+    }
+
+    void Fire(InputAction.CallbackContext ctx)
+    {
+        BaseWeapon weapon = weaponManager.GetCurrentWeapon();
+        if (weapon && weapon.CanFire())
+            weapon.PrimaryFire();
+    }
+
+    void SecondaryFire(InputAction.CallbackContext ctx)
+    {
+        BaseWeapon weapon = weaponManager.GetCurrentWeapon();
+        if (weapon && weapon.CanSecondaryFire())
+            weapon.SecondaryFire();
+    }
+
+    void Reload(InputAction.CallbackContext ctx)
+    {
+        BaseWeapon weapon = weaponManager.GetCurrentWeapon();
+        if (weapon && weapon.CanReload())
+            weapon.Reload();
+    }
+
+    void SwitchWeapon(InputAction.CallbackContext ctx)
+    {
+        float value = ctx.ReadValue<float>();
+
+        if (Mathf.Abs(value) < 0.1f) return;
+
+        if (value > 0)
+            weaponManager.EquipWeapon(1);
+        else
+            weaponManager.EquipWeapon(0);
     }
 }

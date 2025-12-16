@@ -16,12 +16,12 @@ public class Projectile : MonoBehaviour
     [SerializeField] protected float explosionRadius = 0f;
     [SerializeField] protected float penetrationCount = 0f;
 
-    protected WeaponOwner owner;
+    protected IWeaponOwner owner;
     protected Rigidbody rb;
     protected Vector3 lastPosition;
     protected int currentPenetrations;
 
-    public virtual void Initialize(float projectileDamage, WeaponOwner projectileOwner, Vector3 direction = default)
+    public virtual void Initialize(float projectileDamage, IWeaponOwner projectileOwner, Vector3 direction = default)
     {
         damage = projectileDamage;
         owner = projectileOwner;

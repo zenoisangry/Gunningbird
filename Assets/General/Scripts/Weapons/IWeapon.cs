@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IWeapon
 {
-    void Initialize(WeaponData data, WeaponOwner owner);
+    void Initialize(WeaponData data, IWeaponOwner owner);
     void PrimaryFire();
     void SecondaryFire();
     void Reload();

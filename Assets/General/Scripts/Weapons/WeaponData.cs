@@ -33,7 +33,8 @@ public class WeaponData : ScriptableObject
     public float meleeInstaKillThreshold = 30f;
 
     [Header("Fire Rate")]
-    public float fireRate = 600f; // Rounds per minute
+    public float fireRate = 600f;
+    public float bulletSpeed = 100f;
     public float secondaryFireRate = 300f;
     public bool isFullAuto = true;
     public bool isFullAutoSecondary = false;

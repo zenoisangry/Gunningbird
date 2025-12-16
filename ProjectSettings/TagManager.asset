@@ -8,6 +8,8 @@ TagManager:
   - Dummie
   - SecondCamera
   - BulletSpawn
+  - Enemy
+  - Head
   layers:
   - Default
   - TransparentFX
