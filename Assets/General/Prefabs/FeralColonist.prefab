@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1236932388917383469}
   m_Layer: 8
-  m_Name: Enemy
+  m_Name: FeralColonist
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
