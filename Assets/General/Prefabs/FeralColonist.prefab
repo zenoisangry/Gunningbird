@@ -54,6 +54,10 @@ MonoBehaviour:
   jumpChargeTime: 1
   jumpAbortTimer: 0.1
   meleeAttackRange: 1.5
+  attackDelay: 0
+  attackEndLag: 0
+  activeFrames: 0
+  damage: 0
   currentBehavior: 0
 --- !u!195 &680255248503217877
 NavMeshAgent:
@@ -125,6 +129,7 @@ GameObject:
   - component: {fileID: 4278019014520587685}
   - component: {fileID: 6082911699488717224}
   - component: {fileID: 1848178760946453551}
+  - component: {fileID: 5309546460563149170}
   m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
@@ -288,3 +293,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5309546460563149170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493743809459716190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 707febc6438899b41a93013628f3e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeWeapon
+  weaponData: {fileID: 0}
+  audioSource: {fileID: 0}
+  meleeAttackPoint: {fileID: 0}
+  meleeHitLayers:
+    serializedVersion: 2
+    m_Bits: 0

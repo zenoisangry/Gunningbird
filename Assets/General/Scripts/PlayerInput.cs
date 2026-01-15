@@ -14,7 +14,8 @@ public class PlayerInput : MonoBehaviour
     public float groundSpeed;
     public float flightSpeed;
     public float jumpStrength;
-    public float jumpTimer;
+    public float diveStrength;
+    
 
     [Header("Weapons")]
     [SerializeField] private WeaponManager weaponManager;
@@ -127,6 +128,7 @@ public class PlayerInput : MonoBehaviour
             if (!grounded && !flying) currentSpeed = groundSpeed;
 
             grounded = true;
+            jumping = false;
 
             if (flying && !jumping)
             {
@@ -159,7 +161,7 @@ public class PlayerInput : MonoBehaviour
         {
             body.linearVelocity = new Vector3(
                 sideMovement.x,
-                body.linearVelocity.y - jumpStrength * 10,
+                body.linearVelocity.y - diveStrength,
                 sideMovement.y
             );
             flying = false;
@@ -167,20 +169,21 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            flying = true;
-            currentSpeed = flightSpeed;
-            body.useGravity = false;
-
-            if (grounded)
+            if (!grounded)
             {
-                StartCoroutine(Jump());
+                flying = true;
+                currentSpeed = flightSpeed;
+                body.useGravity = false;
+                jumping = false;
+            }
+            else
+            {
                 body.linearVelocity = new Vector3(
                     sideMovement.x,
-                    body.linearVelocity.y + jumpStrength * 6,
+                    body.linearVelocity.y + jumpStrength,
                     sideMovement.y
                 );
             }
-
             grounded = false;
         }
     }
@@ -203,18 +206,6 @@ public class PlayerInput : MonoBehaviour
 
     void SideMove() => sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
     void VerticalMove() => verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
-
-    IEnumerator Jump()
-    {
-        jumping = true;
-        float t = 0f;
-        while (t < jumpTimer)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-        jumping = false;
-    }
 
     void Fire(InputAction.CallbackContext ctx)
     {

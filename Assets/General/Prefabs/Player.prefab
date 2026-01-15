@@ -135,7 +135,8 @@ MonoBehaviour:
   cameraPosition: {fileID: 8022013687539662599}
   groundSpeed: 15
   flightSpeed: 6
-  jumpStrength: 1
+  jumpStrength: 6
+  diveStrength: 10
   jumpTimer: 0.2
   weaponManager: {fileID: 5725789863219392728}
   projectedPosition: {x: 0, y: 0, z: 0}

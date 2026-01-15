@@ -24,6 +24,13 @@ public class FeralColonistNav : MonoBehaviour
     public float jumpAbortTimer;
     public float meleeAttackRange;
 
+    [Header("Attack variables")]
+    public float attackDelay;
+    public float attackEndLag;
+    public float activeFrames;
+    public float damage;
+    private bool attacking = false;
+
     public FeralColonistBehavior currentBehavior = FeralColonistBehavior.Idle;
     private NavMeshHit hit;
     private bool checkForGround = false;
@@ -45,10 +52,17 @@ public class FeralColonistNav : MonoBehaviour
         {
             MovementKindCheck();
         }
-        BehaviorSwitchCheck();
+        if (!attacking)
+        {
+            BehaviorSwitchCheck();
+        }
         if (currentBehavior == FeralColonistBehavior.Closing)
         {
             navigation.SetDestination(player.projectedPosition);
+        }
+        if (currentBehavior == FeralColonistBehavior.Attacking)
+        {
+            AttackCheck();
         }
     }
     private void MovementKindCheck()
@@ -162,6 +176,45 @@ public class FeralColonistNav : MonoBehaviour
         yield return null;
 
         checkForGround = true;
+    }
+
+    private void AttackCheck()
+    {
+        if (!attacking)
+        {
+            StartCoroutine(Attack());
+            attacking = true;
+        }
+    }
+
+    private IEnumerator Attack()
+    {
+        bool waiting = true;
+        float t = 0;
+        while (waiting)
+        {
+            t += Time.deltaTime;
+            yield return null;
+            if (t >= attackDelay) {waiting = false;}
+        }
+
+        //Crea l'hitbox
+
+        t = 0;
+        while (t < activeFrames)
+        {
+            t++;
+        }
+
+        //Disattiva l'hitbox
+
+        t = 0;
+        while (waiting)
+        {
+            t += Time.deltaTime;
+            yield return null;
+            if (t >= attackDelay) { waiting = false; }
+        }
     }
 
     private bool CheckLOS()
