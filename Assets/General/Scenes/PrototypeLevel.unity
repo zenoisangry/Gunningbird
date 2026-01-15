@@ -843,15 +843,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3049692797684000032, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
       propertyPath: flightSpeed
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3049692797684000032, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
       propertyPath: groundSpeed
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3049692797684000032, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
+      propertyPath: diveStrength
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3049692797684000032, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
       propertyPath: jumpStrength
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3130359938680195236, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
       propertyPath: m_LocalPosition.x
