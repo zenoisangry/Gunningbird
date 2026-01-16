@@ -129,7 +129,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     public virtual bool IsReloading() => isReloading;
     public virtual WeaponData GetWeaponData() => weaponData;
 
-    protected abstract void FireWeapon();
+    public abstract void FireWeapon();
     protected virtual void FireSecondaryWeapon() { }
 
     protected virtual void UpdateSpread()

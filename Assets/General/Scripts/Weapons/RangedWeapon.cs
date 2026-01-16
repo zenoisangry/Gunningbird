@@ -9,7 +9,7 @@ public class RangedWeapon : BaseWeapon
     [SerializeField] protected float maxDistance = 100f;
     [SerializeField] protected float bulletForce = 1000f;
 
-    protected override void FireWeapon()
+    public override void FireWeapon()
     {
         switch (weaponData.weaponType)
         {

@@ -7,7 +7,7 @@ public class MeleeWeapon : BaseWeapon
     [SerializeField] protected Transform meleeAttackPoint;
     [SerializeField] protected LayerMask meleeHitLayers;
 
-    protected override void FireWeapon()
+    public override void FireWeapon()
     {
         PerformMeleeAttack();
     }
