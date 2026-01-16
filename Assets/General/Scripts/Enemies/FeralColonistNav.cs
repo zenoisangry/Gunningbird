@@ -9,6 +9,8 @@ public class FeralColonistNav : MonoBehaviour
     [Header("Links to other objects")]
     public PlayerInput player;
     public GameObject body;
+    public Transform meleeAimPoint;
+    private MeleeWeapon meleeAttack;
     private Rigidbody jumpRB;
     private BoxCollider bodyCollider;
     private FeralColonistMovement movementScript;
@@ -22,13 +24,13 @@ public class FeralColonistNav : MonoBehaviour
     public float jumpOvershootSpeed;
     public float jumpChargeTime;
     public float jumpAbortTimer;
-    public float meleeAttackRange;
+    public float meleeAttackRangeMultiplier;
+    private float meleeAttackRange;
 
-    [Header("Attack variables")]
-    public float attackDelay;
-    public float attackEndLag;
-    public float activeFrames;
-    public float damage;
+    //Attack variables
+    private float attackDelay;
+    private float attackEndLag;
+    private float activeFrames;
     private bool attacking = false;
 
     public FeralColonistBehavior currentBehavior = FeralColonistBehavior.Idle;
@@ -39,6 +41,11 @@ public class FeralColonistNav : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        meleeAttack = GetComponent<MeleeWeapon>();
+        meleeAimPoint.localPosition = new Vector3(0f, 0f, meleeAttack.GetWeaponData().meleeRange);
+        meleeAttackRange = meleeAttack.GetWeaponData().meleeRange * meleeAttackRangeMultiplier;
+        attackDelay = meleeAttack.GetWeaponData().meleeHitDelay;
+        attackEndLag = meleeAttack.GetWeaponData().meleeCooldown;
         navigation = GetComponent<NavMeshAgent>();
         jumpRB = body.GetComponent<Rigidbody>();
         bodyCollider = body.GetComponent<BoxCollider>();
@@ -91,6 +98,7 @@ public class FeralColonistNav : MonoBehaviour
                 //Go to attacking
                 if (playerDistance <= meleeAttackRange)
                 {
+                    navigation.SetDestination(transform.position);
                     currentBehavior = FeralColonistBehavior.Attacking;
                 }
                 else
@@ -182,6 +190,7 @@ public class FeralColonistNav : MonoBehaviour
     {
         if (!attacking)
         {
+            meleeAttack.PrimaryFire();
             StartCoroutine(Attack());
             attacking = true;
         }
@@ -189,32 +198,13 @@ public class FeralColonistNav : MonoBehaviour
 
     private IEnumerator Attack()
     {
-        bool waiting = true;
         float t = 0;
-        while (waiting)
+        while (t < attackDelay + attackEndLag)
         {
             t += Time.deltaTime;
             yield return null;
-            if (t >= attackDelay) {waiting = false;}
         }
-
-        //Crea l'hitbox
-
-        t = 0;
-        while (t < activeFrames)
-        {
-            t++;
-        }
-
-        //Disattiva l'hitbox
-
-        t = 0;
-        while (waiting)
-        {
-            t += Time.deltaTime;
-            yield return null;
-            if (t >= attackDelay) { waiting = false; }
-        }
+        attacking = false;
     }
 
     private bool CheckLOS()
