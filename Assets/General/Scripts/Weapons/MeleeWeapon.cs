@@ -20,16 +20,25 @@ public class MeleeWeapon : BaseWeapon
     protected virtual void PerformMeleeAttack()
     {
         if (isFiring) return;
-        StartCoroutine(MeleeAttackRoutine(weaponData.meleeDamage, weaponData.meleeCooldown));
+
+        StartCoroutine(
+            MeleeAttackRoutine(
+                weaponData.meleeDamage,
+                weaponData.meleeCooldown
+            )
+        );
     }
 
     protected virtual void PerformHeavyMeleeAttack()
     {
         if (isFiring) return;
-        StartCoroutine(MeleeAttackRoutine(
-            weaponData.meleeDamage * 1.5f,
-            weaponData.meleeCooldown * 1.5f
-        ));
+
+        StartCoroutine(
+            MeleeAttackRoutine(
+                weaponData.meleeDamage * 1.5f,
+                weaponData.meleeCooldown * 1.5f
+            )
+        );
     }
 
     protected virtual IEnumerator MeleeAttackRoutine(float damage, float cooldown)
@@ -38,7 +47,7 @@ public class MeleeWeapon : BaseWeapon
 
         animator.SetTrigger(weaponData.meleeAnimationTrigger);
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(weaponData.meleeHitDelay);
 
         PerformMeleeHit(damage);
 
@@ -72,7 +81,9 @@ public class MeleeWeapon : BaseWeapon
     }
 
     public override bool CanFire() => !isFiring;
-    public override bool CanSecondaryFire() => !isFiring && weaponData.secondaryFireType != SecondaryFireType.None;
+    public override bool CanSecondaryFire() =>
+        !isFiring && weaponData.secondaryFireType != SecondaryFireType.None;
+
     public override bool CanReload() => false;
     public override void Reload() { }
 }

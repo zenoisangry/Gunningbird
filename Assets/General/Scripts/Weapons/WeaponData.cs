@@ -66,6 +66,7 @@ public class WeaponData : ScriptableObject
     public float meleeRange = 2f;
     public float meleeCooldown = 0.5f;
     public float meleeAngle = 90f;
+    public float meleeHitDelay = 0.2f;
 }
 
 public enum WeaponType
