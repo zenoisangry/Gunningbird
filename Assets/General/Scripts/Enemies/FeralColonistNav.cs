@@ -197,16 +197,22 @@ public class FeralColonistNav : MonoBehaviour
         yield return null;
         checkForGround = true;
     }
-
     private void AttackCheck()
     {
-        if (!attacking)
+        if (!attacking && enemyWeaponAttack != null && player != null)
         {
-            if (enemyWeaponAttack != null && attackTarget != null && enemyWeaponAttack.CanAttack())
+            enemyWeaponAttack.SetTarget(player.transform);
+
+            if (enemyWeaponAttack.CanAttack())
             {
-                enemyWeaponAttack.SetTarget(attackTarget);
-                enemyWeaponAttack.Attack(attackTarget);
+                enemyWeaponAttack.Attack(player.transform);
+                Debug.Log($"{name} ha eseguito l'attacco verso {player.name}");
             }
+            else
+            {
+                Debug.Log($"{name} vuole attaccare ma è in cooldown");
+            }
+
             StartCoroutine(Attack());
             attacking = true;
         }

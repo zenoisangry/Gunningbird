@@ -21,23 +21,30 @@ public class EnemyWeaponAttack : MonoBehaviour
     {
         if (weapon == null || target == null) return false;
 
-        float cooldown = weapon.GetWeaponData().weaponType == WeaponType.Melee
-            ? weapon.GetWeaponData().meleeCooldown
-            : 60f / weapon.GetWeaponData().fireRate;
+        float cooldown = weapon.GetWeaponData().meleeCooldown;
 
-        return Time.time >= lastAttackTime + cooldown && weapon.CanFire();
+        bool ready = Time.time >= lastAttackTime + cooldown && weapon.CanFire();
+
+        if (!ready)
+            Debug.Log($"{name} non pronto ad attaccare. Tempo rimanente: {Mathf.Max(0, lastAttackTime + cooldown - Time.time):F2}s");
+
+        return ready;
     }
 
     public void Attack(Transform t)
     {
-        if (!CanAttack()) return;
+        if (!CanAttack())
+        {
+            Debug.LogWarning($"{name} non può attaccare in questo momento!");
+            return;
+        }
 
-        if (t != null)
-            target = t;
-
+        if (t != null) target = t;
         if (target == null) return;
 
         lastAttackTime = Time.time;
+
+        Debug.Log($"{name} sta attaccando {target.name} con {weapon.GetWeaponData().weaponName}");
 
         Vector3 dir = (target.position - transform.position).normalized;
         transform.forward = new Vector3(dir.x, 0, dir.z);
@@ -48,5 +55,10 @@ public class EnemyWeaponAttack : MonoBehaviour
     public WeaponData GetWeaponData()
     {
         return weapon != null ? weapon.GetWeaponData() : null;
+    }
+
+    public Transform GetTarget()
+    {
+        return target;
     }
 }

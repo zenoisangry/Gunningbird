@@ -45,7 +45,8 @@ public class MeleeWeapon : BaseWeapon
     {
         isFiring = true;
 
-        animator.SetTrigger(weaponData.meleeAnimationTrigger);
+        if (animator != null && !string.IsNullOrEmpty(weaponData.meleeAnimationTrigger))
+            animator.SetTrigger(weaponData.meleeAnimationTrigger);
 
         yield return new WaitForSeconds(weaponData.meleeHitDelay);
 
@@ -58,25 +59,28 @@ public class MeleeWeapon : BaseWeapon
 
     protected virtual void PerformMeleeHit(float damage)
     {
-        Vector3 attackPoint = meleeAttackPoint != null
-            ? meleeAttackPoint.position
-            : transform.position;
+        Vector3 attackPoint = meleeAttackPoint != null ? meleeAttackPoint.position : transform.position;
 
-        Collider[] hitColliders = Physics.OverlapSphere(
-            attackPoint,
-            weaponData.meleeRange,
-            meleeHitLayers
-        );
+        Collider[] hitColliders = Physics.OverlapSphere(attackPoint, weaponData.meleeRange, meleeHitLayers);
 
-        foreach (Collider hit in hitColliders)
+        foreach (Collider hitCollider in hitColliders)
         {
-            IDamageable damageable = hit.GetComponentInParent<IDamageable>();
-            if (damageable == null) continue;
+            IDamageable damageable = hitCollider.GetComponentInParent<IDamageable>();
+            if (damageable != null)
+            {
+                float finalDamage = damage;
 
-            bool isHeadshot = hit.CompareTag("Head");
-            float finalDamage = damage * (isHeadshot ? weaponData.headshotMultiplier : 1f);
+                if (owner != null)
+                {
+                    Vector3 directionToEnemy = hitCollider.transform.position - transform.position;
+                    float angle = Vector3.Angle(directionToEnemy, owner.GetCameraTransform().forward);
 
-            damageable.TakeDamage(finalDamage, DamageType.Melee);
+                    if (angle > weaponData.meleeAngle)
+                        continue;
+                }
+
+                damageable.TakeDamage(finalDamage, DamageType.Melee);
+            }
         }
     }
 
