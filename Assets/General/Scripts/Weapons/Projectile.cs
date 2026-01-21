@@ -29,40 +29,29 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"[Projectile] Hit object: {collision.gameObject.name}");
+        if (collision == null || collision.gameObject == null) return;
 
         if ((hitLayers.value & (1 << collision.gameObject.layer)) == 0)
         {
-            Debug.Log("[Projectile] Hit layer ignored");
             return;
         }
 
         IDamageable damageable = collision.collider.GetComponentInParent<IDamageable>();
-        if (damageable == null)
-        {
-            Debug.Log("[Projectile] No IDamageable found on hit object");
-        }
-        else
+        if (damageable != null)
         {
             bool isHeadshot = collision.collider.CompareTag("Head");
             float finalDamage = damage * (isHeadshot ? headshotMultiplier : 1f);
 
-            Debug.Log(
-                $"[Projectile] DAMAGE APPLIED" +
-                $"Target: {collision.collider.name}" +
-                $"Headshot: {isHeadshot}" +
-                $"Damage: {finalDamage}"
-            );
-
             damageable.TakeDamage(finalDamage, DamageType.Bullet);
         }
 
-        if (impactEffect != null)
+        if (impactEffect != null && collision.contactCount > 0)
         {
+            ContactPoint contact = collision.contacts[0];
             GameObject impact = Instantiate(
                 impactEffect,
-                collision.contacts[0].point,
-                Quaternion.LookRotation(collision.contacts[0].normal)
+                contact.point,
+                Quaternion.LookRotation(contact.normal)
             );
             Destroy(impact, 2f);
         }

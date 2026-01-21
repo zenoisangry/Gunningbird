@@ -21,12 +21,11 @@ public class EnemyWeaponAttack : MonoBehaviour
     {
         if (weapon == null || target == null) return false;
 
-        float cooldown = weapon.GetWeaponData().meleeCooldown;
+        WeaponData data = weapon.GetWeaponData();
+        if (data == null) return false;
 
+        float cooldown = data.meleeCooldown;
         bool ready = Time.time >= lastAttackTime + cooldown && weapon.CanFire();
-
-        if (!ready)
-            Debug.Log($"{name} non pronto ad attaccare. Tempo rimanente: {Mathf.Max(0, lastAttackTime + cooldown - Time.time):F2}s");
 
         return ready;
     }
@@ -35,19 +34,18 @@ public class EnemyWeaponAttack : MonoBehaviour
     {
         if (!CanAttack())
         {
-            Debug.LogWarning($"{name} non può attaccare in questo momento!");
             return;
         }
 
         if (t != null) target = t;
-        if (target == null) return;
+        if (target == null || weapon == null) return;
 
         lastAttackTime = Time.time;
 
-        Debug.Log($"{name} sta attaccando {target.name} con {weapon.GetWeaponData().weaponName}");
-
         Vector3 dir = (target.position - transform.position).normalized;
-        transform.forward = new Vector3(dir.x, 0, dir.z);
+        dir.y = 0f; // Keep rotation on horizontal plane
+        if (dir != Vector3.zero)
+            transform.forward = dir.normalized;
 
         weapon.FireWeapon();
     }

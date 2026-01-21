@@ -19,7 +19,7 @@ public class MeleeWeapon : BaseWeapon
 
     protected virtual void PerformMeleeAttack()
     {
-        if (isFiring) return;
+        if (isFiring || weaponData == null) return;
 
         StartCoroutine(
             MeleeAttackRoutine(
@@ -31,7 +31,7 @@ public class MeleeWeapon : BaseWeapon
 
     protected virtual void PerformHeavyMeleeAttack()
     {
-        if (isFiring) return;
+        if (isFiring || weaponData == null) return;
 
         StartCoroutine(
             MeleeAttackRoutine(
@@ -43,6 +43,8 @@ public class MeleeWeapon : BaseWeapon
 
     protected virtual IEnumerator MeleeAttackRoutine(float damage, float cooldown)
     {
+        if (weaponData == null) yield break;
+
         isFiring = true;
 
         if (animator != null && !string.IsNullOrEmpty(weaponData.meleeAnimationTrigger))
@@ -59,7 +61,12 @@ public class MeleeWeapon : BaseWeapon
 
     protected virtual void PerformMeleeHit(float damage)
     {
+        if (weaponData == null) return;
+
         Vector3 attackPoint = meleeAttackPoint != null ? meleeAttackPoint.position : transform.position;
+        Vector3 attackDirection = meleeAttackPoint != null && owner != null 
+            ? (owner.GetFireTransform() != null ? owner.GetFireTransform().forward : transform.forward)
+            : transform.forward;
 
         Collider[] hitColliders = Physics.OverlapSphere(attackPoint, weaponData.meleeRange, meleeHitLayers);
 
@@ -68,25 +75,21 @@ public class MeleeWeapon : BaseWeapon
             IDamageable damageable = hitCollider.GetComponentInParent<IDamageable>();
             if (damageable != null)
             {
-                float finalDamage = damage;
+                // Check angle from attack point/direction instead of camera
+                Vector3 directionToTarget = (hitCollider.transform.position - attackPoint).normalized;
+                float angle = Vector3.Angle(directionToTarget, attackDirection);
 
-                if (owner != null)
-                {
-                    Vector3 directionToEnemy = hitCollider.transform.position - transform.position;
-                    float angle = Vector3.Angle(directionToEnemy, owner.GetCameraTransform().forward);
+                if (angle > weaponData.meleeAngle)
+                    continue;
 
-                    if (angle > weaponData.meleeAngle)
-                        continue;
-                }
-
-                damageable.TakeDamage(finalDamage, DamageType.Melee);
+                damageable.TakeDamage(damage, DamageType.Melee);
             }
         }
     }
 
-    public override bool CanFire() => !isFiring;
+    public override bool CanFire() => !isFiring && weaponData != null;
     public override bool CanSecondaryFire() =>
-        !isFiring && weaponData.secondaryFireType != SecondaryFireType.None;
+        !isFiring && weaponData != null && weaponData.secondaryFireType != SecondaryFireType.None;
 
     public override bool CanReload() => false;
     public override void Reload() { }

@@ -12,29 +12,39 @@ public class WeaponUI : MonoBehaviour
 
     private void Update()
     {
+        if (weaponManager == null) return;
+
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
         if (weapon == null)
         {
-            ammoText.gameObject.SetActive(false);
+            if (ammoText != null)
+                ammoText.gameObject.SetActive(false);
+            if (crosshair != null)
+                crosshair.enabled = false;
             return;
         }
 
         WeaponData data = weapon.GetWeaponData();
+        if (data == null) return;
 
-        if (!data.usesAmmo)
+        if (ammoText != null)
         {
-            ammoText.gameObject.SetActive(false);
-        }
-        else
-        {
-            ammoText.gameObject.SetActive(true);
+            if (!data.usesAmmo)
+            {
+                ammoText.gameObject.SetActive(false);
+            }
+            else
+            {
+                ammoText.gameObject.SetActive(true);
 
-            ammoText.text = data.hasInfiniteAmmo
-                ? "∞"
-                : $"{weapon.GetCurrentAmmo()} / {weapon.GetReserveAmmo()}";
+                ammoText.text = data.hasInfiniteAmmo
+                    ? "∞"
+                    : $"{weapon.GetCurrentAmmo()} / {weapon.GetReserveAmmo()}";
+            }
         }
 
-        crosshair.enabled = weapon.CanFire();
+        if (crosshair != null)
+            crosshair.enabled = weapon.CanFire();
     }
 
     public void SetWeaponIcon(Sprite icon)

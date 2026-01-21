@@ -17,18 +17,33 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     protected Vector2 currentRecoil;
     protected bool isFiring;
     protected bool isSecondaryFiring;
+    protected Coroutine reloadCoroutine;
+    protected float fireRateCooldown;
 
     [Header("Audio")]
     [SerializeField] protected AudioSource audioSource;
 
     public virtual void Initialize(WeaponData data, IWeaponOwner weaponOwner)
     {
+        if (data == null)
+        {
+            Debug.LogError("[BaseWeapon] WeaponData is null!");
+            return;
+        }
+
+        if (weaponOwner == null)
+        {
+            Debug.LogError("[BaseWeapon] IWeaponOwner is null!");
+            return;
+        }
+
         weaponData = data;
         owner = weaponOwner;
         animator = weaponOwner.GetAnimator();
 
         currentAmmo = weaponData.magazineSize;
         currentReserveAmmo = weaponData.totalAmmo;
+        fireRateCooldown = 60f / weaponData.fireRate;
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
@@ -74,13 +89,18 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     {
         if (!CanReload() || isReloading) return;
 
-        StartCoroutine(ReloadRoutine());
+        if (reloadCoroutine != null)
+            StopCoroutine(reloadCoroutine);
+
+        reloadCoroutine = StartCoroutine(ReloadRoutine());
     }
 
     protected virtual System.Collections.IEnumerator ReloadRoutine()
     {
         isReloading = true;
-        animator.SetTrigger(weaponData.reloadAnimationTrigger);
+
+        if (animator != null && !string.IsNullOrEmpty(weaponData.reloadAnimationTrigger))
+            animator.SetTrigger(weaponData.reloadAnimationTrigger);
 
         if (weaponData.reloadSound != null && audioSource != null)
             audioSource.PlayOneShot(weaponData.reloadSound);
@@ -92,24 +112,33 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
         currentReserveAmmo -= ammoToReload;
 
         isReloading = false;
+        reloadCoroutine = null;
     }
 
     public virtual void Draw()
     {
-        animator.SetTrigger(weaponData.drawAnimationTrigger);
+        if (animator != null && !string.IsNullOrEmpty(weaponData.drawAnimationTrigger))
+            animator.SetTrigger(weaponData.drawAnimationTrigger);
     }
 
     public virtual void Holster()
     {
         isFiring = false;
         isSecondaryFiring = false;
+
+        if (reloadCoroutine != null)
+        {
+            StopCoroutine(reloadCoroutine);
+            reloadCoroutine = null;
+            isReloading = false;
+        }
     }
 
     public virtual bool CanFire()
     {
-        if (isReloading) return false;
+        if (weaponData == null || isReloading) return false;
         if (weaponData.hasInfiniteAmmo) return true;
-        return currentAmmo > 0 && Time.time >= lastFireTime + (60f / weaponData.fireRate);
+        return currentAmmo > 0 && Time.time >= lastFireTime + fireRateCooldown;
     }
 
     public virtual bool CanSecondaryFire()
@@ -122,7 +151,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
     public virtual bool CanReload()
     {
-        if (weaponData.hasInfiniteAmmo) return false;
+        if (weaponData == null || weaponData.hasInfiniteAmmo) return false;
         return currentAmmo < weaponData.magazineSize && currentReserveAmmo > 0;
     }
 
@@ -139,12 +168,17 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
     protected virtual void ApplyRecoil()
     {
+        if (weaponData == null) return;
+
         currentRecoil += weaponData.recoilPattern;
-        owner.AddRecoil(weaponData.recoilPattern);
+        if (owner != null)
+            owner.AddRecoil(weaponData.recoilPattern);
     }
 
     protected virtual void PlayFireEffects()
     {
+        if (weaponData == null) return;
+
         if (weaponData.shootSound != null && audioSource != null)
             audioSource.PlayOneShot(weaponData.shootSound);
 
@@ -153,13 +187,16 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
             weaponData.muzzleFlash.Play();
         }
 
-        animator.SetTrigger(weaponData.shootAnimationTrigger);
+        if (animator != null && !string.IsNullOrEmpty(weaponData.shootAnimationTrigger))
+            animator.SetTrigger(weaponData.shootAnimationTrigger);
     }
 
-    protected virtual void PlaySecondaryFireEffects(){}
+    protected virtual void PlaySecondaryFireEffects() { }
 
     protected virtual void Update()
     {
+        if (weaponData == null) return;
+
         if (currentSpread > 0)
         {
             currentSpread = Mathf.Max(0, currentSpread - weaponData.spreadDecreaseSpeed * Time.deltaTime);
@@ -168,18 +205,34 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
     protected virtual Vector3 CalculateSpreadDirection(Vector3 baseDirection)
     {
-        float spreadAngle = currentSpread;
-        Vector3 spread = Vector3.zero;
+        if (currentSpread <= 0f)
+            return baseDirection.normalized;
 
-        spread.x = Random.Range(-spreadAngle, spreadAngle);
-        spread.y = Random.Range(-spreadAngle, spreadAngle);
+        // Convert spread angle from degrees to radians and apply proper spherical distribution
+        float spreadAngleRad = currentSpread * Mathf.Deg2Rad;
+        float randomAngle = Random.Range(0f, 2f * Mathf.PI);
+        float randomSpread = Random.Range(0f, spreadAngleRad);
 
-        return baseDirection + spread;
+        // Calculate perpendicular vectors for spread
+        Vector3 right = Vector3.Cross(baseDirection, Vector3.up).normalized;
+        if (right == Vector3.zero)
+            right = Vector3.Cross(baseDirection, Vector3.forward).normalized;
+
+        Vector3 up = Vector3.Cross(right, baseDirection).normalized;
+
+        // Apply spread using spherical coordinates
+        Vector3 spreadDirection = baseDirection.normalized;
+        spreadDirection += right * (Mathf.Sin(randomAngle) * Mathf.Sin(randomSpread));
+        spreadDirection += up * (Mathf.Cos(randomAngle) * Mathf.Sin(randomSpread));
+        spreadDirection = Vector3.Slerp(baseDirection.normalized, spreadDirection, Mathf.Sin(randomSpread));
+
+        return spreadDirection.normalized;
     }
 
     public virtual void AddAmmo(int amount)
     {
-        currentReserveAmmo += amount;
+        if (amount > 0)
+            currentReserveAmmo += amount;
     }
 
     public virtual int GetCurrentAmmo() => currentAmmo;

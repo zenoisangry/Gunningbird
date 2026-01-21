@@ -33,12 +33,17 @@ public class HealthSystem : MonoBehaviour, IDamageable
 
     protected virtual void Awake()
     {
+        if (maxHealth <= 0f)
+        {
+            Debug.LogWarning($"[HealthSystem] MaxHealth is {maxHealth}. Setting to 100.", this);
+            maxHealth = 100f;
+        }
         currentHealth = maxHealth;
     }
 
     public virtual void TakeDamage(float damage, DamageType damageType)
     {
-        if (isDead) return;
+        if (isDead || damage <= 0f) return;
 
         float finalDamage = CalculateDamage(damage, damageType);
 
@@ -73,6 +78,8 @@ public class HealthSystem : MonoBehaviour, IDamageable
             default: resistance = genericResistance; break;
         }
 
+        // Clamp resistance between 0 and 1
+        resistance = Mathf.Clamp01(resistance);
         return damage * (1f - resistance);
     }
 
@@ -100,7 +107,7 @@ public class HealthSystem : MonoBehaviour, IDamageable
 
     public virtual void Heal(float amount)
     {
-        if (isDead) return;
+        if (isDead || amount <= 0f) return;
         currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
         OnHealed?.Invoke();
@@ -137,5 +144,5 @@ public class HealthSystem : MonoBehaviour, IDamageable
     public virtual float GetHealth() => currentHealth;
     public virtual float GetMaxHealth() => maxHealth;
     public virtual bool IsDead() => isDead;
-    public virtual float GetHealthPercentage() => currentHealth / maxHealth;
+    public virtual float GetHealthPercentage() => maxHealth > 0f ? currentHealth / maxHealth : 0f;
 }

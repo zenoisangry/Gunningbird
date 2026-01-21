@@ -12,20 +12,29 @@ public class WeaponController : MonoBehaviour, IWeaponOwner
 
     private void Awake()
     {
-        if (!playerCamera)
+        if (playerCamera == null)
             playerCamera = GetComponentInChildren<Camera>();
 
-        if (!fireTransform)
-            Debug.LogError("[WeaponController] FireTransform missing");
+        if (fireTransform == null)
+            Debug.LogError("[WeaponController] FireTransform missing! Please assign a fire transform.", this);
+
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
     }
 
     public Transform GetFireTransform() => fireTransform;
-    public Transform GetCameraTransform() => playerCamera.transform;
+    public Transform GetCameraTransform() => playerCamera != null ? playerCamera.transform : null;
     public Animator GetAnimator() => animator;
 
     public void AddRecoil(Vector2 recoil)
     {
         accumulatedRecoil += recoil;
+        // Clamp recoil to prevent excessive values
+        accumulatedRecoil.x = Mathf.Clamp(accumulatedRecoil.x, -90f, 90f);
+        accumulatedRecoil.y = Mathf.Clamp(accumulatedRecoil.y, -90f, 90f);
     }
 
     public Vector2 ConsumeRecoil()
@@ -50,7 +59,7 @@ public class WeaponController : MonoBehaviour, IWeaponOwner
 
         private void LateUpdate()
         {
-            if (!weaponController) return;
+            if (weaponController == null) return;
 
             currentRecoil += weaponController.ConsumeRecoil();
 
@@ -60,11 +69,14 @@ public class WeaponController : MonoBehaviour, IWeaponOwner
                 recoilReturnSpeed * Time.deltaTime
             );
 
-            transform.localRotation *= Quaternion.Euler(
-                -currentRecoil.y,
-                currentRecoil.x,
-                0f
-            );
+            // Apply recoil rotation
+            float pitch = -currentRecoil.y;
+            float yaw = currentRecoil.x;
+            
+            // Clamp pitch to prevent over-rotation
+            pitch = Mathf.Clamp(pitch, -90f, 90f);
+            
+            transform.localRotation *= Quaternion.Euler(pitch, yaw, 0f);
         }
     }
 }
