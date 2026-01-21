@@ -17,6 +17,8 @@ public class FeralColonistNav : MonoBehaviour
     private FeralColonistMovement movementScript;
     private NavMeshAgent navigation;
     private float playerDistance;
+    private HealthSystem healthSystem;
+    private Animator animator;
 
     [Header("Enemy Attack Logic")]
     [SerializeField] private EnemyWeaponAttack enemyWeaponAttack;
@@ -32,6 +34,17 @@ public class FeralColonistNav : MonoBehaviour
     public float meleeAttackRangeMultiplier;
     private float meleeAttackRange;
 
+    [Header("Damage / Death Reactions")]
+    [SerializeField] private bool playHitReaction = true;
+    [SerializeField] private float hitStunTime = 0.15f;
+    [SerializeField] private string hitAnimationTrigger = "Hit";
+    [SerializeField] private string deathAnimationTrigger = "Die";
+    [SerializeField] private bool disableBodyCollidersOnDeath = true;
+    [SerializeField] private bool disableNavOnDeath = true;
+    [SerializeField] private bool disableWeaponAttackOnDeath = true;
+    [SerializeField] private bool destroyEnemyRootOnDeath = true;
+    [SerializeField] private float destroyDelay = 2f;
+
     //Attack variables
     private float attackDelay;
     private float attackEndLag;
@@ -42,6 +55,11 @@ public class FeralColonistNav : MonoBehaviour
     private NavMeshHit hit;
     private bool checkForGround = false;
     private bool canJump = false;
+    private bool isDead = false;
+
+    private Coroutine hitReactCoroutine;
+    private Coroutine attackCoroutine;
+    private Coroutine jumpCoroutine;
 
     // Start is called once before the first execution of Update
     void Start()
@@ -61,6 +79,28 @@ public class FeralColonistNav : MonoBehaviour
         jumpRB = body.GetComponent<Rigidbody>();
         bodyCollider = body.GetComponent<BoxCollider>();
         movementScript = body.GetComponent<FeralColonistMovement>();
+        animator = body != null ? body.GetComponentInChildren<Animator>() : GetComponentInChildren<Animator>();
+
+        // Resolve HealthSystem even if it's not on this GameObject (e.g. on Body).
+        if (healthSystem == null)
+        {
+            if (body != null)
+                healthSystem = body.GetComponentInChildren<HealthSystem>();
+
+            if (healthSystem == null)
+                healthSystem = GetComponentInChildren<HealthSystem>();
+        }
+
+        // Subscribe to HealthSystem events (C# events; no Inspector wiring required)
+        if (healthSystem != null)
+        {
+            healthSystem.DamageTaken += HandleDamageTaken;
+            healthSystem.Died += HandleDeath;
+        }
+        else
+        {
+            Debug.LogWarning($"[FeralColonistNav] HealthSystem not found.", this);
+        }
 
         // Protezione EnemyWeaponAttack
         if (enemyWeaponAttack != null && attackTarget == null)
@@ -69,9 +109,21 @@ public class FeralColonistNav : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // Unsubscribe from events to prevent memory leaks
+        if (healthSystem != null)
+        {
+            healthSystem.DamageTaken -= HandleDamageTaken;
+            healthSystem.Died -= HandleDeath;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (isDead) return;
+
         if (navigation.updatePosition)
         {
             MovementKindCheck();
@@ -128,7 +180,9 @@ public class FeralColonistNav : MonoBehaviour
                         currentBehavior = FeralColonistBehavior.Jumping;
                         navigation.SetDestination(transform.position);
                         navigation.updatePosition = false;
-                        StartCoroutine(Jump());
+                        if (jumpCoroutine != null)
+                            StopCoroutine(jumpCoroutine);
+                        jumpCoroutine = StartCoroutine(Jump());
                     }
                 }
                 else if ((player.height > jumpRange))
@@ -174,6 +228,8 @@ public class FeralColonistNav : MonoBehaviour
         movementScript.DisableNavmeshFollow();
         while (timer < jumpChargeTime)
         {
+            if (isDead) yield break;
+
             if (!CheckLOS()) abortTimer += Time.deltaTime;
             else abortTimer = 0;
 
@@ -187,6 +243,8 @@ public class FeralColonistNav : MonoBehaviour
             yield return null;
         }
 
+        if (isDead) yield break;
+
         float jumpDuration = playerDistance / (jumpRange * (1 + jumpOvershootSpeed / 10));
         float lostHeight = (float)Math.Pow(jumpDuration, 2) * Physics.gravity.y / 2;
         float targetVerticalVelocity = (player.height - lostHeight) / jumpDuration;
@@ -196,9 +254,13 @@ public class FeralColonistNav : MonoBehaviour
         jumpRB.linearVelocity = new Vector3(horizontalForce.x, targetVerticalVelocity, horizontalForce.y);
         yield return null;
         checkForGround = true;
+        jumpCoroutine = null;
     }
+
     private void AttackCheck()
     {
+        if (isDead) return;
+
         if (!attacking && enemyWeaponAttack != null && player != null)
         {
             enemyWeaponAttack.SetTarget(player.transform);
@@ -206,14 +268,11 @@ public class FeralColonistNav : MonoBehaviour
             if (enemyWeaponAttack.CanAttack())
             {
                 enemyWeaponAttack.Attack(player.transform);
-                Debug.Log($"{name} ha eseguito l'attacco verso {player.name}");
-            }
-            else
-            {
-                Debug.Log($"{name} vuole attaccare ma è in cooldown");
             }
 
-            StartCoroutine(Attack());
+            if (attackCoroutine != null)
+                StopCoroutine(attackCoroutine);
+            attackCoroutine = StartCoroutine(Attack());
             attacking = true;
         }
     }
@@ -223,10 +282,12 @@ public class FeralColonistNav : MonoBehaviour
         float t = 0;
         while (t < attackDelay + attackEndLag)
         {
+            if (isDead) yield break;
             t += Time.deltaTime;
             yield return null;
         }
         attacking = false;
+        attackCoroutine = null;
     }
 
     private bool CheckLOS()
@@ -235,6 +296,131 @@ public class FeralColonistNav : MonoBehaviour
 
         return !Physics.BoxCast(body.transform.position, bodyCollider.size, player.transform.position - body.transform.position,
                                 Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
+    }
+
+    private void HandleDamageTaken(float finalDamage)
+    {
+        if (isDead) return;
+
+        // Force aggro when taking damage
+        if (currentBehavior == FeralColonistBehavior.Idle || currentBehavior == FeralColonistBehavior.Escaping)
+        {
+            currentBehavior = FeralColonistBehavior.Closing;
+        }
+
+        // Play hit reaction (brief stun)
+        if (playHitReaction && hitStunTime > 0f)
+        {
+            if (hitReactCoroutine != null)
+                StopCoroutine(hitReactCoroutine);
+            hitReactCoroutine = StartCoroutine(HitReactRoutine());
+        }
+
+        // Trigger hit animation
+        if (animator != null && !string.IsNullOrEmpty(hitAnimationTrigger))
+        {
+            animator.SetTrigger(hitAnimationTrigger);
+        }
+    }
+
+    private IEnumerator HitReactRoutine()
+    {
+        // Briefly pause attack decision-making
+        bool prevAttacking = attacking;
+        attacking = true;
+
+        yield return new WaitForSeconds(hitStunTime);
+
+        // Restore attacking state only if still alive
+        if (!isDead)
+            attacking = prevAttacking;
+
+        hitReactCoroutine = null;
+    }
+
+    private void HandleDeath()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // Stop behavior
+        currentBehavior = FeralColonistBehavior.Idle;
+        attacking = false;
+
+        // Stop all coroutines
+        if (hitReactCoroutine != null)
+        {
+            StopCoroutine(hitReactCoroutine);
+            hitReactCoroutine = null;
+        }
+
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+
+        if (jumpCoroutine != null)
+        {
+            StopCoroutine(jumpCoroutine);
+            jumpCoroutine = null;
+        }
+
+        // Stop navigation
+        if (disableNavOnDeath && navigation != null)
+        {
+            navigation.SetDestination(transform.position);
+            navigation.updatePosition = false;
+            navigation.enabled = false;
+        }
+
+        // Stop movement follow
+        if (movementScript != null)
+        {
+            movementScript.DisableNavmeshFollow();
+        }
+
+        // Disable weapon attack
+        if (disableWeaponAttackOnDeath && enemyWeaponAttack != null)
+        {
+            enemyWeaponAttack.enabled = false;
+        }
+
+        // Disable colliders to prevent corpse from blocking or taking more hits
+        if (disableBodyCollidersOnDeath)
+        {
+            if (bodyCollider != null)
+                bodyCollider.enabled = false;
+
+            // Disable all colliders on body and children
+            if (body != null)
+            {
+                Collider[] colliders = body.GetComponentsInChildren<Collider>();
+                foreach (Collider col in colliders)
+                {
+                    col.enabled = false;
+                }
+            }
+        }
+
+        // Freeze jump rigidbody
+        if (jumpRB != null)
+        {
+            jumpRB.linearVelocity = Vector3.zero;
+            jumpRB.isKinematic = true;
+        }
+
+        // Trigger death animation
+        if (animator != null && !string.IsNullOrEmpty(deathAnimationTrigger))
+        {
+            animator.SetTrigger(deathAnimationTrigger);
+        }
+
+        if (destroyEnemyRootOnDeath)
+        {
+            GameObject root = transform.root != null ? transform.root.gameObject : gameObject;
+            Destroy(root, Mathf.Max(0f, destroyDelay));
+        }
     }
 
     public enum FeralColonistBehavior

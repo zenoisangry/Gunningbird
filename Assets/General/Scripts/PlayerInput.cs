@@ -20,12 +20,16 @@ public class PlayerInput : MonoBehaviour
     [Header("Weapons")]
     [SerializeField] private WeaponManager weaponManager;
 
+    [Header("Health")]
+    [SerializeField] private HealthSystem healthSystem;
+
     private float currentSpeed;
     private bool flying = false;
     private bool jumping = false;
     private bool grounded = true;
     private Vector2 sideMovement = Vector2.zero;
     private float verticalMovement = 0;
+    private bool isDead = false;
 
     [Header("Projected position for pathfinding")]
     public Vector3 projectedPosition = Vector3.zero;
@@ -64,6 +68,10 @@ public class PlayerInput : MonoBehaviour
         slot2Action = actions["Player/Weapon2"];
         slot3Action = actions["Player/Weapon3"];
         slot4Action = actions["Player/Weapon4"];
+
+        // Auto-find HealthSystem if not assigned
+        if (healthSystem == null)
+            healthSystem = GetComponent<HealthSystem>();
     }
 
     void OnEnable()
@@ -119,10 +127,36 @@ public class PlayerInput : MonoBehaviour
         slot4Action.Disable();
     }
 
-    void Start() => currentSpeed = groundSpeed;
+    void Start()
+    {
+        currentSpeed = groundSpeed;
+
+        // Subscribe to HealthSystem events
+        if (healthSystem != null)
+        {
+            healthSystem.DamageTaken += HandleDamageTaken;
+            healthSystem.Died += HandleDeath;
+        }
+        else
+        {
+            Debug.LogWarning($"[PlayerInput] HealthSystem not found on {gameObject.name}. Player will not react to damage or death.", this);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe from events
+        if (healthSystem != null)
+        {
+            healthSystem.DamageTaken -= HandleDamageTaken;
+            healthSystem.Died -= HandleDeath;
+        }
+    }
 
     void FixedUpdate()
     {
+        if (isDead) return;
+
         if (Physics.Raycast(transform.position, Vector3.down, 1.1f))
         {
             if (!grounded && !flying) currentSpeed = groundSpeed;
@@ -209,19 +243,54 @@ public class PlayerInput : MonoBehaviour
 
     void Fire(InputAction.CallbackContext ctx)
     {
+        if (isDead) return;
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
         if (weapon != null && weapon.CanFire()) weapon.PrimaryFire();
     }
 
     void SecondaryFire(InputAction.CallbackContext ctx)
     {
+        if (isDead) return;
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
         if (weapon != null && weapon.CanSecondaryFire()) weapon.SecondaryFire();
     }
 
     void Reload(InputAction.CallbackContext ctx)
     {
+        if (isDead) return;
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
         if (weapon != null && weapon.CanReload()) weapon.Reload();
     }
+
+    private void HandleDamageTaken(float damage)
+    {
+        // Player damage reaction - you can add screen effects, sound, etc. here
+        // For now, just a placeholder
+    }
+
+    private void HandleDeath()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // Disable input/controls
+        OnDisable();
+
+        // Disable weapon manager
+        if (weaponManager != null)
+            weaponManager.enabled = false;
+
+        // Stop movement
+        if (body != null)
+        {
+            body.linearVelocity = Vector3.zero;
+            body.isKinematic = true;
+        }
+
+        // You can add death screen, respawn logic, etc. here
+        Debug.Log("[PlayerInput] Player has died!");
+    }
+
+    public bool IsDead() => isDead;
+    public HealthSystem GetHealthSystem() => healthSystem;
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 public class HealthSystem : MonoBehaviour, IDamageable
@@ -21,12 +22,10 @@ public class HealthSystem : MonoBehaviour, IDamageable
     [SerializeField] protected float fireResistance = 0f;
     [SerializeField] protected float genericResistance = 0f;
 
-    [Header("Events")]
-    public UnityEngine.Events.UnityEvent<float, float> OnHealthChanged;
-    public UnityEngine.Events.UnityEvent OnDeath;
-    public UnityEngine.Events.UnityEvent OnDamageTaken;
-    public UnityEngine.Events.UnityEvent OnHealed;
-    public UnityEngine.Events.UnityEvent<float> OnDamageReceived;
+    public event Action<float, float> HealthChanged; // current, max
+    public event Action Died;
+    public event Action<float> DamageTaken; // final damage applied
+    public event Action<float> Healed; // heal amount applied
 
     protected Coroutine regenerationCoroutine;
     protected float lastDamageTime;
@@ -56,9 +55,8 @@ public class HealthSystem : MonoBehaviour, IDamageable
         if (enableRegeneration && currentHealth > 0)
             regenerationCoroutine = StartCoroutine(RegenerationRoutine());
 
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-        OnDamageTaken?.Invoke();
-        OnDamageReceived?.Invoke(finalDamage);
+        HealthChanged?.Invoke(currentHealth, maxHealth);
+        DamageTaken?.Invoke(finalDamage);
 
         if (currentHealth <= 0 && !isDead)
             Die();
@@ -95,28 +93,31 @@ public class HealthSystem : MonoBehaviour, IDamageable
             float healthToRegen = Mathf.Min(regenerationRate * Time.deltaTime, targetHealth - currentHealth);
             currentHealth += healthToRegen;
 
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
-            OnHealed?.Invoke();
+            HealthChanged?.Invoke(currentHealth, maxHealth);
+            Healed?.Invoke(healthToRegen);
 
             yield return null;
         }
 
         currentHealth = Mathf.Min(currentHealth, maxHealth);
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        HealthChanged?.Invoke(currentHealth, maxHealth);
     }
 
     public virtual void Heal(float amount)
     {
         if (isDead || amount <= 0f) return;
+        float before = currentHealth;
         currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
-        OnHealed?.Invoke();
+        float applied = Mathf.Max(0f, currentHealth - before);
+        HealthChanged?.Invoke(currentHealth, maxHealth);
+        if (applied > 0f)
+            Healed?.Invoke(applied);
     }
 
     public virtual void SetHealth(float health)
     {
         currentHealth = Mathf.Clamp(health, 0f, maxHealth);
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        HealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (currentHealth <= 0 && !isDead)
             Die();
@@ -126,7 +127,7 @@ public class HealthSystem : MonoBehaviour, IDamageable
     {
         if (isDead) return;
         isDead = true;
-        OnDeath?.Invoke();
+        Died?.Invoke();
         if (regenerationCoroutine != null)
             StopCoroutine(regenerationCoroutine);
     }
@@ -135,7 +136,7 @@ public class HealthSystem : MonoBehaviour, IDamageable
     {
         isDead = false;
         currentHealth = maxHealth * Mathf.Clamp01(healthPercentage);
-        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        HealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (enableRegeneration)
             regenerationCoroutine = StartCoroutine(RegenerationRoutine());
