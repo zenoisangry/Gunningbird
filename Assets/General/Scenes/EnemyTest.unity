@@ -452,7 +452,7 @@ PrefabInstance:
     - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 773716178}
+      objectReference: {fileID: 0}
     - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: jumpRange
       value: 20
@@ -536,17 +536,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1122735408}
   m_SourcePrefab: {fileID: 100100000, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
---- !u!114 &773716178 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3049692797684000032, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
-  m_PrefabInstance: {fileID: 1776247410}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51939731434369944b907f4408931a4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInput
 --- !u!4 &773716179 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3130359938680195236, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}

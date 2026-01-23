@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FeralColonistNav : MonoBehaviour
+public class CorruptedGunslingerNav : MonoBehaviour
 {
     [Header("Links to other objects")]
     public PlayerInput player;
@@ -65,9 +65,6 @@ public class FeralColonistNav : MonoBehaviour
     // Start is called once before the first execution of Update
     void Start()
     {
-        //Cerca player
-        player = FindFirstObjectByType<PlayerInput>();
-
         // Inizializza MeleeWeapon se presente
         meleeAttack = GetComponent<MeleeWeapon>();
         if (meleeAttack != null && meleeAimPoint != null)
