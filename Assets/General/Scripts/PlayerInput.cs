@@ -239,7 +239,16 @@ public class PlayerInput : MonoBehaviour
     }
 
     void SideMove() => sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
-    void VerticalMove() => verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
+    void VerticalMove(){
+        verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
+        if (!grounded && !flying && jumping)
+        {
+            flying = true;
+            currentSpeed = flightSpeed;
+            body.useGravity = false;
+            jumping = false;
+        }
+    }
 
     void Fire(InputAction.CallbackContext ctx)
     {
