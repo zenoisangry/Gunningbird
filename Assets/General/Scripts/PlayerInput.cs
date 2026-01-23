@@ -68,7 +68,6 @@ public class PlayerInput : MonoBehaviour
         slot3Action = actions["Player/Weapon3"];
         slot4Action = actions["Player/Weapon4"];
 
-        // Auto-find HealthSystem if not assigned
         if (healthSystem == null)
             healthSystem = GetComponent<HealthSystem>();
     }
@@ -131,7 +130,6 @@ public class PlayerInput : MonoBehaviour
     {
         currentSpeed = groundSpeed;
 
-        // Subscribe to HealthSystem events
         if (healthSystem != null)
         {
             healthSystem.DamageTaken += HandleDamageTaken;
@@ -145,7 +143,6 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe from events
         if (healthSystem != null)
         {
             healthSystem.DamageTaken -= HandleDamageTaken;
@@ -275,8 +272,15 @@ public class PlayerInput : MonoBehaviour
 
     private void HandleDamageTaken(float damage)
     {
-        // Player damage reaction - you can add screen effects, sound, etc. here
-        // For now, just a placeholder
+        if (isDead) return;
+
+        Debug.Log($"[PLAYER] Damage taken: {damage} | HP: {healthSystem.GetHealth()} / {healthSystem.GetMaxHealth()}", this);
+
+        if (healthSystem.GetHealth() <= 0f)
+        {
+            HandleDeath();
+            return;
+        }
     }
 
     private void HandleDeath()
@@ -284,21 +288,17 @@ public class PlayerInput : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // Disable input/controls
         OnDisable();
 
-        // Disable weapon manager
         if (weaponManager != null)
             weaponManager.enabled = false;
 
-        // Stop movement
         if (body != null)
         {
             body.linearVelocity = Vector3.zero;
             body.isKinematic = true;
         }
 
-        // You can add death screen, respawn logic, etc. here
         Debug.Log("[PlayerInput] Player has died!");
     }
 
