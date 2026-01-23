@@ -25,7 +25,6 @@ public class PlayerInput : MonoBehaviour
 
     private float currentSpeed;
     private bool flying = false;
-    private bool jumping = false;
     private bool grounded = true;
     private Vector2 sideMovement = Vector2.zero;
     private float verticalMovement = 0;
@@ -91,6 +90,7 @@ public class PlayerInput : MonoBehaviour
         slot4Action.Enable();
 
         switchMovementAction.started += SwitchMovement;
+        flyAction.started += AltSwitch;
         lookAction.performed += Look;
 
         fireAction.performed += Fire;
@@ -162,9 +162,8 @@ public class PlayerInput : MonoBehaviour
             if (!grounded && !flying) currentSpeed = groundSpeed;
 
             grounded = true;
-            jumping = false;
 
-            if (flying && !jumping)
+            if (flying)
             {
                 flying = false;
                 currentSpeed = groundSpeed;
@@ -175,7 +174,7 @@ public class PlayerInput : MonoBehaviour
 
         SideMove();
 
-        if (flying && !jumping) VerticalMove();
+        if (flying) VerticalMove();
         else verticalMovement = body.linearVelocity.y;
 
         body.linearVelocity =
@@ -189,6 +188,19 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    void AltSwitch(InputAction.CallbackContext ctx)
+    {
+        if (!flying)
+        {
+            Debug.Log(!grounded);
+            if (!grounded)
+            {
+                flying = true;
+                currentSpeed = flightSpeed;
+                body.useGravity = false;
+            }
+        }
+    }
     void SwitchMovement(InputAction.CallbackContext ctx)
     {
         if (flying)
@@ -208,7 +220,6 @@ public class PlayerInput : MonoBehaviour
                 flying = true;
                 currentSpeed = flightSpeed;
                 body.useGravity = false;
-                jumping = false;
             }
             else
             {
@@ -239,16 +250,7 @@ public class PlayerInput : MonoBehaviour
     }
 
     void SideMove() => sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
-    void VerticalMove(){
-        verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
-        if (!grounded && !flying && jumping)
-        {
-            flying = true;
-            currentSpeed = flightSpeed;
-            body.useGravity = false;
-            jumping = false;
-        }
-    }
+    void VerticalMove() => verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
 
     void Fire(InputAction.CallbackContext ctx)
     {
