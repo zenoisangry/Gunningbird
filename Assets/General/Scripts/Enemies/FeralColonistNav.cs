@@ -10,6 +10,7 @@ public class FeralColonistNav : MonoBehaviour
     public PlayerInput player;
     public GameObject body;
     public Transform meleeAimPoint;
+    public CapsuleCollider jumpHitBox;
 
     private MeleeWeapon meleeAttack;
     private Rigidbody jumpRB;
@@ -207,6 +208,7 @@ public class FeralColonistNav : MonoBehaviour
                         navigation.Warp(transform.position);
                         navigation.updatePosition = true;
                         checkForGround = false;
+                        jumpHitBox.enabled = false;
                         currentBehavior = FeralColonistBehavior.Closing;
                     }
                 }
@@ -252,6 +254,7 @@ public class FeralColonistNav : MonoBehaviour
                                               (player.transform.position.z - transform.position.z) / jumpDuration);
 
         jumpRB.linearVelocity = new Vector3(horizontalForce.x, targetVerticalVelocity, horizontalForce.y);
+        jumpHitBox.enabled = true;
         yield return null;
         checkForGround = true;
         jumpCoroutine = null;
@@ -293,8 +296,11 @@ public class FeralColonistNav : MonoBehaviour
     private bool CheckLOS()
     {
         if (player == null) return false;
-
-        return !Physics.BoxCast(body.transform.position, bodyCollider.size, player.transform.position - body.transform.position,
+        Debug.Log("Checking LOS");
+        bool result = Physics.BoxCast(body.transform.position, bodyCollider.size/3, player.transform.position - body.transform.position,
+                                Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
+        Debug.Log("Something is blocking LOS = " + result);
+        return !Physics.BoxCast(body.transform.position, bodyCollider.size/3f, player.transform.position - body.transform.position,
                                 Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
     }
 
