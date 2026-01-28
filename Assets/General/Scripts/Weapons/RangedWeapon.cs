@@ -32,8 +32,21 @@ public class RangedWeapon : BaseWeapon
         Transform cameraTransform = owner.GetCameraTransform();
         if (cameraTransform == null) return;
 
-        Vector3 fireDirection = CalculateSpreadDirection(cameraTransform.forward);
         Vector3 firePosition = firePoint != null ? firePoint.position : transform.position;
+
+        Vector3 targetPoint;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, maxDistance, hitLayers))
+        {
+            targetPoint = hit.point;
+            Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
+        }
+        else
+        {
+            targetPoint = cameraTransform.position + cameraTransform.forward * maxDistance;
+        }
+
+        Vector3 fireDirection = (targetPoint - firePosition).normalized;
+        fireDirection = CalculateSpreadDirection(fireDirection);
 
         if (weaponData.bulletPrefab != null)
         {
@@ -47,10 +60,10 @@ public class RangedWeapon : BaseWeapon
 
         if (weaponData.bulletTrailPrefab != null && firePoint != null)
         {
-            CreateBulletTrail(firePosition, firePosition + fireDirection * maxDistance);
+            CreateBulletTrail(firePosition, targetPoint);
         }
 
-        if (Physics.Raycast(cameraTransform.position, fireDirection, out RaycastHit hit, maxDistance, hitLayers))
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, maxDistance, hitLayers))
         {
             ProcessHit(hit, fireDirection);
         }
@@ -68,12 +81,21 @@ public class RangedWeapon : BaseWeapon
 
         for (int i = 0; i < pelletCount; i++)
         {
-            Vector3 fireDirection = CalculateSpreadDirection(cameraTransform.forward);
+            Vector3 spreadDirection = CalculateSpreadDirection(cameraTransform.forward);
 
-            if (Physics.Raycast(cameraTransform.position, fireDirection, out RaycastHit hit, maxDistance, hitLayers))
+            Vector3 targetPoint;
+            if (Physics.Raycast(cameraTransform.position, spreadDirection, out RaycastHit hit, maxDistance, hitLayers))
             {
-                ProcessHit(hit, fireDirection, weaponData.damage / pelletCount);
+                targetPoint = hit.point;
+                ProcessHit(hit, spreadDirection, weaponData.damage / pelletCount);
+                Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
             }
+            else
+            {
+                targetPoint = cameraTransform.position + spreadDirection * maxDistance;
+            }
+
+            Vector3 fireDirection = (targetPoint - firePosition).normalized;
 
             if (weaponData.bulletPrefab != null)
             {
@@ -92,8 +114,21 @@ public class RangedWeapon : BaseWeapon
         Transform cameraTransform = owner.GetCameraTransform();
         if (cameraTransform == null) return;
 
-        Vector3 fireDirection = cameraTransform.forward;
         Vector3 firePosition = firePoint != null ? firePoint.position : transform.position;
+
+        Vector3 targetPoint;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, maxDistance, hitLayers))
+        {
+            targetPoint = hit.point;
+            ProcessHit(hit, cameraTransform.forward, 1f, true);
+            Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
+        }
+        else
+        {
+            targetPoint = cameraTransform.position + cameraTransform.forward * maxDistance;
+        }
+
+        Vector3 fireDirection = (targetPoint - firePosition).normalized;
 
         if (weaponData.bulletPrefab != null)
         {
@@ -101,11 +136,6 @@ public class RangedWeapon : BaseWeapon
             Projectile proj = projGO.GetComponent<Projectile>();
             if (proj != null)
                 proj.Initialize(weaponData.damage, owner, fireDirection, weaponData.headshotMultiplier);
-        }
-
-        if (Physics.Raycast(cameraTransform.position, fireDirection, out RaycastHit hit, maxDistance, hitLayers))
-        {
-            ProcessHit(hit, fireDirection, 1f, true);
         }
     }
 
