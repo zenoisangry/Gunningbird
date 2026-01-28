@@ -3,11 +3,15 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
+using UnityEngine.UIElements;
+using Unity.Mathematics;
 
 public class FeralColonistNav : MonoBehaviour
 {
     [Header("Links to other objects")]
-    public PlayerInput player;
+    private PlayerInput player;
+    private EscapeManager escManager;
     public GameObject body;
     public Transform meleeAimPoint;
     public CapsuleCollider jumpHitBox;
@@ -29,6 +33,11 @@ public class FeralColonistNav : MonoBehaviour
     [Header("AI variables")]
     public float aggroRange;
     public float losAggroRange;
+    public float escapeRange;
+    public float escapeRangePriority;
+    public float escapeCheckCooldown;
+    public float escapeSafetyPriority;
+    private bool canEscape;
     public float jumpRange;
     public float jumpOvershootSpeed;
     public float jumpChargeTime;
@@ -68,6 +77,9 @@ public class FeralColonistNav : MonoBehaviour
     {
         //Cerca player
         player = FindFirstObjectByType<PlayerInput>();
+
+        //Cerca luoghi di cover segnati
+        escManager = FindFirstObjectByType<EscapeManager>();
 
         // Inizializza MeleeWeapon se presente
         meleeAttack = GetComponent<MeleeWeapon>();
@@ -159,6 +171,14 @@ public class FeralColonistNav : MonoBehaviour
         {
             AttackCheck();
         }
+
+        if (currentBehavior == FeralColonistBehavior.Escaping)
+        {
+            if (navigation.remainingDistance <= navigation.stoppingDistance)
+            {
+                currentBehavior = FeralColonistBehavior.Idle;
+            }
+        }
     }
 
     private void MovementKindCheck()
@@ -205,6 +225,7 @@ public class FeralColonistNav : MonoBehaviour
                 }
                 else if ((player.height > jumpRange))
                 {
+                    FindEscapeZone();
                     currentBehavior = FeralColonistBehavior.Escaping;
                 }
                 break;
@@ -243,6 +264,10 @@ public class FeralColonistNav : MonoBehaviour
                 break;
 
             case FeralColonistBehavior.Escaping:
+                if ((player.height < jumpRange/4*3) && ((CheckLOS() && playerDistance <= losAggroRange) || playerDistance <= aggroRange))
+                {
+                    currentBehavior = FeralColonistBehavior.Closing;
+                }
                 break;
 
             default:
@@ -251,8 +276,76 @@ public class FeralColonistNav : MonoBehaviour
         }
     }
 
+    private void FindEscapeZone()
+    {
+        Vector3 targetZone = Vector3.zero;
+        float targetQuality = 0;
+        foreach (KeyValuePair<Vector3, float> zone in escManager.escapeAreas)
+        {
+            int coveredLines = CheckZoneLOS(zone.Key + new Vector3(0,1,0), zone.Value);
+            if (coveredLines > 0)
+            {
+                float tempQuality = -(zone.Key - transform.position).magnitude*escapeRangePriority + coveredLines*(escapeRange/5)*escapeSafetyPriority;
+                if (tempQuality > targetQuality)
+                {
+                    targetQuality = tempQuality;
+                    targetZone = zone.Key;
+                }
+            }
+        }
+        if (targetZone == Vector3.zero)
+        {
+            currentBehavior = FeralColonistBehavior.Closing;
+        }
+        else
+        {
+            float maxOffset = escManager.escapeAreas[targetZone];
+            Vector3 finaloffset = new Vector3(UnityEngine.Random.Range(-maxOffset, maxOffset), 0, UnityEngine.Random.Range(-maxOffset, maxOffset));
+            navigation.SetDestination(targetZone + finaloffset);
+        }
+        StartCoroutine(EscapeCD());
+        canEscape = false;
+        //TODO logica per determinare in quale zona andare
+    }
+
+    private IEnumerator EscapeCD()
+    {
+        float timer = 0;
+        while (timer < escapeCheckCooldown)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        canEscape = true;
+    }
+
+    private int CheckZoneLOS(Vector3 zoneCoords, float zoneRadius)
+    {
+        int coveredSightlines = 0;
+        Vector3 tempDistance;
+        //Check for center
+        tempDistance = player.transform.position - zoneCoords;
+        if (Physics.Raycast(zoneCoords, tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        //Check for Xpositive
+        tempDistance = player.transform.position - (zoneCoords + new Vector3(zoneRadius,0,0));
+        if (Physics.Raycast(zoneCoords + new Vector3(zoneRadius, 0, 0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        //Check for Xnegative
+        tempDistance = player.transform.position - (zoneCoords + new Vector3(-zoneRadius,0,0));
+        if (Physics.Raycast(zoneCoords + new Vector3(-zoneRadius,0,0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        //Check for Zpositive
+        tempDistance = player.transform.position - (zoneCoords + new Vector3(0, 0, zoneRadius));
+        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        //Check for Znegative
+        tempDistance = player.transform.position - (zoneCoords + new Vector3(0, 0, -zoneRadius));
+        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, -zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        //TODO check se la zona è nascosta dal player o no
+        Debug.Log(coveredSightlines);
+        return coveredSightlines;
+    }
+
     private IEnumerator Jump()
     {
+        checkForGround = false;
         float timer = 0;
         float abortTimer = 0;
         movementScript.DisableNavmeshFollow();
@@ -370,7 +463,7 @@ public class FeralColonistNav : MonoBehaviour
         if (isDead) return;
 
         // Force aggro when taking damage
-        if (currentBehavior == FeralColonistBehavior.Idle || currentBehavior == FeralColonistBehavior.Escaping)
+        if (currentBehavior == FeralColonistBehavior.Idle)
         {
             currentBehavior = FeralColonistBehavior.Closing;
         }

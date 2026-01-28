@@ -28,12 +28,11 @@ public class CorruptedGunslingerNav : MonoBehaviour
     [Header("AI variables")]
     public float aggroRange;
     public float losAggroRange;
-    public float jumpRange;
-    public float jumpOvershootSpeed;
-    public float jumpChargeTime;
-    public float jumpAbortTimer;
-    public float meleeAttackRangeMultiplier;
-    private float meleeAttackRange;
+    public float escapeRange;
+    public float shootingMinRange;
+    public float shootingMaxRange;
+    public float formChangeRange;
+    public float formChangeCooldown;
 
     [Header("Damage / Death Reactions")]
     [SerializeField] private bool playHitReaction = true;
@@ -47,15 +46,11 @@ public class CorruptedGunslingerNav : MonoBehaviour
     [SerializeField] private float destroyDelay = 2f;
 
     //Attack variables
-    private float attackDelay;
-    private float attackEndLag;
-    private float activeFrames;
-    private bool attacking = false;
+    private float attackSpeed;
+    private float reloadTime;
 
-    public FeralColonistBehavior currentBehavior = FeralColonistBehavior.Idle;
+    public GunslingerBehavior currentBehavior = GunslingerBehavior.Idle;
     private NavMeshHit hit;
-    private bool checkForGround = false;
-    private bool canJump = false;
     private bool isDead = false;
 
     private Coroutine hitReactCoroutine;
@@ -65,16 +60,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
     // Start is called once before the first execution of Update
     void Start()
     {
-        // Inizializza MeleeWeapon se presente
-        meleeAttack = GetComponent<MeleeWeapon>();
-        if (meleeAttack != null && meleeAimPoint != null)
-        {
-            meleeAimPoint.localPosition = new Vector3(0f, 0f, meleeAttack.GetWeaponData().meleeRange);
-            meleeAttackRange = meleeAttack.GetWeaponData().meleeRange * meleeAttackRangeMultiplier;
-            attackDelay = meleeAttack.GetWeaponData().meleeHitDelay;
-            attackEndLag = meleeAttack.GetWeaponData().meleeCooldown;
-        }
-
         // Componenti generici
         navigation = GetComponent<NavMeshAgent>();
         jumpRB = body.GetComponent<Rigidbody>();
@@ -102,12 +87,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
         {
             Debug.LogWarning($"[FeralColonistNav] HealthSystem not found.", this);
         }
-
-        // Protezione EnemyWeaponAttack
-        if (enemyWeaponAttack != null && attackTarget == null)
-        {
-            attackTarget = player != null ? player.transform : null;
-        }
     }
 
     private void OnDestroy()
@@ -125,32 +104,11 @@ public class CorruptedGunslingerNav : MonoBehaviour
     {
         if (isDead) return;
 
-        if (navigation.updatePosition)
-        {
-            MovementKindCheck();
-        }
-
-        if (!attacking)
-        {
-            BehaviorSwitchCheck();
-        }
-
-        if (currentBehavior == FeralColonistBehavior.Closing)
+        if (currentBehavior == GunslingerBehavior.Closing)
         {
             if (player != null)
                 navigation.SetDestination(player.projectedPosition);
         }
-
-        if (currentBehavior == FeralColonistBehavior.Attacking)
-        {
-            AttackCheck();
-        }
-    }
-
-    private void MovementKindCheck()
-    {
-        NavMesh.SamplePosition(transform.position, out hit, 0.1f, NavMesh.AllAreas);
-        canJump = hit.mask == 1;
     }
 
     private void BehaviorSwitchCheck()
@@ -161,136 +119,34 @@ public class CorruptedGunslingerNav : MonoBehaviour
 
         switch (currentBehavior)
         {
-            case FeralColonistBehavior.Idle:
+            case GunslingerBehavior.Idle:
                 if ((CheckLOS() && playerDistance <= losAggroRange) || playerDistance <= aggroRange)
                 {
-                    currentBehavior = FeralColonistBehavior.Closing;
+                    currentBehavior = GunslingerBehavior.Closing;
                 }
                 break;
 
-            case FeralColonistBehavior.Closing:
-                if (playerDistance <= meleeAttackRange)
-                {
-                    navigation.SetDestination(transform.position);
-                    currentBehavior = FeralColonistBehavior.Attacking;
-                }
-                else if ((player.height > meleeAttackRange + 1) && playerDistance <= jumpRange && CheckLOS() && canJump)
-                {
-                    if (player.height > ((player.transform.position - new Vector3(0, player.height, 0)) - transform.position).magnitude)
-                    {
-                        currentBehavior = FeralColonistBehavior.Jumping;
-                        navigation.SetDestination(transform.position);
-                        navigation.updatePosition = false;
-                        if (jumpCoroutine != null)
-                            StopCoroutine(jumpCoroutine);
-                        jumpCoroutine = StartCoroutine(Jump());
-                    }
-                }
-                else if ((player.height > jumpRange))
-                {
-                    currentBehavior = FeralColonistBehavior.Escaping;
+            case GunslingerBehavior.Closing:
+                if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange){
+                    currentBehavior = GunslingerBehavior.Shooting;
                 }
                 break;
 
-            case FeralColonistBehavior.Attacking:
-                if (playerDistance > meleeAttackRange)
-                {
-                    currentBehavior = FeralColonistBehavior.Closing;
-                }
+            case GunslingerBehavior.Shooting:
+                //Read current weapon state. If empty, go to cover
                 break;
 
-            case FeralColonistBehavior.Jumping:
-                if (checkForGround)
-                {
-                    if (Physics.BoxCast(body.transform.position, new Vector3(0.5f, 0.5f, 0.5f), Vector3.down, Quaternion.identity, 0.51f, LayerMask.GetMask("Default")))
-                    {
-                        movementScript.EnableNavmeshFollow();
-                        navigation.Warp(transform.position);
-                        navigation.updatePosition = true;
-                        checkForGround = false;
-                        jumpHitBox.enabled = false;
-                        currentBehavior = FeralColonistBehavior.Closing;
-                    }
-                }
+            case GunslingerBehavior.Reloading:
+                //When weapon is fully reloaded, go back to closing
                 break;
 
-            case FeralColonistBehavior.Escaping:
+            case GunslingerBehavior.Escaping:
                 break;
 
             default:
-                currentBehavior = FeralColonistBehavior.Closing;
+                currentBehavior = GunslingerBehavior.Closing;
                 break;
         }
-    }
-
-    private IEnumerator Jump()
-    {
-        float timer = 0;
-        float abortTimer = 0;
-        movementScript.DisableNavmeshFollow();
-        while (timer < jumpChargeTime)
-        {
-            if (isDead) yield break;
-
-            if (!CheckLOS()) abortTimer += Time.deltaTime;
-            else abortTimer = 0;
-
-            if (abortTimer >= jumpAbortTimer)
-            {
-                checkForGround = true;
-                yield break;
-            }
-
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        if (isDead) yield break;
-
-        float jumpDuration = playerDistance / (jumpRange * (1 + jumpOvershootSpeed / 10));
-        float lostHeight = (float)Math.Pow(jumpDuration, 2) * Physics.gravity.y / 2;
-        float targetVerticalVelocity = (player.height - lostHeight) / jumpDuration;
-        Vector2 horizontalForce = new Vector2((player.transform.position.x - transform.position.x) / jumpDuration,
-                                              (player.transform.position.z - transform.position.z) / jumpDuration);
-
-        jumpRB.linearVelocity = new Vector3(horizontalForce.x, targetVerticalVelocity, horizontalForce.y);
-        jumpHitBox.enabled = true;
-        yield return null;
-        checkForGround = true;
-        jumpCoroutine = null;
-    }
-
-    private void AttackCheck()
-    {
-        if (isDead) return;
-
-        if (!attacking && enemyWeaponAttack != null && player != null)
-        {
-            enemyWeaponAttack.SetTarget(player.transform);
-
-            if (enemyWeaponAttack.CanAttack())
-            {
-                enemyWeaponAttack.Attack(player.transform);
-            }
-
-            if (attackCoroutine != null)
-                StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine(Attack());
-            attacking = true;
-        }
-    }
-
-    private IEnumerator Attack()
-    {
-        float t = 0;
-        while (t < attackDelay + attackEndLag)
-        {
-            if (isDead) yield break;
-            t += Time.deltaTime;
-            yield return null;
-        }
-        attacking = false;
-        attackCoroutine = null;
     }
 
     private bool CheckLOS()
@@ -309,9 +165,9 @@ public class CorruptedGunslingerNav : MonoBehaviour
         if (isDead) return;
 
         // Force aggro when taking damage
-        if (currentBehavior == FeralColonistBehavior.Idle || currentBehavior == FeralColonistBehavior.Escaping)
+        if (currentBehavior == GunslingerBehavior.Idle)
         {
-            currentBehavior = FeralColonistBehavior.Closing;
+            currentBehavior = GunslingerBehavior.Closing;
         }
 
         // Play hit reaction (brief stun)
@@ -331,16 +187,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
 
     private IEnumerator HitReactRoutine()
     {
-        // Briefly pause attack decision-making
-        bool prevAttacking = attacking;
-        attacking = true;
 
         yield return new WaitForSeconds(hitStunTime);
-
-        // Restore attacking state only if still alive
-        if (!isDead)
-            attacking = prevAttacking;
-
         hitReactCoroutine = null;
     }
 
@@ -350,8 +198,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
         isDead = true;
 
         // Stop behavior
-        currentBehavior = FeralColonistBehavior.Idle;
-        attacking = false;
+        currentBehavior = GunslingerBehavior.Idle;
 
         // Stop all coroutines
         if (hitReactCoroutine != null)
@@ -429,12 +276,12 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
     }
 
-    public enum FeralColonistBehavior
+    public enum GunslingerBehavior
     {
         Idle,
         Closing,
-        Attacking,
-        Jumping,
+        Shooting,
+        Reloading,
         Escaping
     }
 }
