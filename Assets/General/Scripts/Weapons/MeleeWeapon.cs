@@ -75,7 +75,6 @@ public class MeleeWeapon : BaseWeapon
             IDamageable damageable = hitCollider.GetComponentInParent<IDamageable>();
             if (damageable != null)
             {
-                // Check angle from attack point/direction instead of camera
                 Vector3 directionToTarget = (hitCollider.transform.position - attackPoint).normalized;
                 float angle = Vector3.Angle(directionToTarget, attackDirection);
 

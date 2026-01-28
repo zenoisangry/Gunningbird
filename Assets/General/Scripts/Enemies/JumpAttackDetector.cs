@@ -3,21 +3,55 @@ using UnityEngine;
 public class JumpAttackDetector : MonoBehaviour
 {
     public MeleeWeapon referenceWeapon;
+
     private CapsuleCollider hitBox;
+    private bool hasAttacked = false;
 
     private void Start()
     {
         hitBox = GetComponent<CapsuleCollider>();
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.layer == 3)
+        if (hitBox != null)
         {
-            IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-            if (damageable != null){
-                damageable.TakeDamage(referenceWeapon.GetWeaponData().damage, DamageType.Melee);
+            hitBox.isTrigger = true;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 3 && !hasAttacked)
+        {
+            IDamageable damageable = other.GetComponentInParent<IDamageable>();
+            if (damageable != null && referenceWeapon != null)
+            {
+                float damage = referenceWeapon.GetWeaponData().meleeDamage;
+                damageable.TakeDamage(damage, DamageType.Melee);
+
+                Debug.Log($"[JumpAttack] Hit player! Damage: {damage}");
+
+                hasAttacked = true;
             }
         }
-        hitBox.enabled = false;
+    }
+
+    public void ResetAttack()
+    {
+        hasAttacked = false;
+    }
+
+    public void EnableHitBox()
+    {
+        if (hitBox != null)
+        {
+            hitBox.enabled = true;
+            hasAttacked = false;
+        }
+    }
+
+    public void DisableHitBox()
+    {
+        if (hitBox != null)
+        {
+            hitBox.enabled = false;
+        }
     }
 }

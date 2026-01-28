@@ -11,6 +11,7 @@ public class FeralColonistNav : MonoBehaviour
     public GameObject body;
     public Transform meleeAimPoint;
     public CapsuleCollider jumpHitBox;
+    public JumpAttackDetector jumpAttackDetector;
 
     private MeleeWeapon meleeAttack;
     private Rigidbody jumpRB;
@@ -111,6 +112,16 @@ public class FeralColonistNav : MonoBehaviour
         {
             attackTarget = player != null ? player.transform : null;
         }
+
+        if (jumpAttackDetector == null && jumpHitBox != null)
+        {
+            jumpAttackDetector = jumpHitBox.GetComponent<JumpAttackDetector>();
+        }
+
+        if (jumpAttackDetector == null)
+        {
+            Debug.LogWarning("[FeralColonistNav] JumpAttackDetector not found!", this);
+        }
     }
 
     private void OnDestroy()
@@ -144,7 +155,7 @@ public class FeralColonistNav : MonoBehaviour
                 navigation.SetDestination(player.projectedPosition);
         }
 
-        if (currentBehavior == FeralColonistBehavior.Attacking)
+        if (currentBehavior == FeralColonistBehavior.Attacking || currentBehavior == FeralColonistBehavior.Jumping)
         {
             AttackCheck();
         }
@@ -161,6 +172,9 @@ public class FeralColonistNav : MonoBehaviour
         if (player == null) return;
 
         playerDistance = (player.transform.position - transform.position).magnitude;
+
+        Vector3 attackPoint = meleeAimPoint != null ? meleeAimPoint.position : transform.position;
+        float attackDistance = Vector3.Distance(player.transform.position, attackPoint);
 
         switch (currentBehavior)
         {
@@ -205,13 +219,24 @@ public class FeralColonistNav : MonoBehaviour
             case FeralColonistBehavior.Jumping:
                 if (checkForGround)
                 {
-                    if (Physics.BoxCast(body.transform.position, new Vector3(0.5f, 0.5f, 0.5f), Vector3.down, Quaternion.identity, 0.51f, LayerMask.GetMask("Default")))
+                    if (Physics.BoxCast(body.transform.position, new Vector3(0.5f, 0.5f, 0.5f),
+                        Vector3.down, Quaternion.identity, 0.51f, LayerMask.GetMask("Default")))
                     {
                         movementScript.EnableNavmeshFollow();
                         navigation.Warp(transform.position);
                         navigation.updatePosition = true;
                         checkForGround = false;
-                        jumpHitBox.enabled = false;
+
+                        if (jumpAttackDetector != null)
+                        {
+                            jumpAttackDetector.DisableHitBox();
+                            jumpAttackDetector.ResetAttack();
+                        }
+                        else if (jumpHitBox != null)
+                        {
+                            jumpHitBox.enabled = false;
+                        }
+
                         currentBehavior = FeralColonistBehavior.Closing;
                     }
                 }
@@ -231,6 +256,7 @@ public class FeralColonistNav : MonoBehaviour
         float timer = 0;
         float abortTimer = 0;
         movementScript.DisableNavmeshFollow();
+
         while (timer < jumpChargeTime)
         {
             if (isDead) yield break;
@@ -251,13 +277,24 @@ public class FeralColonistNav : MonoBehaviour
         if (isDead) yield break;
 
         float jumpDuration = playerDistance / (jumpRange * (1 + jumpOvershootSpeed / 10));
-        float lostHeight = (float)Math.Pow(jumpDuration, 2) * Physics.gravity.y / 2;
+        float lostHeight = (float)System.Math.Pow(jumpDuration, 2) * Physics.gravity.y / 2;
         float targetVerticalVelocity = (player.height - lostHeight) / jumpDuration;
-        Vector2 horizontalForce = new Vector2((player.transform.position.x - transform.position.x) / jumpDuration,
-                                              (player.transform.position.z - transform.position.z) / jumpDuration);
+        Vector2 horizontalForce = new Vector2(
+            (player.transform.position.x - transform.position.x) / jumpDuration,
+            (player.transform.position.z - transform.position.z) / jumpDuration
+        );
 
         jumpRB.linearVelocity = new Vector3(horizontalForce.x, targetVerticalVelocity, horizontalForce.y);
-        jumpHitBox.enabled = true;
+
+        if (jumpAttackDetector != null)
+        {
+            jumpAttackDetector.EnableHitBox();
+        }
+        else if (jumpHitBox != null)
+        {
+            jumpHitBox.enabled = true;
+        }
+
         yield return null;
         checkForGround = true;
         jumpCoroutine = null;
@@ -269,17 +306,38 @@ public class FeralColonistNav : MonoBehaviour
 
         if (!attacking && enemyWeaponAttack != null && player != null)
         {
-            enemyWeaponAttack.SetTarget(player.transform);
+            Vector3 attackPoint = meleeAimPoint != null ? meleeAimPoint.position : transform.position;
+            float attackDistance = Vector3.Distance(player.transform.position, attackPoint);
 
-            if (enemyWeaponAttack.CanAttack())
+            if (attackDistance <= meleeAttackRange)
             {
-                enemyWeaponAttack.Attack(player.transform);
-            }
+                enemyWeaponAttack.SetTarget(player.transform);
 
-            if (attackCoroutine != null)
-                StopCoroutine(attackCoroutine);
-            attackCoroutine = StartCoroutine(Attack());
-            attacking = true;
+                Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+                if (directionToPlayer.magnitude > 0.1f)
+                {
+                    if (currentBehavior == FeralColonistBehavior.Jumping)
+                    {
+                        transform.rotation = Quaternion.LookRotation(directionToPlayer);
+                    }
+                    else
+                    {
+                        directionToPlayer.y = 0;
+                        if (directionToPlayer != Vector3.zero)
+                            transform.rotation = Quaternion.LookRotation(directionToPlayer);
+                    }
+                }
+
+                if (enemyWeaponAttack.CanAttack())
+                {
+                    enemyWeaponAttack.Attack(player.transform);
+                }
+
+                if (attackCoroutine != null)
+                    StopCoroutine(attackCoroutine);
+                attackCoroutine = StartCoroutine(Attack());
+                attacking = true;
+            }
         }
     }
 
@@ -352,11 +410,9 @@ public class FeralColonistNav : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        // Stop behavior
         currentBehavior = FeralColonistBehavior.Idle;
         attacking = false;
 
-        // Stop all coroutines
         if (hitReactCoroutine != null)
         {
             StopCoroutine(hitReactCoroutine);
@@ -375,7 +431,6 @@ public class FeralColonistNav : MonoBehaviour
             jumpCoroutine = null;
         }
 
-        // Stop navigation
         if (disableNavOnDeath && navigation != null)
         {
             navigation.SetDestination(transform.position);
@@ -383,25 +438,21 @@ public class FeralColonistNav : MonoBehaviour
             navigation.enabled = false;
         }
 
-        // Stop movement follow
         if (movementScript != null)
         {
             movementScript.DisableNavmeshFollow();
         }
 
-        // Disable weapon attack
         if (disableWeaponAttackOnDeath && enemyWeaponAttack != null)
         {
             enemyWeaponAttack.enabled = false;
         }
 
-        // Disable colliders to prevent corpse from blocking or taking more hits
         if (disableBodyCollidersOnDeath)
         {
             if (bodyCollider != null)
                 bodyCollider.enabled = false;
 
-            // Disable all colliders on body and children
             if (body != null)
             {
                 Collider[] colliders = body.GetComponentsInChildren<Collider>();
@@ -412,14 +463,21 @@ public class FeralColonistNav : MonoBehaviour
             }
         }
 
-        // Freeze jump rigidbody
+        if (jumpAttackDetector != null)
+        {
+            jumpAttackDetector.DisableHitBox();
+        }
+        else if (jumpHitBox != null)
+        {
+            jumpHitBox.enabled = false;
+        }
+
         if (jumpRB != null)
         {
             jumpRB.linearVelocity = Vector3.zero;
             jumpRB.isKinematic = true;
         }
 
-        // Trigger death animation
         if (animator != null && !string.IsNullOrEmpty(deathAnimationTrigger))
         {
             animator.SetTrigger(deathAnimationTrigger);
