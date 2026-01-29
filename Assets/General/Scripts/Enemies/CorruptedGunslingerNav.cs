@@ -12,8 +12,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
     public PlayerInput player;
     public GameObject body;
     private EscapeManager escManager;
-
-    private Rigidbody jumpRB;
     private BoxCollider bodyCollider;
     private FeralColonistMovement movementScript;
     private NavMeshAgent navigation;
@@ -35,8 +33,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
     public float escapeCheckCooldown;
     public float escapeSafetyPriority;
     private bool canEscape;
-    public float formChangeRange;
+    public float baseSpeed;
     public float formChangeCooldown;
+    public float formChangeSpeed;
+    private bool canChangeForm;
 
     [Header("Damage / Death Reactions")]
     [SerializeField] private bool playHitReaction = true;
@@ -66,7 +66,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
     {
         // Componenti generici
         navigation = GetComponent<NavMeshAgent>();
-        jumpRB = body.GetComponent<Rigidbody>();
         bodyCollider = body.GetComponent<BoxCollider>();
         movementScript = body.GetComponent<FeralColonistMovement>();
         animator = body != null ? body.GetComponentInChildren<Animator>() : GetComponentInChildren<Animator>();
@@ -91,6 +90,9 @@ public class CorruptedGunslingerNav : MonoBehaviour
         {
             Debug.LogWarning($"[FeralColonistNav] HealthSystem not found.", this);
         }
+
+        //Set speed
+        navigation.speed = baseSpeed;
     }
 
     private void OnDestroy()
@@ -138,19 +140,32 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 }
                 if (playerDistance <= shootingMinRange)
                 {
+                    FindEscapeZone();
                     currentBehavior = GunslingerBehavior.Escaping;
                 }
                 break;
 
             case GunslingerBehavior.Shooting:
+                //Check if player is visible
+                if (!CheckLOS())
+                {
+                    currentBehavior = GunslingerBehavior.Reloading;
+                }
+                //To add: If weapon is empty but player is in line of sight, escape
                 //Read current weapon state. If empty, go to cover
                 break;
 
             case GunslingerBehavior.Reloading:
-                //When weapon is fully reloaded, go back to closing
+                //To add: If weapon is fully reloaded, go back to closing
                 break;
 
             case GunslingerBehavior.Escaping:
+                if (navigation.remainingDistance <= navigation.stoppingDistance)
+                {
+                    if (navigation.speed == formChangeSpeed)
+                        navigation.speed = baseSpeed;
+                    currentBehavior = GunslingerBehavior.Reloading;
+                }
                 break;
 
             default:
@@ -182,13 +197,19 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
         else
         {
+            //Cambia behavior in base a se hai la forma o meno
+            if (canChangeForm)
+            {
+                navigation.speed = formChangeSpeed;
+                StartCoroutine(FormChangeCD());
+                canChangeForm = false;
+            }
             float maxOffset = escManager.escapeAreas[targetZone];
             Vector3 finaloffset = new Vector3(UnityEngine.Random.Range(-maxOffset, maxOffset), 0, UnityEngine.Random.Range(-maxOffset, maxOffset));
             navigation.SetDestination(targetZone + finaloffset);
         }
         StartCoroutine(EscapeCD());
         canEscape = false;
-        //TODO logica per determinare in quale zona andare
     }
 
     private IEnumerator EscapeCD()
@@ -200,6 +221,17 @@ public class CorruptedGunslingerNav : MonoBehaviour
             yield return null;
         }
         canEscape = true;
+    }
+
+    private IEnumerator FormChangeCD()
+    {
+        float timer = 0;
+        while (timer < formChangeCooldown)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        canChangeForm = true;
     }
 
     private bool CheckLOS()
@@ -266,12 +298,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
             attackCoroutine = null;
         }
 
-        if (jumpCoroutine != null)
-        {
-            StopCoroutine(jumpCoroutine);
-            jumpCoroutine = null;
-        }
-
         // Stop navigation
         if (disableNavOnDeath && navigation != null)
         {
@@ -307,13 +333,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     col.enabled = false;
                 }
             }
-        }
-
-        // Freeze jump rigidbody
-        if (jumpRB != null)
-        {
-            jumpRB.linearVelocity = Vector3.zero;
-            jumpRB.isKinematic = true;
         }
 
         // Trigger death animation

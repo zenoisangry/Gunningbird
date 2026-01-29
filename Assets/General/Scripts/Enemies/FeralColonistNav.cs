@@ -305,7 +305,6 @@ public class FeralColonistNav : MonoBehaviour
         }
         StartCoroutine(EscapeCD());
         canEscape = false;
-        //TODO logica per determinare in quale zona andare
     }
 
     private IEnumerator EscapeCD()
