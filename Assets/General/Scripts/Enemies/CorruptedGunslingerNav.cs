@@ -1,18 +1,18 @@
-using System.Collections;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static FeralColonistNav;
 
 public class CorruptedGunslingerNav : MonoBehaviour
 {
     [Header("Links to other objects")]
     public PlayerInput player;
     public GameObject body;
-    public Transform meleeAimPoint;
-    public CapsuleCollider jumpHitBox;
+    private EscapeManager escManager;
 
-    private MeleeWeapon meleeAttack;
     private Rigidbody jumpRB;
     private BoxCollider bodyCollider;
     private FeralColonistMovement movementScript;
@@ -31,6 +31,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
     public float escapeRange;
     public float shootingMinRange;
     public float shootingMaxRange;
+    public float escapeRangePriority;
+    public float escapeCheckCooldown;
+    public float escapeSafetyPriority;
+    private bool canEscape;
     public float formChangeRange;
     public float formChangeCooldown;
 
@@ -109,6 +113,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
             if (player != null)
                 navigation.SetDestination(player.projectedPosition);
         }
+
+        BehaviorSwitchCheck();
     }
 
     private void BehaviorSwitchCheck()
@@ -130,6 +136,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange){
                     currentBehavior = GunslingerBehavior.Shooting;
                 }
+                if (playerDistance <= shootingMinRange)
+                {
+                    currentBehavior = GunslingerBehavior.Escaping;
+                }
                 break;
 
             case GunslingerBehavior.Shooting:
@@ -147,6 +157,49 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 currentBehavior = GunslingerBehavior.Closing;
                 break;
         }
+    }
+
+    private void FindEscapeZone()
+    {
+        Vector3 targetZone = Vector3.zero;
+        float targetQuality = 0;
+        foreach (KeyValuePair<Vector3, float> zone in escManager.escapeAreas)
+        {
+            int coveredLines = escManager.CheckZoneLOS(player.gameObject, zone.Key + new Vector3(0, 1, 0), zone.Value);
+            if (coveredLines > 0)
+            {
+                float tempQuality = -(zone.Key - transform.position).magnitude * escapeRangePriority + coveredLines * (escapeRange / 5) * escapeSafetyPriority;
+                if (tempQuality > targetQuality)
+                {
+                    targetQuality = tempQuality;
+                    targetZone = zone.Key;
+                }
+            }
+        }
+        if (targetZone == Vector3.zero)
+        {
+            currentBehavior = GunslingerBehavior.Closing;
+        }
+        else
+        {
+            float maxOffset = escManager.escapeAreas[targetZone];
+            Vector3 finaloffset = new Vector3(UnityEngine.Random.Range(-maxOffset, maxOffset), 0, UnityEngine.Random.Range(-maxOffset, maxOffset));
+            navigation.SetDestination(targetZone + finaloffset);
+        }
+        StartCoroutine(EscapeCD());
+        canEscape = false;
+        //TODO logica per determinare in quale zona andare
+    }
+
+    private IEnumerator EscapeCD()
+    {
+        float timer = 0;
+        while (timer < escapeCheckCooldown)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        canEscape = true;
     }
 
     private bool CheckLOS()

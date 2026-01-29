@@ -282,7 +282,7 @@ public class FeralColonistNav : MonoBehaviour
         float targetQuality = 0;
         foreach (KeyValuePair<Vector3, float> zone in escManager.escapeAreas)
         {
-            int coveredLines = CheckZoneLOS(zone.Key + new Vector3(0,1,0), zone.Value);
+            int coveredLines = escManager.CheckZoneLOS(player.gameObject, zone.Key + new Vector3(0,1,0), zone.Value);
             if (coveredLines > 0)
             {
                 float tempQuality = -(zone.Key - transform.position).magnitude*escapeRangePriority + coveredLines*(escapeRange/5)*escapeSafetyPriority;
@@ -317,30 +317,6 @@ public class FeralColonistNav : MonoBehaviour
             yield return null;
         }
         canEscape = true;
-    }
-
-    private int CheckZoneLOS(Vector3 zoneCoords, float zoneRadius)
-    {
-        int coveredSightlines = 0;
-        Vector3 tempDistance;
-        //Check for center
-        tempDistance = player.transform.position - zoneCoords;
-        if (Physics.Raycast(zoneCoords, tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
-        //Check for Xpositive
-        tempDistance = player.transform.position - (zoneCoords + new Vector3(zoneRadius,0,0));
-        if (Physics.Raycast(zoneCoords + new Vector3(zoneRadius, 0, 0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
-        //Check for Xnegative
-        tempDistance = player.transform.position - (zoneCoords + new Vector3(-zoneRadius,0,0));
-        if (Physics.Raycast(zoneCoords + new Vector3(-zoneRadius,0,0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
-        //Check for Zpositive
-        tempDistance = player.transform.position - (zoneCoords + new Vector3(0, 0, zoneRadius));
-        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
-        //Check for Znegative
-        tempDistance = player.transform.position - (zoneCoords + new Vector3(0, 0, -zoneRadius));
-        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, -zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
-        //TODO check se la zona è nascosta dal player o no
-        Debug.Log(coveredSightlines);
-        return coveredSightlines;
     }
 
     private IEnumerator Jump()
