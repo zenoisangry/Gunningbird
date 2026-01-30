@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 394998266009877896}
   - component: {fileID: 8882426607531328090}
   - component: {fileID: 2339917923790671652}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Spear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,8 +131,6 @@ MonoBehaviour:
   meleeHitLayers:
     serializedVersion: 2
     m_Bits: 256
-  meleeRadius: 1
-  canInstakill: 0
 --- !u!82 &2339917923790671652
 AudioSource:
   m_ObjectHideFlags: 0

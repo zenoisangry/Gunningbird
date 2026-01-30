@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5098418086404931136}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PF_Revolver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,6 +93,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: revolver
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: bd0f685770fc90e4a81f73db6400d642, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -175,6 +179,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 9f2bf69952b524d4e84c93813d7ba6f5, type: 2}
     - target: {fileID: -1018664272722485354, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -1018664272722485354, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -182,13 +190,25 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 9f2bf69952b524d4e84c93813d7ba6f5, type: 2}
+    - target: {fileID: 903645308349579735, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_Name
       value: revolver_Effects
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242459941974961133, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5458804588103103244, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -300,9 +320,25 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1018664272722485354, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 903645308349579735, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_Name
       value: revolver_Effects
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242459941974961133, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5458804588103103244, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_LocalRotation.w

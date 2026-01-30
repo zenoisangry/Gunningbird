@@ -791,7 +791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: m_TagString
@@ -1101,11 +1101,11 @@ PrefabInstance:
       objectReference: {fileID: 773716179}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: losAggroRange
-      value: 20
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: formChangeSpeed
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: playHitReaction
@@ -1113,7 +1113,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: shootingMaxRange
-      value: 15
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: shootingMinRange
@@ -1121,7 +1121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: formChangeCooldown
-      value: 3
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: escapeCheckCooldown

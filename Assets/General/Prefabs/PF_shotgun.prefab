@@ -50,7 +50,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8ff9d4c0a5a45be47bab5cee702a3dae, type: 3}
       propertyPath: m_Name
-      value: shotgun 1
+      value: PF_shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8ff9d4c0a5a45be47bab5cee702a3dae, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

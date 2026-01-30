@@ -130,6 +130,20 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 navigation.SetDestination(player.projectedPosition);
         }
 
+        if (currentBehavior == GunslingerBehavior.Shooting)
+        {
+            Debug.Log(enemyRangedAttack.CanFire());
+            if (enemyRangedAttack != null && enemyRangedAttack.CanFire())
+            {
+                Debug.Log("Can fire");
+                if (enemyRangedAttack.IsAimedAtTarget(10f))
+                {
+                    Debug.Log("IsAimed");
+                    enemyRangedAttack.Fire();
+                }
+            }
+        }
+
         BehaviorSwitchCheck();
     }
 
@@ -163,59 +177,41 @@ public class CorruptedGunslingerNav : MonoBehaviour
             case GunslingerBehavior.Shooting:
                 if (!CheckLOS())
                 {
-                    Debug.Log("[Gunslinger] Lost line of sight");
-                    FindEscapeZone();
-                    currentBehavior = GunslingerBehavior.Escaping;
-                    break;
-                }
-
-                if (enemyRangedAttack != null && enemyRangedAttack.IsReloading())
-                {
-                    Debug.Log("[Gunslinger] Weapon empty, escaping to reload");
-                    FindEscapeZone();
-                    currentBehavior = GunslingerBehavior.Escaping;
-                    break;
-                }
-
-                if (enemyRangedAttack != null && enemyRangedAttack.CanFire())
-                {
-                    if (enemyRangedAttack.IsAimedAtTarget(10f))
-                    {
-                        enemyRangedAttack.Fire();
-                    }
-                }
-
-                if (playerDistance <= shootingMinRange && canEscape)
-                {
-                    Debug.Log("[Gunslinger] Player too close, escaping");
-                    FindEscapeZone();
-                    currentBehavior = GunslingerBehavior.Escaping;
-                }
-
-                if (playerDistance > shootingMaxRange)
-                {
-                    Debug.Log("[Gunslinger] Player too far, closing distance");
-                    currentBehavior = GunslingerBehavior.Closing;
-                }
-                break;
-
-            case GunslingerBehavior.Reloading:
-                if (enemyRangedAttack != null && !enemyRangedAttack.IsReloading())
-                {
+                    Debug.Log("[Gunslinger] Lost line of sight, reloading if possible");
                     if (enemyRangedAttack.CanReload())
                     {
                         Debug.Log("[Gunslinger] Starting reload");
                         enemyRangedAttack.Reload();
                     }
-                    else
+                    currentBehavior = GunslingerBehavior.Reloading;
+                    break;
+                }
+                else
+                {
+                    if (enemyRangedAttack != null && enemyRangedAttack.IsReloading())
                     {
-                        Debug.Log("[Gunslinger] Cannot reload, no reserve ammo");
+                        Debug.Log("[Gunslinger] Weapon empty, escaping to reload");
                         FindEscapeZone();
                         currentBehavior = GunslingerBehavior.Escaping;
                         break;
                     }
-                }
 
+                    if (playerDistance <= shootingMinRange && canEscape)
+                    {
+                        Debug.Log("[Gunslinger] Player too close, escaping");
+                        FindEscapeZone();
+                        currentBehavior = GunslingerBehavior.Escaping;
+                    }
+
+                    if (playerDistance > shootingMaxRange)
+                    {
+                        Debug.Log("[Gunslinger] Player too far, closing distance");
+                        currentBehavior = GunslingerBehavior.Closing;
+                    }
+                }
+                break;
+
+            case GunslingerBehavior.Reloading:
                 if (enemyRangedAttack != null && !enemyRangedAttack.IsReloading())
                 {
                     if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange)
@@ -296,12 +292,9 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private bool CheckLOS()
     {
         if (player == null) return false;
-        Debug.Log("Checking LOS");
         bool result = Physics.BoxCast(body.transform.position, bodyCollider.size/3, player.transform.position - body.transform.position,
                                 Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
-        Debug.Log("Something is blocking LOS = " + result);
-        return !Physics.BoxCast(body.transform.position, bodyCollider.size/3f, player.transform.position - body.transform.position,
-                                Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
+        return !result;
     }
 
     private void HandleDamageTaken(float finalDamage)

@@ -36,7 +36,6 @@ public class EscapeManager : MonoBehaviour
         tempDistance = player.transform.position - (zoneCoords + new Vector3(0, 0, -zoneRadius));
         if (Physics.Raycast(zoneCoords + new Vector3(0, 0, -zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
         //TODO check se la zona è nascosta dal player o no
-        Debug.Log(coveredSightlines);
         return coveredSightlines;
     }
 }
