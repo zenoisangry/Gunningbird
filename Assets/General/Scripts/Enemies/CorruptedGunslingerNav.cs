@@ -132,13 +132,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
 
         if (currentBehavior == GunslingerBehavior.Shooting)
         {
-            Debug.Log(enemyRangedAttack.CanFire());
             if (enemyRangedAttack != null && enemyRangedAttack.CanFire())
             {
-                Debug.Log("Can fire");
                 if (enemyRangedAttack.IsAimedAtTarget(10f))
                 {
-                    Debug.Log("IsAimed");
                     enemyRangedAttack.Fire();
                 }
             }
