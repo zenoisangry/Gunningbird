@@ -20,7 +20,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private Animator animator;
 
     [Header("Enemy Attack Logic")]
-    [SerializeField] private EnemyWeaponAttack enemyWeaponAttack;
+    [SerializeField] private EnemyRangedAttack enemyRangedAttack;
     [SerializeField] private Transform attackTarget;
 
     [Header("AI variables")]
@@ -64,7 +64,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
     // Start is called once before the first execution of Update
     void Start()
     {
-        // Componenti generici
+        player = FindFirstObjectByType<PlayerInput>();
+        escManager = FindFirstObjectByType<EscapeManager>();
         navigation = GetComponent<NavMeshAgent>();
         bodyCollider = body.GetComponent<BoxCollider>();
         movementScript = body.GetComponent<FeralColonistMovement>();
@@ -89,6 +90,19 @@ public class CorruptedGunslingerNav : MonoBehaviour
         else
         {
             Debug.LogWarning($"[FeralColonistNav] HealthSystem not found.", this);
+        }
+
+        if (enemyRangedAttack != null)
+        {
+            if (player != null)
+            {
+                enemyRangedAttack.SetTarget(player.transform);
+                attackTarget = player.transform;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[CorruptedGunslingerNav] EnemyRangedAttack not assigned!", this);
         }
 
         //Set speed
@@ -137,6 +151,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
             case GunslingerBehavior.Closing:
                 if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange){
                     currentBehavior = GunslingerBehavior.Shooting;
+                    navigation.SetDestination(transform.position);
                 }
                 if (playerDistance <= shootingMinRange)
                 {
@@ -146,31 +161,75 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 break;
 
             case GunslingerBehavior.Shooting:
-                //Check if player is visible
                 if (!CheckLOS())
                 {
-                    currentBehavior = GunslingerBehavior.Reloading;
+                    Debug.Log("[Gunslinger] Lost line of sight");
+                    FindEscapeZone();
+                    currentBehavior = GunslingerBehavior.Escaping;
+                    break;
                 }
-                //To add: If weapon is empty but player is in line of sight, escape
-                //Read current weapon state. If empty, go to cover
+
+                if (enemyRangedAttack != null && enemyRangedAttack.IsReloading())
+                {
+                    Debug.Log("[Gunslinger] Weapon empty, escaping to reload");
+                    FindEscapeZone();
+                    currentBehavior = GunslingerBehavior.Escaping;
+                    break;
+                }
+
+                if (enemyRangedAttack != null && enemyRangedAttack.CanFire())
+                {
+                    if (enemyRangedAttack.IsAimedAtTarget(10f))
+                    {
+                        enemyRangedAttack.Fire();
+                    }
+                }
+
+                if (playerDistance <= shootingMinRange && canEscape)
+                {
+                    Debug.Log("[Gunslinger] Player too close, escaping");
+                    FindEscapeZone();
+                    currentBehavior = GunslingerBehavior.Escaping;
+                }
+
+                if (playerDistance > shootingMaxRange)
+                {
+                    Debug.Log("[Gunslinger] Player too far, closing distance");
+                    currentBehavior = GunslingerBehavior.Closing;
+                }
                 break;
 
             case GunslingerBehavior.Reloading:
-                //To add: If weapon is fully reloaded, go back to closing
-                break;
-
-            case GunslingerBehavior.Escaping:
-                if (navigation.remainingDistance <= navigation.stoppingDistance)
+                if (enemyRangedAttack != null && !enemyRangedAttack.IsReloading())
                 {
-                    if (navigation.speed == formChangeSpeed)
-                        navigation.speed = baseSpeed;
-                    currentBehavior = GunslingerBehavior.Reloading;
+                    if (enemyRangedAttack.CanReload())
+                    {
+                        Debug.Log("[Gunslinger] Starting reload");
+                        enemyRangedAttack.Reload();
+                    }
+                    else
+                    {
+                        Debug.Log("[Gunslinger] Cannot reload, no reserve ammo");
+                        FindEscapeZone();
+                        currentBehavior = GunslingerBehavior.Escaping;
+                        break;
+                    }
                 }
-                break;
 
-            default:
-                currentBehavior = GunslingerBehavior.Closing;
-                break;
+                if (enemyRangedAttack != null && !enemyRangedAttack.IsReloading())
+                {
+                    if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange)
+                    {
+                        Debug.Log("[Gunslinger] Reload complete, resuming shooting");
+                        currentBehavior = GunslingerBehavior.Shooting;
+                    }
+                    else
+                    {
+                        Debug.Log("[Gunslinger] Reload complete, closing distance");
+                        currentBehavior = GunslingerBehavior.Closing;
+                    }
+                }
+            break;
         }
     }
 
@@ -313,9 +372,9 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
 
         // Disable weapon attack
-        if (disableWeaponAttackOnDeath && enemyWeaponAttack != null)
+        if (disableWeaponAttackOnDeath && enemyRangedAttack != null)
         {
-            enemyWeaponAttack.enabled = false;
+            enemyRangedAttack.enabled = false;
         }
 
         // Disable colliders to prevent corpse from blocking or taking more hits

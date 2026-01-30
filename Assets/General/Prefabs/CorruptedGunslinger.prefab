@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4343202572123529792
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9051706075495373289}
+  m_Layer: 8
+  m_Name: WeaponHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9051706075495373289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4343202572123529792}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.814, y: 1.052, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4309424284287511740}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5526311039920142374
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,9 +40,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4309424284287511740}
-  - component: {fileID: 2604263428331699232}
+  - component: {fileID: 3971287175625106120}
   - component: {fileID: 680255248503217877}
-  - component: {fileID: 881732388443884152}
+  - component: {fileID: 1646647564736562245}
   m_Layer: 8
   m_Name: NavigationGuide
   m_TagString: Untagged
@@ -31,10 +62,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 9051706075495373289}
   m_Father: {fileID: 1236932388917383469}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2604263428331699232
+--- !u!114 &3971287175625106120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,22 +75,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 5526311039920142374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06b382586c3803f429729d87a2d4207a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2416fa1d81eafd743b028364f7654a2d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FeralColonistAI
+  m_EditorClassIdentifier: Assembly-CSharp::CorruptedGunslingerNav
   player: {fileID: 0}
   body: {fileID: 6493743809459716190}
-  meleeAimPoint: {fileID: 0}
-  jumpHitBox: {fileID: 0}
-  enemyWeaponAttack: {fileID: 0}
+  enemyRangedAttack: {fileID: 1646647564736562245}
   attackTarget: {fileID: 0}
-  aggroRange: 10
-  losAggroRange: 50
-  jumpRange: 20
-  jumpOvershootSpeed: -1
-  jumpChargeTime: 0.8
-  jumpAbortTimer: 0.1
-  meleeAttackRangeMultiplier: 1.5
+  aggroRange: 0
+  losAggroRange: 0
+  escapeRange: 0
+  shootingMinRange: 0
+  shootingMaxRange: 0
+  escapeRangePriority: 0
+  escapeCheckCooldown: 0
+  escapeSafetyPriority: 0
+  baseSpeed: 0
+  formChangeCooldown: 0
+  formChangeSpeed: 0
   playHitReaction: 1
   hitStunTime: 0.15
   hitAnimationTrigger: Hit
@@ -91,7 +125,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 13
   m_ObstacleAvoidanceType: 4
---- !u!114 &881732388443884152
+--- !u!114 &1646647564736562245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,15 +134,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 5526311039920142374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 707febc6438899b41a93013628f3e15c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8391e7c8c52b13445b286179a46e2595, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MeleeWeapon
-  weaponData: {fileID: 11400000, guid: d25cfae204b88044ebc786e9fc79a6bd, type: 2}
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyRangedAttack
+  weaponData: {fileID: 11400000, guid: f3ce25cee44b56a4697f4bbd835350b2, type: 2}
+  firePoint: {fileID: 0}
+  weaponHolder: {fileID: 0}
+  aimSpeed: 5
+  aimOffset: 0.5
+  predictTargetMovement: 1
+  predictionMultiplier: 0.5
   audioSource: {fileID: 0}
-  meleeAttackPoint: {fileID: 0}
-  meleeHitLayers:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1 &5609910913689416305
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +170,7 @@ Transform:
   m_GameObject: {fileID: 5609910913689416305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.237, y: 0, z: 29.82}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -247,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e026de7eb0e1694eb82343ee4480998, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FeralColonistMovement
-  AI: {fileID: 2604263428331699232}
+  AI: {fileID: 0}
   navAimPoint: {fileID: 5526311039920142374}
   horizontalConstraint: 0.5
   verticalOffset: 1
