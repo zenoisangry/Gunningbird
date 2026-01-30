@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float damage = 25f;
     [SerializeField] private LayerMask hitLayers;
     [SerializeField] private GameObject impactEffect;
+    [SerializeField] private GameObject trailEffect;
     private IWeaponOwner owner;
     private float headshotMultiplier = 2f;
     private Rigidbody rb;
@@ -29,9 +30,11 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("collision entered");
         if (collision == null || collision.gameObject == null) return;
 
-        if ((hitLayers.value & (1 << collision.gameObject.layer)) == 0)
+        Debug.Log("check 1 passed");
+        if ((hitLayers.value & (1 << collision.gameObject.layer)) == 0 && collision.gameObject.layer != 0)
         {
             return;
         }
@@ -55,7 +58,11 @@ public class Projectile : MonoBehaviour
             );
             Destroy(impact, 2f);
         }
-
+        if (trailEffect != null)
+        {
+            transform.DetachChildren();
+            trailEffect.GetComponent<TrailScript>().fadeOut(0.35f);
+        }
         Destroy(gameObject);
     }
 }
