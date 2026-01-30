@@ -160,7 +160,7 @@ public class EnemyRangedAttack : MonoBehaviour
         if (target == null) return false;
 
         Vector3 directionToTarget = (target.position - transform.position).normalized;
-        float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
+        float angleToTarget = Vector3.Angle(transform.forward, new Vector3(directionToTarget.x, 0, directionToTarget.z));
 
         return angleToTarget <= maxAngle;
     }
