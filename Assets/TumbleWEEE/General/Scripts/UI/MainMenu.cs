@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+public class OldMainMenu : MonoBehaviour
 {
     public void LoadScene(string sceneName)
     {
