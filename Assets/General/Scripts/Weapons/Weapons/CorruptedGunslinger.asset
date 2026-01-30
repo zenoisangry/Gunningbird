@@ -16,8 +16,8 @@ MonoBehaviour:
   description: 
   weaponType: 0
   weaponIcon: {fileID: 21300000, guid: c2f64ac25c371b64893906ebb705a741, type: 3}
-  weaponPrefab: {fileID: 7797442051283886472, guid: 7f9183f4b03271e40b11d6ac469fcff3, type: 3}
-  pickupPrefab: {fileID: 7797442051283886472, guid: 7f9183f4b03271e40b11d6ac469fcff3, type: 3}
+  weaponPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
+  pickupPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
   bulletPrefab: {fileID: 8058749452768088809, guid: 684f4c5c9a2c9aa4190fb75f2aedb9ec, type: 3}
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
@@ -43,7 +43,7 @@ MonoBehaviour:
   totalAmmo: 60
   reloadTime: 2.5
   ammoType: 0
-  hasInfiniteAmmo: 0
+  hasInfiniteAmmo: 1
   baseSpread: 0
   maxSpread: 3
   spreadIncreasePerShot: 0.5
