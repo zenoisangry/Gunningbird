@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponIcon: {fileID: 21300000, guid: c2f64ac25c371b64893906ebb705a741, type: 3}
   weaponPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
   pickupPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
-  bulletPrefab: {fileID: 8058749452768088809, guid: 684f4c5c9a2c9aa4190fb75f2aedb9ec, type: 3}
+  bulletPrefab: {fileID: 8058749452768088809, guid: b165455e6aba38842b0c30097b189a0d, type: 3}
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   emptySound: {fileID: 0}
@@ -33,8 +33,8 @@ MonoBehaviour:
   headshotMultiplier: 2
   meleeDamage: 50
   meleeInstaKillThreshold: 30
-  fireRate: 2
-  bulletSpeed: 50
+  fireRate: 300
+  bulletSpeed: 25
   secondaryFireRate: 0
   isFullAuto: 1
   isFullAutoSecondary: 0

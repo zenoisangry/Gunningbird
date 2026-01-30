@@ -185,7 +185,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 }
                 else
                 {
-                    if (enemyRangedAttack != null && enemyRangedAttack.IsReloading())
+                    if (enemyRangedAttack != null && enemyRangedAttack.GetWeapon().GetCurrentAmmo() == 0)
                     {
                         Debug.Log("[Gunslinger] Weapon empty, escaping to reload");
                         FindEscapeZone();
@@ -227,6 +227,11 @@ public class CorruptedGunslingerNav : MonoBehaviour
             case GunslingerBehavior.Escaping:
                 if (navigation.remainingDistance <= navigation.stoppingDistance)
                 {
+                    if (enemyRangedAttack.CanReload())
+                    {
+                        Debug.Log("[Gunslinger] Starting reload");
+                        enemyRangedAttack.Reload();
+                    }
                     currentBehavior = GunslingerBehavior.Reloading;
                 }
                 break;

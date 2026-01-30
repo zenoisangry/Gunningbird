@@ -61,7 +61,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
         ApplyRecoil();
         PlayFireEffects();
 
-        if (currentAmmo <= 0 && !weaponData.hasInfiniteAmmo)
+        if (currentAmmo <= 0)
         {
             if (CanReload())
                 Reload();
@@ -137,7 +137,6 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     public virtual bool CanFire()
     {
         if (weaponData == null || isReloading) return false;
-        if (weaponData.hasInfiniteAmmo) return true;
         return currentAmmo > 0 && Time.time >= lastFireTime + fireRateCooldown;
     }
 
@@ -151,7 +150,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
     public virtual bool CanReload()
     {
-        if (weaponData == null || weaponData.hasInfiniteAmmo) return false;
+        if (weaponData == null) return false;
         return currentAmmo < weaponData.magazineSize && currentReserveAmmo > 0;
     }
 
