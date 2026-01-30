@@ -225,8 +225,11 @@ public class FeralColonistNav : MonoBehaviour
                 }
                 else if ((player.height > jumpRange))
                 {
-                    FindEscapeZone();
-                    currentBehavior = FeralColonistBehavior.Escaping;
+                    if (canEscape)
+                    {
+                        FindEscapeZone();
+                        currentBehavior = FeralColonistBehavior.Escaping;
+                    }
                 }
                 break;
 
