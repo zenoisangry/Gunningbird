@@ -223,6 +223,13 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     }
                 }
             break;
+
+            case GunslingerBehavior.Escaping:
+                if (navigation.remainingDistance <= navigation.stoppingDistance)
+                {
+                    currentBehavior = GunslingerBehavior.Reloading;
+                }
+                break;
         }
     }
 
