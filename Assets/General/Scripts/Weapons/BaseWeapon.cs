@@ -78,7 +78,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
         PlaySecondaryFireEffects();
 
-        if (currentAmmo <= 0 && !weaponData.hasInfiniteAmmo)
+        if (currentAmmo <= 0)
         {
             if (CanReload())
                 Reload();
@@ -109,7 +109,8 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
         int ammoToReload = Mathf.Min(weaponData.magazineSize - currentAmmo, currentReserveAmmo);
         currentAmmo += ammoToReload;
-        currentReserveAmmo -= ammoToReload;
+        if (!weaponData.hasInfiniteAmmo)
+            currentReserveAmmo -= ammoToReload;
 
         isReloading = false;
         reloadCoroutine = null;
@@ -144,7 +145,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     {
         if (isReloading) return false;
         if (weaponData.secondaryFireType == SecondaryFireType.None) return false;
-        if (currentAmmo < weaponData.secondaryFireAmmoCost && !weaponData.hasInfiniteAmmo) return false;
+        if (currentAmmo < weaponData.secondaryFireAmmoCost) return false;
         return Time.time >= lastSecondaryFireTime + weaponData.secondaryFireCooldown;
     }
 
