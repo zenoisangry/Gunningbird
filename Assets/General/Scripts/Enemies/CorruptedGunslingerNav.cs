@@ -300,7 +300,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private bool CheckLOS()
     {
         if (player == null) return false;
-        bool result = Physics.BoxCast(body.transform.position, bodyCollider.size/3, player.transform.position - body.transform.position,
+        bool result = Physics.BoxCast(body.transform.position, bodyCollider.size/3f, player.transform.position - body.transform.position,
                                 Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
         return !result;
     }
