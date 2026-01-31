@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
             if (_instance == null)
                 _instance = FindAnyObjectByType<GameManager>();
             if (_instance == null)
-                Debug.LogError("Error can't instantiate singleton");
+                Debug.LogError("[GameManager] Error can't instantiate singleton");
             return _instance;
         }
     }
@@ -44,38 +45,29 @@ public class GameManager : MonoBehaviour
         GameStateManager.instance.SetCurrentGameState(startingGameState);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (isGameActive && !isGamePaused)
-            {
-                GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Options);
-            }
-            else if (isGamePaused)
-            {
-                ResumeGame();
-            }
-        }
-    }
-
     private void RegisterGameStates()
     {
         GameStateManager.instance.RegisterState(GameStateManager.GameStates.MainMenu, new GSMainMenu());
         GameStateManager.instance.RegisterState(GameStateManager.GameStates.Options, new GSOptions());
+        GameStateManager.instance.RegisterState(GameStateManager.GameStates.Pause, new GSPause());
         GameStateManager.instance.RegisterState(GameStateManager.GameStates.Gameplay, new GSGameplay());
         GameStateManager.instance.RegisterState(GameStateManager.GameStates.GameOver, new GSGameOver());
     }
 
     public void StartGame()
     {
+
         isGameActive = true;
         isGamePaused = false;
+        Time.timeScale = 1f;
 
-        if (playerInstance == null)
+        if (LevelManager.Instance == null)
         {
-            playerInstance = FindAnyObjectByType<PlayerInput>();
+            return;
         }
+
+        LevelManager.Instance.InstantiateLevel();
+        LevelManager.Instance.StartLevel();
 
         if (playerInstance != null)
         {
@@ -86,13 +78,10 @@ public class GameManager : MonoBehaviour
                 playerHealth.Died += OnPlayerDeath;
             }
         }
-
-        Time.timeScale = 1f;
     }
-
     public void EndGame()
     {
-        
+
         isGameActive = false;
         isGamePaused = false;
 
@@ -101,12 +90,39 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        if (!isGameActive) return;
+        if (!isGameActive)
+        {
+            return;
+        }
 
         isGamePaused = true;
         Time.timeScale = 0f;
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        if (isGameActive && !isGamePaused)
+        {
+            GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Pause);
+        }
+        else if (isGamePaused)
+        {
+            var currentState = GameStateManager.instance.currentGameState;
+
+            if (currentState is GSOptions)
+            {
+                GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Pause);
+            }
+            else if (currentState is GSPause)
+            {
+                ResumeGame();
+            }
+        }
     }
 
     public void ResumeGame()
@@ -118,6 +134,29 @@ public class GameManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Gameplay);
+    }
+
+    public void RestartLevel()
+    {
+        isGameActive = false;
+        isGamePaused = false;
+        Time.timeScale = 1f;
+
+        if (playerInstance != null)
+        {
+            HealthSystem playerHealth = playerInstance.GetHealthSystem();
+            if (playerHealth != null)
+            {
+                playerHealth.Died -= OnPlayerDeath;
+            }
+        }
+
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.ResetLevel();
+        }
 
         GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Gameplay);
     }
@@ -138,12 +177,17 @@ public class GameManager : MonoBehaviour
             playerInstance = null;
         }
 
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.CleanupLevel();
+        }
+
         GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.MainMenu);
     }
 
     public void QuitGame()
     {
-        Application.Quit();
+         Application.Quit();
     }
 
     private void OnPlayerDeath()
@@ -160,6 +204,14 @@ public class GameManager : MonoBehaviour
             {
                 playerHealth.Died -= OnPlayerDeath;
             }
+        }
+    }
+
+    private void Update()
+    {
+        if (playerInstance != null)
+        {
+            var input = playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
         }
     }
 }

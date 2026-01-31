@@ -7,7 +7,6 @@ public class UIOptions : MonoBehaviour, IGameUI
     [Header("UI Elements")]
     [SerializeField] private GameObject optionsPanel;
     [SerializeField] private Button backButton;
-    [SerializeField] private Button mainMenuButton;
 
     [Header("Settings")]
     [SerializeField] private Slider volumeSlider;
@@ -22,9 +21,6 @@ public class UIOptions : MonoBehaviour, IGameUI
     {
         if (backButton != null)
             backButton.onClick.AddListener(OnBackClicked);
-
-        if (mainMenuButton != null)
-            mainMenuButton.onClick.AddListener(OnMainMenuClicked);
 
         if (volumeSlider != null)
         {
@@ -86,11 +82,6 @@ public class UIOptions : MonoBehaviour, IGameUI
     private void OnResumeClicked()
     {
         GameManager.Instance.ResumeGame();
-    }
-
-    private void OnMainMenuClicked()
-    {
-        GameManager.Instance.ReturnToMainMenu();
     }
 
     private void OnVolumeChanged(float value)

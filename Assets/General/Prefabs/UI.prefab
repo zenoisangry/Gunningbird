@@ -513,7 +513,6 @@ GameObject:
   - component: {fileID: 7115414031857477373}
   - component: {fileID: 4512009190010815898}
   - component: {fileID: 8897981593232370817}
-  - component: {fileID: 4889669876183338348}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -607,19 +606,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4889669876183338348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1284840641606647553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b797a93cf6d03f44868fc786f898d1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  uiContainer: {fileID: 5909108325454263550}
 --- !u!1 &1461848059966090189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1111,7 +1097,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIOptions
   optionsPanel: {fileID: 1762467394467461262}
   backButton: {fileID: 7360481111927629745}
-  mainMenuButton: {fileID: 4971444885822402619}
   volumeSlider: {fileID: 775070848840230842}
   sensitivitySlider: {fileID: 2939833727012449954}
   fullscreenToggle: {fileID: 1540726416502596517}

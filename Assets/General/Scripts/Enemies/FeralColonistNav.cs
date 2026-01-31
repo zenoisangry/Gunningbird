@@ -50,16 +50,11 @@ public class FeralColonistNav : MonoBehaviour
     [SerializeField] private float hitStunTime = 0.15f;
     [SerializeField] private string hitAnimationTrigger = "Hit";
     [SerializeField] private string deathAnimationTrigger = "Die";
-    [SerializeField] private bool disableBodyCollidersOnDeath = true;
-    [SerializeField] private bool disableNavOnDeath = true;
-    [SerializeField] private bool disableWeaponAttackOnDeath = true;
-    [SerializeField] private bool destroyEnemyRootOnDeath = true;
     [SerializeField] private float destroyDelay = 2f;
 
     //Attack variables
     private float attackDelay;
     private float attackEndLag;
-    private float activeFrames;
     private bool attacking = false;
 
     public FeralColonistBehavior currentBehavior = FeralColonistBehavior.Idle;
@@ -481,83 +476,19 @@ public class FeralColonistNav : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        currentBehavior = FeralColonistBehavior.Idle;
-        attacking = false;
-
-        if (hitReactCoroutine != null)
+        if (healthSystem != null)
         {
-            StopCoroutine(hitReactCoroutine);
-            hitReactCoroutine = null;
+            healthSystem.DamageTaken -= HandleDamageTaken;
+            healthSystem.Died -= HandleDeath;
         }
 
-        if (attackCoroutine != null)
+        if (transform.parent != null)
         {
-            StopCoroutine(attackCoroutine);
-            attackCoroutine = null;
+            transform.parent.gameObject.SetActive(false);
         }
-
-        if (jumpCoroutine != null)
+        else
         {
-            StopCoroutine(jumpCoroutine);
-            jumpCoroutine = null;
-        }
-
-        if (disableNavOnDeath && navigation != null)
-        {
-            navigation.SetDestination(transform.position);
-            navigation.updatePosition = false;
-            navigation.enabled = false;
-        }
-
-        if (movementScript != null)
-        {
-            movementScript.DisableNavmeshFollow();
-        }
-
-        if (disableWeaponAttackOnDeath && enemyWeaponAttack != null)
-        {
-            enemyWeaponAttack.enabled = false;
-        }
-
-        if (disableBodyCollidersOnDeath)
-        {
-            if (bodyCollider != null)
-                bodyCollider.enabled = false;
-
-            if (body != null)
-            {
-                Collider[] colliders = body.GetComponentsInChildren<Collider>();
-                foreach (Collider col in colliders)
-                {
-                    col.enabled = false;
-                }
-            }
-        }
-
-        if (jumpAttackDetector != null)
-        {
-            jumpAttackDetector.DisableHitBox();
-        }
-        else if (jumpHitBox != null)
-        {
-            jumpHitBox.enabled = false;
-        }
-
-        if (jumpRB != null)
-        {
-            jumpRB.linearVelocity = Vector3.zero;
-            jumpRB.isKinematic = true;
-        }
-
-        if (animator != null && !string.IsNullOrEmpty(deathAnimationTrigger))
-        {
-            animator.SetTrigger(deathAnimationTrigger);
-        }
-
-        if (destroyEnemyRootOnDeath)
-        {
-            GameObject root = transform.root != null ? transform.root.gameObject : gameObject;
-            Destroy(root, Mathf.Max(0f, destroyDelay));
+            gameObject.SetActive(false);
         }
     }
 

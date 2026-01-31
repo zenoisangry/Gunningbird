@@ -304,4 +304,8 @@ public class PlayerInput : MonoBehaviour
 
     public bool IsDead() => isDead;
     public HealthSystem GetHealthSystem() => healthSystem;
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.OnPause(context);
+    }
 }

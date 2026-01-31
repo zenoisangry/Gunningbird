@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class UIGameOver : MonoBehaviour, IGameUI
 {
@@ -14,10 +13,10 @@ public class UIGameOver : MonoBehaviour, IGameUI
     {
         if (restartButton != null)
             restartButton.onClick.AddListener(OnRestartClicked);
-        
+
         if (mainMenuButton != null)
             mainMenuButton.onClick.AddListener(OnMainMenuClicked);
-        
+
         if (quitButton != null)
             quitButton.onClick.AddListener(OnQuitClicked);
     }
@@ -35,7 +34,7 @@ public class UIGameOver : MonoBehaviour, IGameUI
 
     private void OnRestartClicked()
     {
-        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Gameplay);
+        GameManager.Instance.RestartLevel();
     }
 
     private void OnMainMenuClicked()
