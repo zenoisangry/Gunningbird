@@ -6,7 +6,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float speed = 50f;
     [SerializeField] private float lifetime = 5f;
     [SerializeField] private float damage = 25f;
-    [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private LayerMask ignoreLayers;
     [SerializeField] private GameObject impactEffect;
     [SerializeField] private GameObject trailEffect;
     private IWeaponOwner owner;
@@ -30,11 +30,9 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("collision entered");
         if (collision == null || collision.gameObject == null) return;
 
-        Debug.Log("check 1 passed");
-        if ((hitLayers.value & (1 << collision.gameObject.layer)) == 0 && collision.gameObject.layer != 0)
+        if ((ignoreLayers.value & (1 << collision.gameObject.layer)) != 0 || collision.gameObject.layer == 10 || collision.gameObject.layer == 9)
         {
             return;
         }
@@ -42,6 +40,7 @@ public class Projectile : MonoBehaviour
         IDamageable damageable = collision.collider.GetComponentInParent<IDamageable>();
         if (damageable != null)
         {
+            Debug.Log(collision.collider.gameObject);
             bool isHeadshot = collision.collider.CompareTag("Head");
             float finalDamage = damage * (isHeadshot ? headshotMultiplier : 1f);
 

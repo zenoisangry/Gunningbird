@@ -82,18 +82,18 @@ MonoBehaviour:
   body: {fileID: 6493743809459716190}
   enemyRangedAttack: {fileID: 1646647564736562245}
   attackTarget: {fileID: 0}
-  aggroRange: 0
-  losAggroRange: 0
-  escapeRange: 0
-  shootingMinRange: 0
-  shootingMaxRange: 0
-  escapeRangePriority: 0
-  escapeCheckCooldown: 0
-  escapeSafetyPriority: 0
-  baseSpeed: 0
-  formChangeCooldown: 0
-  formChangeSpeed: 0
-  playHitReaction: 1
+  aggroRange: 10
+  losAggroRange: 100
+  escapeRange: 200
+  shootingMinRange: 5
+  shootingMaxRange: 100
+  escapeRangePriority: 1
+  escapeCheckCooldown: 3
+  escapeSafetyPriority: 1
+  baseSpeed: 5
+  formChangeCooldown: 30
+  formChangeSpeed: 15
+  playHitReaction: 0
   hitStunTime: 0.15
   hitAnimationTrigger: Hit
   deathAnimationTrigger: Die
@@ -137,9 +137,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8391e7c8c52b13445b286179a46e2595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyRangedAttack
-  weaponData: {fileID: 11400000, guid: f3ce25cee44b56a4697f4bbd835350b2, type: 2}
-  firePoint: {fileID: 0}
-  weaponHolder: {fileID: 0}
+  weaponData: {fileID: 11400000, guid: e65eb825094d8d04ca8ef58a58f7f440, type: 2}
+  firePoint: {fileID: 9051706075495373289}
+  weaponHolder: {fileID: 9051706075495373289}
   aimSpeed: 5
   aimOffset: 0.5
   predictTargetMovement: 1
@@ -193,6 +193,7 @@ GameObject:
   - component: {fileID: 4278019014520587685}
   - component: {fileID: 6082911699488717224}
   - component: {fileID: 1848178760946453551}
+  - component: {fileID: 5513037657310114198}
   m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
@@ -356,3 +357,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5513037657310114198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493743809459716190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ac0bcc4a60acc54d9361b19279fdc8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+  maxHealth: 100
+  currentHealth: 0
+  isDead: 0
+  enableRegeneration: 1
+  regenerationDelay: 3
+  regenerationRate: 5
+  regenerationPercentage: 0.5
+  bulletResistance: 0
+  meleeResistance: 0
+  explosionResistance: 0
+  fireResistance: 0
+  genericResistance: 0

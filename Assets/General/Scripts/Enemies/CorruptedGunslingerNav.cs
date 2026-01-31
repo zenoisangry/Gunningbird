@@ -164,7 +164,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     currentBehavior = GunslingerBehavior.Shooting;
                     navigation.SetDestination(transform.position);
                 }
-                if (playerDistance <= shootingMinRange)
+                if (playerDistance <= shootingMinRange && canEscape)
                 {
                     FindEscapeZone();
                     currentBehavior = GunslingerBehavior.Escaping;
@@ -175,11 +175,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 if (!CheckLOS())
                 {
                     Debug.Log("[Gunslinger] Lost line of sight, reloading if possible");
-                    if (enemyRangedAttack.CanReload())
-                    {
-                        Debug.Log("[Gunslinger] Starting reload");
-                        enemyRangedAttack.Reload();
-                    }
+                    enemyRangedAttack.Reload();
                     currentBehavior = GunslingerBehavior.Reloading;
                     break;
                 }
@@ -192,18 +188,20 @@ public class CorruptedGunslingerNav : MonoBehaviour
                         currentBehavior = GunslingerBehavior.Escaping;
                         break;
                     }
-
+                    else
                     if (playerDistance <= shootingMinRange && canEscape)
                     {
                         Debug.Log("[Gunslinger] Player too close, escaping");
                         FindEscapeZone();
                         currentBehavior = GunslingerBehavior.Escaping;
+                        break;
                     }
-
+                    else
                     if (playerDistance > shootingMaxRange)
                     {
                         Debug.Log("[Gunslinger] Player too far, closing distance");
                         currentBehavior = GunslingerBehavior.Closing;
+                        break;
                     }
                 }
                 break;
@@ -214,24 +212,25 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange)
                     {
                         Debug.Log("[Gunslinger] Reload complete, resuming shooting");
+                        navigation.SetDestination(transform.position);
                         currentBehavior = GunslingerBehavior.Shooting;
+                        break;
                     }
                     else
                     {
                         Debug.Log("[Gunslinger] Reload complete, closing distance");
                         currentBehavior = GunslingerBehavior.Closing;
+                        break;
                     }
                 }
             break;
 
             case GunslingerBehavior.Escaping:
-                if (navigation.remainingDistance <= navigation.stoppingDistance)
+                if (navigation.remainingDistance <= navigation.stoppingDistance && !navigation.pathPending)
                 {
-                    if (enemyRangedAttack.CanReload())
-                    {
-                        Debug.Log("[Gunslinger] Starting reload");
-                        enemyRangedAttack.Reload();
-                    }
+                    Debug.Log("Escape complete. [Gunslinger] Starting reload");
+                    navigation.SetDestination(transform.position);
+                    enemyRangedAttack.Reload();
                     currentBehavior = GunslingerBehavior.Reloading;
                 }
                 break;
@@ -245,19 +244,19 @@ public class CorruptedGunslingerNav : MonoBehaviour
         foreach (KeyValuePair<Vector3, float> zone in escManager.escapeAreas)
         {
             int coveredLines = escManager.CheckZoneLOS(player.gameObject, zone.Key + new Vector3(0, 1, 0), zone.Value);
-            if (coveredLines > 0)
+            float tempQuality = (-(transform.position - zone.Key).magnitude * escapeRangePriority) + (coveredLines * (escapeRange / 5) * escapeSafetyPriority);
+            if (tempQuality > targetQuality)
             {
-                float tempQuality = -(zone.Key - transform.position).magnitude * escapeRangePriority + coveredLines * (escapeRange / 5) * escapeSafetyPriority;
-                if (tempQuality > targetQuality)
-                {
-                    targetQuality = tempQuality;
-                    targetZone = zone.Key;
-                }
+                targetQuality = tempQuality;
+                targetZone = zone.Key;
             }
         }
         if (targetZone == Vector3.zero)
         {
-            currentBehavior = GunslingerBehavior.Closing;
+            Debug.Log("couldn't find good enough escape option");
+            enemyRangedAttack.Reload();
+            currentBehavior = GunslingerBehavior.Reloading;
+            navigation.SetDestination(transform.position);
         }
         else
         {

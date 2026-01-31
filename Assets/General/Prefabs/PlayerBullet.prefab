@@ -128,9 +128,9 @@ MonoBehaviour:
   speed: 50
   lifetime: 5
   damage: 25
-  hitLayers:
+  ignoreLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 8
   impactEffect: {fileID: 0}
   trailEffect: {fileID: 8522113990326279968}
 --- !u!1 &8522113990326279968

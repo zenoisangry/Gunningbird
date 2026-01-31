@@ -22,20 +22,19 @@ public class EscapeManager : MonoBehaviour
         Vector3 tempDistance;
         //Check for center
         tempDistance = player.transform.position - zoneCoords;
-        if (Physics.Raycast(zoneCoords, tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        if (Physics.Raycast(zoneCoords, tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy", "Weapon", "Projectile"))) coveredSightlines += 1;
         //Check for Xpositive
         tempDistance = player.transform.position - (zoneCoords + new Vector3(zoneRadius, 0, 0));
-        if (Physics.Raycast(zoneCoords + new Vector3(zoneRadius, 0, 0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        if (Physics.Raycast(zoneCoords + new Vector3(zoneRadius, 0, 0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy", "Weapon", "Projectile"))) coveredSightlines += 1;
         //Check for Xnegative
         tempDistance = player.transform.position - (zoneCoords + new Vector3(-zoneRadius, 0, 0));
-        if (Physics.Raycast(zoneCoords + new Vector3(-zoneRadius, 0, 0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        if (Physics.Raycast(zoneCoords + new Vector3(-zoneRadius, 0, 0), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy", "Weapon", "Projectile"))) coveredSightlines += 1;
         //Check for Zpositive
         tempDistance = player.transform.position - (zoneCoords + new Vector3(0, 0, zoneRadius));
-        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
+        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy", "Weapon", "Projectile"))) coveredSightlines += 1;
         //Check for Znegative
         tempDistance = player.transform.position - (zoneCoords + new Vector3(0, 0, -zoneRadius));
-        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, -zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy"))) coveredSightlines += 1;
-        //TODO check se la zona è nascosta dal player o no
+        if (Physics.Raycast(zoneCoords + new Vector3(0, 0, -zoneRadius), tempDistance, tempDistance.magnitude, LayerMask.GetMask("Default", "Enemy", "Weapon", "Projectile"))) coveredSightlines += 1;
         return coveredSightlines;
     }
 }
