@@ -1054,15 +1054,53 @@ PrefabInstance:
       propertyPath: attackTarget
       value: 
       objectReference: {fileID: 773716179}
+    - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+      propertyPath: enemyRangedAttack
+      value: 
+      objectReference: {fileID: 1026502817}
     - target: {fileID: 5609910913689416305, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: m_Name
       value: CorruptedGunslinger
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1646647564736562245, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4343202572123529792, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1026502817}
   m_SourcePrefab: {fileID: 100100000, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+--- !u!4 &1026502815 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9051706075495373289, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+  m_PrefabInstance: {fileID: 1026502814}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1026502816 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4343202572123529792, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+  m_PrefabInstance: {fileID: 1026502814}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1026502817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026502816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8391e7c8c52b13445b286179a46e2595, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyRangedAttack
+  weaponData: {fileID: 11400000, guid: e65eb825094d8d04ca8ef58a58f7f440, type: 2}
+  firePoint: {fileID: 1026502815}
+  weaponHolder: {fileID: 1026502815}
+  aimSpeed: 5
+  aimOffset: 0.5
+  predictTargetMovement: 1
+  predictionMultiplier: 0.5
+  audioSource: {fileID: 951068101}
 --- !u!1 &1051474175
 GameObject:
   m_ObjectHideFlags: 0

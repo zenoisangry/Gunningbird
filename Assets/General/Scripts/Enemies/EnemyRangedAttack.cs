@@ -160,7 +160,7 @@ public class EnemyRangedAttack : MonoBehaviour
         if (target == null) return false;
 
         Vector3 directionToTarget = (target.position - transform.position).normalized;
-        float angleToTarget = Vector3.Angle(transform.forward, new Vector3(directionToTarget.x, 0, directionToTarget.z));
+        float angleToTarget = Vector3.Angle(transform.forward, directionToTarget);
 
         return angleToTarget <= maxAngle;
     }
@@ -284,7 +284,7 @@ public class EnemyWeaponOwner : MonoBehaviour, IWeaponOwner
     }
 
     public Transform GetFireTransform() => fireTransform;
-    public Transform GetCameraTransform() => cameraTransform;
+    public Transform GetCameraTransform() => GetComponent<Transform>();
     public Animator GetAnimator() => GetComponent<Animator>();
 
     public void AddRecoil(Vector2 recoil){}
