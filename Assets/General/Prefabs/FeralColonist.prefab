@@ -112,7 +112,8 @@ GameObject:
   - component: {fileID: 2604263428331699232}
   - component: {fileID: 680255248503217877}
   - component: {fileID: 881732388443884152}
-  - component: {fileID: 2249149963711480744}
+  - component: {fileID: 8965811001228008669}
+  - component: {fileID: 8029248531387426070}
   m_Layer: 8
   m_Name: NavigationGuide
   m_TagString: Untagged
@@ -148,14 +149,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06b382586c3803f429729d87a2d4207a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FeralColonistAI
-  player: {fileID: 0}
   body: {fileID: 6493743809459716190}
   meleeAimPoint: {fileID: 4737721415466516782}
   jumpHitBox: {fileID: 3633808791388390542}
-  enemyWeaponAttack: {fileID: 0}
+  jumpAttackDetector: {fileID: 0}
+  enemyWeaponAttack: {fileID: 8029248531387426070}
   attackTarget: {fileID: 0}
-  aggroRange: 10
-  losAggroRange: 50
+  aggroRange: 15
+  losAggroRange: 100
+  escapeRange: 100
+  escapeRangePriority: 1
+  escapeCheckCooldown: 3
+  escapeSafetyPriority: 1
   jumpRange: 20
   jumpOvershootSpeed: -1
   jumpChargeTime: 1
@@ -165,10 +170,6 @@ MonoBehaviour:
   hitStunTime: 0.15
   hitAnimationTrigger: Hit
   deathAnimationTrigger: Die
-  disableBodyCollidersOnDeath: 1
-  disableNavOnDeath: 1
-  disableWeaponAttackOnDeath: 1
-  destroyEnemyRootOnDeath: 1
   destroyDelay: 2
   currentBehavior: 0
 --- !u!195 &680255248503217877
@@ -181,10 +182,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 1479372276
   m_Radius: 0.5
-  m_Speed: 5
+  m_Speed: 10
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 5
+  m_AngularSpeed: 10
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -211,7 +212,7 @@ MonoBehaviour:
   meleeHitLayers:
     serializedVersion: 2
     m_Bits: 8
---- !u!95 &2249149963711480744
+--- !u!95 &8965811001228008669
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -233,6 +234,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8029248531387426070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5526311039920142374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf6192421297ad841a3be0a0535618c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyWeaponAttack
+  weapon: {fileID: 881732388443884152}
+  attackOrigin: {fileID: 4737721415466516782}
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &5609910913689416305
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,6 +299,8 @@ GameObject:
   - component: {fileID: 4278019014520587685}
   - component: {fileID: 6082911699488717224}
   - component: {fileID: 1939356918662690604}
+  - component: {fileID: 900786120784058635}
+  - component: {fileID: 3819658263134213634}
   m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
@@ -425,6 +445,51 @@ BoxCollider:
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1939356918662690604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493743809459716190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ac0bcc4a60acc54d9361b19279fdc8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
+  maxHealth: 100
+  currentHealth: 0
+  isDead: 0
+  enableRegeneration: 1
+  regenerationDelay: 3
+  regenerationRate: 5
+  regenerationPercentage: 0.5
+  bulletResistance: 0
+  meleeResistance: 0
+  explosionResistance: 0
+  fireResistance: 0
+  genericResistance: 0
+--- !u!65 &900786120784058635
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493743809459716190}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3819658263134213634
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

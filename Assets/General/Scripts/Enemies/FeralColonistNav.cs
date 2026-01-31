@@ -37,7 +37,7 @@ public class FeralColonistNav : MonoBehaviour
     public float escapeRangePriority;
     public float escapeCheckCooldown;
     public float escapeSafetyPriority;
-    private bool canEscape;
+    private bool canEscape = true;
     public float jumpRange;
     public float jumpOvershootSpeed;
     public float jumpChargeTime;
@@ -218,7 +218,7 @@ public class FeralColonistNav : MonoBehaviour
                         jumpCoroutine = StartCoroutine(Jump());
                     }
                 }
-                else if ((player.height > jumpRange))
+                else if (player.height > jumpRange)
                 {
                     if (canEscape)
                     {
@@ -318,6 +318,7 @@ public class FeralColonistNav : MonoBehaviour
 
     private IEnumerator Jump()
     {
+        canJump = false;
         checkForGround = false;
         float timer = 0;
         float abortTimer = 0;
@@ -361,8 +362,9 @@ public class FeralColonistNav : MonoBehaviour
             jumpHitBox.enabled = true;
         }
 
-        yield return null;
+        yield return new WaitForSeconds(0.1f);
         checkForGround = true;
+        canJump = true;
         jumpCoroutine = null;
     }
 
@@ -423,12 +425,13 @@ public class FeralColonistNav : MonoBehaviour
     private bool CheckLOS()
     {
         if (player == null) return false;
-        Debug.Log("Checking LOS");
-        bool result = Physics.BoxCast(body.transform.position, bodyCollider.size/3, player.transform.position - body.transform.position,
+        if (playerDistance < losAggroRange)
+        {
+            bool result = Physics.BoxCast(body.transform.position, bodyCollider.size / 3, player.transform.position - body.transform.position,
                                 Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
-        Debug.Log("Something is blocking LOS = " + result);
-        return !Physics.BoxCast(body.transform.position, bodyCollider.size/3f, player.transform.position - body.transform.position,
-                                Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
+            return !result;
+        }
+        else return false;
     }
 
     private void HandleDamageTaken(float finalDamage)

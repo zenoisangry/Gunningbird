@@ -12,7 +12,10 @@ public class EscapeManager : MonoBehaviour
     {
         foreach(Transform child in gameObject.transform)
         {
-            escapeAreas.Add(child.position, child.gameObject.GetComponent<EscapePoint>().areaRadius);
+            if (child.GetComponent<EscapePoint>() != null)
+            {
+                escapeAreas.Add(child.position, child.gameObject.GetComponent<EscapePoint>().areaRadius);
+            }
         }
     }
 

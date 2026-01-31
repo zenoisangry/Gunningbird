@@ -119,56 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &42866967 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6493743809459716190, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-  m_PrefabInstance: {fileID: 722359121}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &42866968
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 42866967}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &42866976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 42866967}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ac0bcc4a60acc54d9361b19279fdc8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
-  maxHealth: 100
-  currentHealth: 0
-  isDead: 0
-  enableRegeneration: 1
-  regenerationDelay: 3
-  regenerationRate: 5
-  regenerationPercentage: 0.5
-  bulletResistance: 0
-  meleeResistance: 0
-  explosionResistance: 0
-  fireResistance: 0
-  genericResistance: 0
 --- !u!1001 &60402453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -226,16 +176,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38741eb123c6be44ba7aff3715a21728, type: 3}
---- !u!4 &172306014 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4737721415466516782, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-  m_PrefabInstance: {fileID: 722359121}
-  m_PrefabAsset: {fileID: 0}
---- !u!136 &180938886 stripped
-CapsuleCollider:
-  m_CorrespondingSourceObject: {fileID: 3633808791388390542, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-  m_PrefabInstance: {fileID: 722359121}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &200851717
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,110 +638,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpRange
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpSpeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpHitBox
-      value: 
-      objectReference: {fileID: 180938886}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeRange
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: attackTarget
       value: 
       objectReference: {fileID: 773716179}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: healthSystem
-      value: 
-      objectReference: {fileID: 42866976}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpStrength
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpAbortTimer
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpChargeTime
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: meleeAttackRange
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: enemyWeaponAttack
-      value: 
-      objectReference: {fileID: 1122735412}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpOvershootSpeed
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeCheckCooldown
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeRangePriority
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: jumpOvershootLength
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeSafetyPriority
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4278019014520587685, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: m_UseGravity
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: m_TagString
-      value: Enemy
-      objectReference: {fileID: 0}
-    - target: {fileID: 8974050707936385254, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: referenceWeapon
-      value: 
-      objectReference: {fileID: 1122735405}
-    m_RemovedComponents:
-    - {fileID: 4307741153633557616, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6493743809459716190, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 42866968}
-    - targetCorrespondingSourceObject: {fileID: 6493743809459716190, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 42866976}
-    - targetCorrespondingSourceObject: {fileID: 5526311039920142374, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1122735408}
-    - targetCorrespondingSourceObject: {fileID: 5526311039920142374, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1122735412}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
 --- !u!4 &773716179 stripped
 Transform:
@@ -1042,10 +889,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1646647564736562245, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
-      propertyPath: audioSource
-      value: 
-      objectReference: {fileID: 951068101}
     - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: player
       value: 
@@ -1054,53 +897,23 @@ PrefabInstance:
       propertyPath: attackTarget
       value: 
       objectReference: {fileID: 773716179}
-    - target: {fileID: 3971287175625106120, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
-      propertyPath: enemyRangedAttack
+    - target: {fileID: 5608643920456250554, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+      propertyPath: audioSource
       value: 
-      objectReference: {fileID: 1026502817}
+      objectReference: {fileID: 951068101}
     - target: {fileID: 5609910913689416305, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: m_Name
       value: CorruptedGunslinger
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1646647564736562245, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+    - target: {fileID: 5609910913689416305, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4343202572123529792, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1026502817}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
---- !u!4 &1026502815 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9051706075495373289, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
-  m_PrefabInstance: {fileID: 1026502814}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1026502816 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4343202572123529792, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
-  m_PrefabInstance: {fileID: 1026502814}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1026502817
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1026502816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8391e7c8c52b13445b286179a46e2595, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyRangedAttack
-  weaponData: {fileID: 11400000, guid: e65eb825094d8d04ca8ef58a58f7f440, type: 2}
-  firePoint: {fileID: 1026502815}
-  weaponHolder: {fileID: 1026502815}
-  aimSpeed: 5
-  aimOffset: 0.5
-  predictTargetMovement: 1
-  predictionMultiplier: 0.5
-  audioSource: {fileID: 951068101}
 --- !u!1 &1051474175
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,61 +1016,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38741eb123c6be44ba7aff3715a21728, type: 3}
---- !u!1 &1122735403 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5526311039920142374, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-  m_PrefabInstance: {fileID: 722359121}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1122735405 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 881732388443884152, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-  m_PrefabInstance: {fileID: 722359121}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1122735403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 707febc6438899b41a93013628f3e15c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MeleeWeapon
---- !u!95 &1122735408
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1122735403}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1122735412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1122735403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf6192421297ad841a3be0a0535618c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyWeaponAttack
-  weapon: {fileID: 1122735405}
-  attackOrigin: {fileID: 172306014}
-  hitLayers:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!1001 &1305732050
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -255,7 +255,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
         if (targetZone == Vector3.zero)
         {
-            Debug.Log("couldn't find good enough escape option");
             enemyRangedAttack.Reload();
             currentBehavior = GunslingerBehavior.Reloading;
             navigation.SetDestination(transform.position);

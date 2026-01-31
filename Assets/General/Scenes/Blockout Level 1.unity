@@ -794,22 +794,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeRange
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeCheckCooldown
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeRangePriority
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2604263428331699232, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
-      propertyPath: escapeSafetyPriority
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
       propertyPath: m_Name
       value: FeralColonist (16)
