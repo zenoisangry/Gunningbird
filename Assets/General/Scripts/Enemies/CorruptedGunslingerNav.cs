@@ -36,7 +36,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
     public float baseSpeed;
     public float formChangeCooldown;
     public float formChangeSpeed;
-    private bool canChangeForm;
+    public float formChangeDistance;
+    private bool canChangeForm = true;
 
     [Header("Damage / Death Reactions")]
     [SerializeField] private bool playHitReaction = true;
@@ -232,6 +233,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     navigation.SetDestination(transform.position);
                     enemyRangedAttack.Reload();
                     currentBehavior = GunslingerBehavior.Reloading;
+                    navigation.speed = baseSpeed;
                 }
                 break;
         }
@@ -261,7 +263,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
         else
         {
             //Cambia behavior in base a se hai la forma o meno
-            if (canChangeForm)
+            if (canChangeForm && ((targetZone-transform.position).magnitude) > formChangeDistance)
             {
                 navigation.speed = formChangeSpeed;
                 StartCoroutine(FormChangeCD());

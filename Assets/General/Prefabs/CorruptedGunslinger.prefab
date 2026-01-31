@@ -90,9 +90,10 @@ MonoBehaviour:
   escapeRangePriority: 1
   escapeCheckCooldown: 3
   escapeSafetyPriority: 1
-  baseSpeed: 5
+  baseSpeed: 7
   formChangeCooldown: 30
-  formChangeSpeed: 15
+  formChangeSpeed: 20
+  formChangeDistance: 25
   playHitReaction: 0
   hitStunTime: 0.15
   hitAnimationTrigger: Hit
@@ -114,9 +115,9 @@ NavMeshAgent:
   m_AgentTypeID: 1479372276
   m_Radius: 0.6
   m_Speed: 5
-  m_Acceleration: 8
+  m_Acceleration: 50
   avoidancePriority: 50
-  m_AngularSpeed: 5
+  m_AngularSpeed: 180
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
