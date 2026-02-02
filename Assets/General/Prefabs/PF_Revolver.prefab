@@ -320,10 +320,22 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1922004986729384597, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f2bf69952b524d4e84c93813d7ba6f5, type: 2}
     - target: {fileID: -1018664272722485354, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: -1018664272722485354, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 66147713318263757, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f2bf69952b524d4e84c93813d7ba6f5, type: 2}
     - target: {fileID: 903645308349579735, guid: b12eb7b8cdb8eb140b90b7970f89fab2, type: 3}
       propertyPath: m_Layer
       value: 10
