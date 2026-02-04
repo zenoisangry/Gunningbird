@@ -38,9 +38,10 @@ MonoBehaviour:
   secondaryFireRate: 300
   isFullAuto: 1
   isFullAutoSecondary: 0
-  magazineSize: 30
+  usesAmmo: 1
+  magazineSize: 1
   totalAmmo: 120
-  reloadTime: 2.5
+  reloadTime: 2
   ammoType: 1
   hasInfiniteAmmo: 0
   baseSpread: 0
@@ -56,3 +57,10 @@ MonoBehaviour:
   meleeRange: 2
   meleeCooldown: 0.5
   meleeAngle: 90
+  meleeHitDelay: 0.2
+  useHorizontalSpread: 0
+  horizontalSpreadAngle: 15
+  verticalSpreadAngle: 3
+  weaponViewPosition: {x: 0, y: 0, z: 0}
+  weaponViewRotation: {x: 0, y: 0, z: 0}
+  weaponViewScale: {x: 1, y: 1, z: 1}

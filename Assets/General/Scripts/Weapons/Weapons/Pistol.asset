@@ -33,7 +33,7 @@ MonoBehaviour:
   headshotMultiplier: 2
   meleeDamage: 50
   meleeInstaKillThreshold: 30
-  fireRate: 300
+  fireRate: 150
   bulletSpeed: 100
   secondaryFireRate: 0
   isFullAuto: 1
@@ -41,7 +41,7 @@ MonoBehaviour:
   usesAmmo: 1
   magazineSize: 12
   totalAmmo: 60
-  reloadTime: 2.5
+  reloadTime: 1.5
   ammoType: 0
   hasInfiniteAmmo: 0
   baseSpread: 0
