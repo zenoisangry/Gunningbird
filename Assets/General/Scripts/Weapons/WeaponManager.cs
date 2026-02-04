@@ -8,6 +8,9 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private WeaponData[] startingWeapons;
     [SerializeField] private WeaponUI weaponUI;
 
+    [Header("Weapon Transform Override")]
+    [SerializeField] private bool useCustomTransforms = true;
+
     private BaseWeapon[] slots;
     private int currentIndex = -1;
 
@@ -89,9 +92,22 @@ public class WeaponManager : MonoBehaviour
         }
 
         GameObject weaponGO = Instantiate(data.weaponPrefab, weaponHolder);
-        weaponGO.transform.localPosition = Vector3.zero;
-        weaponGO.transform.localRotation = Quaternion.identity;
-        weaponGO.transform.localScale = Vector3.one;
+
+        if (useCustomTransforms)
+        {
+            if (data.weaponViewPosition != Vector3.zero || data.weaponViewRotation != Vector3.zero || data.weaponViewScale != Vector3.one)
+            {
+                weaponGO.transform.localPosition = data.weaponViewPosition;
+                weaponGO.transform.localRotation = Quaternion.Euler(data.weaponViewRotation);
+                weaponGO.transform.localScale = data.weaponViewScale;
+            }
+        }
+        else
+        {
+            weaponGO.transform.localPosition = Vector3.zero;
+            weaponGO.transform.localRotation = Quaternion.identity;
+            weaponGO.transform.localScale = Vector3.one;
+        }
 
         BaseWeapon weapon = weaponGO.GetComponent<BaseWeapon>();
         if (weapon == null)
@@ -135,16 +151,16 @@ public class WeaponManager : MonoBehaviour
     public void NextWeapon()
     {
         if (slots == null || slots.Length == 0) return;
-        
+
         int nextIndex = (currentIndex + 1) % slots.Length;
         int attempts = 0;
-        
+
         while (slots[nextIndex] == null && attempts < slots.Length)
         {
             nextIndex = (nextIndex + 1) % slots.Length;
             attempts++;
         }
-        
+
         if (slots[nextIndex] != null)
             EquipWeapon(nextIndex);
     }
@@ -152,19 +168,43 @@ public class WeaponManager : MonoBehaviour
     public void PreviousWeapon()
     {
         if (slots == null || slots.Length == 0) return;
-        
+
         int prevIndex = (currentIndex - 1 + slots.Length) % slots.Length;
         int attempts = 0;
-        
+
         while (slots[prevIndex] == null && attempts < slots.Length)
         {
             prevIndex = (prevIndex - 1 + slots.Length) % slots.Length;
             attempts++;
         }
-        
+
         if (slots[prevIndex] != null)
             EquipWeapon(prevIndex);
     }
 
     public BaseWeapon GetCurrentWeapon() => currentIndex < 0 ? null : slots[currentIndex];
+
+    public BaseWeapon GetWeaponAtSlot(int slotIndex)
+    {
+        if (slots == null || slotIndex < 0 || slotIndex >= slots.Length)
+            return null;
+        return slots[slotIndex];
+    }
+
+    public int GetSlotCount()
+    {
+        return slots != null ? slots.Length : 0;
+    }
+
+    public int GetCurrentSlotIndex()
+    {
+        return currentIndex;
+    }
+
+    public bool IsSlotOccupied(int slotIndex)
+    {
+        if (slots == null || slotIndex < 0 || slotIndex >= slots.Length)
+            return false;
+        return slots[slotIndex] != null;
+    }
 }

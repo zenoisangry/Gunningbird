@@ -67,6 +67,26 @@ public class WeaponData : ScriptableObject
     public float meleeCooldown = 0.5f;
     public float meleeAngle = 90f;
     public float meleeHitDelay = 0.2f;
+
+    [Header("Shotgun Settings")]
+    [Tooltip("Use horizontal spread pattern for shotguns instead of spherical")]
+    public bool useHorizontalSpread = false;
+
+    [Tooltip("Horizontal spread angle for shotguns (degrees)")]
+    public float horizontalSpreadAngle = 15f;
+
+    [Tooltip("Vertical spread angle for shotguns (degrees) - usually much smaller")]
+    public float verticalSpreadAngle = 3f;
+
+    [Header("View Model Transform (First Person)")]
+    [Tooltip("Position offset in first person view. Leave at zero to use prefab defaults.")]
+    public Vector3 weaponViewPosition = Vector3.zero;
+
+    [Tooltip("Rotation offset in first person view (Euler angles). Leave at zero to use prefab defaults.")]
+    public Vector3 weaponViewRotation = Vector3.zero;
+
+    [Tooltip("Scale in first person view. Use (1,1,1) to use prefab defaults, or adjust per weapon.")]
+    public Vector3 weaponViewScale = Vector3.one;
 }
 
 public enum WeaponType

@@ -79,6 +79,63 @@ public class RangedWeapon : BaseWeapon
 
         Vector3 firePosition = firePoint != null ? firePoint.position : transform.position;
 
+        if (weaponData.useHorizontalSpread)
+        {
+            FireShotgunHorizontalPattern(pelletCount, cameraTransform, firePosition);
+        }
+        else
+        {
+            FireShotgunSphericalPattern(pelletCount, cameraTransform, firePosition);
+        }
+    }
+
+    private void FireShotgunHorizontalPattern(int pelletCount, Transform cameraTransform, Vector3 firePosition)
+    {
+        Vector3 baseDirection = cameraTransform.forward;
+        Vector3 cameraRight = cameraTransform.right;
+        Vector3 cameraUp = cameraTransform.up;
+
+        float horizontalSpread = weaponData.horizontalSpreadAngle;
+        float verticalSpread = weaponData.verticalSpreadAngle;
+
+        for (int i = 0; i < pelletCount; i++)
+        {
+            float horizontalOffset = Mathf.Lerp(-horizontalSpread / 2f, horizontalSpread / 2f, i / (float)(pelletCount - 1));
+            float verticalOffset = Random.Range(-verticalSpread, verticalSpread);
+
+            Vector3 spreadDirection = baseDirection;
+
+            spreadDirection = Quaternion.AngleAxis(horizontalOffset, cameraUp) * spreadDirection;
+            spreadDirection = Quaternion.AngleAxis(verticalOffset, cameraRight) * spreadDirection;
+
+            spreadDirection = spreadDirection.normalized;
+
+            Vector3 targetPoint;
+            if (Physics.Raycast(cameraTransform.position, spreadDirection, out RaycastHit hit, maxDistance, hitLayers))
+            {
+                targetPoint = hit.point;
+                ProcessHit(hit, spreadDirection, weaponData.damage / pelletCount);
+                Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
+            }
+            else
+            {
+                targetPoint = cameraTransform.position + spreadDirection * maxDistance;
+            }
+
+            Vector3 fireDirection = (targetPoint - firePosition).normalized;
+
+            if (weaponData.bulletPrefab != null)
+            {
+                GameObject projGO = Instantiate(weaponData.bulletPrefab, firePosition, Quaternion.LookRotation(fireDirection));
+                Projectile proj = projGO.GetComponent<Projectile>();
+                if (proj != null)
+                    proj.Initialize(weaponData.damage / pelletCount, owner, fireDirection, weaponData.headshotMultiplier);
+            }
+        }
+    }
+
+    private void FireShotgunSphericalPattern(int pelletCount, Transform cameraTransform, Vector3 firePosition)
+    {
         for (int i = 0; i < pelletCount; i++)
         {
             Vector3 spreadDirection = CalculateSpreadDirection(cameraTransform.forward);

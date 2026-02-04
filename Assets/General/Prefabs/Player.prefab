@@ -137,8 +137,8 @@ MonoBehaviour:
   flightSpeed: 6
   jumpStrength: 6
   diveStrength: 10
-  jumpTimer: 0.2
   weaponManager: {fileID: 5725789863219392728}
+  healthSystem: {fileID: 0}
   projectedPosition: {x: 0, y: 0, z: 0}
   height: 0
 --- !u!33 &3025159574481230761
@@ -305,6 +305,8 @@ MonoBehaviour:
   ammoText: {fileID: 0}
   crosshair: {fileID: 0}
   weaponIconImage: {fileID: 0}
+  playerHealth: {fileID: 0}
+  healthText: {fileID: 0}
 --- !u!114 &6361763353340809841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,21 +347,6 @@ MonoBehaviour:
   explosionResistance: 0
   fireResistance: 0
   genericResistance: 0
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageTaken:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealed:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageReceived:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &9180429886455192656
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,9 +372,9 @@ Transform:
   m_GameObject: {fileID: 9180429886455192656}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0.6, y: -0.6, z: 0.3}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3130359938680195236}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
