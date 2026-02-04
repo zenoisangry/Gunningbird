@@ -91,7 +91,6 @@ GameObject:
   - component: {fileID: 107142312633675505}
   - component: {fileID: 3355620652941261144}
   - component: {fileID: 5725789863219392728}
-  - component: {fileID: 7346425650048931627}
   - component: {fileID: 6361763353340809841}
   - component: {fileID: 3208829876065403440}
   m_Layer: 3
@@ -288,25 +287,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cbfe386dbe261b347b6574e014a017d6, type: 2}
   - {fileID: 11400000, guid: 0455bf4f7b5542543b53d2fb5a8b09a2, type: 2}
   - {fileID: 11400000, guid: 380bf146f025fff4cbdb1b18b8483e68, type: 2}
-  weaponUI: {fileID: 7346425650048931627}
---- !u!114 &7346425650048931627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3670304794437903089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fdf8a3abbbbcd3479e365c1b75160cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WeaponUI
-  weaponManager: {fileID: 5725789863219392728}
-  ammoText: {fileID: 0}
-  crosshair: {fileID: 0}
-  weaponIconImage: {fileID: 0}
-  playerHealth: {fileID: 0}
-  healthText: {fileID: 0}
+  weaponUI: {fileID: 0}
+  useCustomTransforms: 1
 --- !u!114 &6361763353340809841
 MonoBehaviour:
   m_ObjectHideFlags: 0

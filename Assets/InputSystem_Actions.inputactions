@@ -28,7 +28,7 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "6c2ab1b8-8984-453a-af3d-a3c78ae1679a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -208,6 +208,15 @@
                     "name": "Weapon4",
                     "type": "Button",
                     "id": "c4bff010-8b2a-4b7b-ac1d-0a8361f2bf97",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "ef0a848d-ae12-4fda-8568-03605c39df56",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -806,6 +815,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Weapon4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eaec238e-7104-4e52-a71c-ebae8a3d0d45",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

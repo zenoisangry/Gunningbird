@@ -192,8 +192,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7741487668503514833}
+  - component: {fileID: 5957861181805699332}
   m_Layer: 0
-  m_Name: EnemySpawnpoint
+  m_Name: EnemySpawn_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -214,6 +215,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5552504758929660190}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5957861181805699332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4137612757809356574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc4dfebe76413ce4f8deeceeaf64e107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnPoint
+  enemyPrefab: {fileID: 5609910913689416305, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+  spawnDelay: 0
+  showGizmo: 1
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &4873454385064900330
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,8 +333,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2118218906649339684}
+  - component: {fileID: 3646280802131754904}
   m_Layer: 0
-  m_Name: EnemySpawnpoint
+  m_Name: EnemySpawn_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -338,6 +356,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5552504758929660190}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3646280802131754904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6175487042786113592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc4dfebe76413ce4f8deeceeaf64e107, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnPoint
+  enemyPrefab: {fileID: 5609910913689416305, guid: 61a6e9f9e45b926408ae78536ce7d7db, type: 3}
+  spawnDelay: 0
+  showGizmo: 1
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &6729106505955157190
 GameObject:
   m_ObjectHideFlags: 0
@@ -348,7 +382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4730940958428184447}
   m_Layer: 0
-  m_Name: PlayerSpawnpoint
+  m_Name: PlayerSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

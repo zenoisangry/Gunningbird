@@ -16,8 +16,8 @@ MonoBehaviour:
   description: 
   weaponType: 0
   weaponIcon: {fileID: 21300000, guid: c2f64ac25c371b64893906ebb705a741, type: 3}
-  weaponPrefab: {fileID: 7797442051283886472, guid: 7f9183f4b03271e40b11d6ac469fcff3, type: 3}
-  pickupPrefab: {fileID: 7797442051283886472, guid: 7f9183f4b03271e40b11d6ac469fcff3, type: 3}
+  weaponPrefab: {fileID: 3275731119075818684, guid: 632f650d3d272074da24d8f35a38840f, type: 3}
+  pickupPrefab: {fileID: 3275731119075818684, guid: 632f650d3d272074da24d8f35a38840f, type: 3}
   bulletPrefab: {fileID: 8058749452768088809, guid: 684f4c5c9a2c9aa4190fb75f2aedb9ec, type: 3}
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
@@ -38,6 +38,7 @@ MonoBehaviour:
   secondaryFireRate: 0
   isFullAuto: 1
   isFullAutoSecondary: 0
+  usesAmmo: 1
   magazineSize: 12
   totalAmmo: 60
   reloadTime: 2.5
@@ -56,3 +57,10 @@ MonoBehaviour:
   meleeRange: 2
   meleeCooldown: 0.5
   meleeAngle: 90
+  meleeHitDelay: 0.2
+  useHorizontalSpread: 0
+  horizontalSpreadAngle: 15
+  verticalSpreadAngle: 3
+  weaponViewPosition: {x: 0, y: 0, z: 0}
+  weaponViewRotation: {x: 0, y: 0, z: 0}
+  weaponViewScale: {x: 1, y: 1, z: 1}

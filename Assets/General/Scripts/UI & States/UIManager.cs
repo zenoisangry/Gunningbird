@@ -138,4 +138,16 @@ public class UIManager : MonoBehaviour
         }
         return null;
     }
+    public void RegisterPlayer(PlayerInput player)
+    {
+        if (player == null) return;
+
+        if (registeredUIs.TryGetValue(UIType.Gameplay, out IGameUI ui))
+        {
+            if (ui is UIGameplay gameplayUI)
+            {
+                gameplayUI.BindPlayer(player);
+            }
+        }
+    }
 }

@@ -4,39 +4,34 @@ using TMPro;
 
 public class WeaponUI : MonoBehaviour
 {
-    [Header("Weapon References")]
-    [SerializeField] private WeaponManager weaponManager;
+    [Header("UI")]
     [SerializeField] private TMP_Text ammoText;
     [SerializeField] private Image crosshair;
     [SerializeField] private Image weaponIconImage;
-
-    [Header("Player Health")]
-    [SerializeField] private HealthSystem playerHealth;
     [SerializeField] private TMP_Text healthText;
 
-    private void Awake()
-    {
-        if (playerHealth == null)
-        {
-            PlayerInput player = Object.FindAnyObjectByType<PlayerInput>();
-            if (player != null)
-                playerHealth = player.GetHealthSystem();
-        }
-    }
+    private WeaponManager weaponManager;
+    private HealthSystem healthSystem;
 
-    private void OnEnable()
+    public void Bind(WeaponManager wm, HealthSystem hs)
     {
-        if (playerHealth != null)
+        weaponManager = wm;
+        healthSystem = hs;
+
+        if (healthSystem != null)
         {
-            playerHealth.HealthChanged += UpdateHealthUI;
-            UpdateHealthUI(playerHealth.GetHealth(), playerHealth.GetMaxHealth());
+            healthSystem.HealthChanged += UpdateHealthUI;
+            UpdateHealthUI(
+                healthSystem.GetHealth(),
+                healthSystem.GetMaxHealth()
+            );
         }
     }
 
     private void OnDisable()
     {
-        if (playerHealth != null)
-            playerHealth.HealthChanged -= UpdateHealthUI;
+        if (healthSystem != null)
+            healthSystem.HealthChanged -= UpdateHealthUI;
     }
 
     private void Update()
@@ -46,17 +41,15 @@ public class WeaponUI : MonoBehaviour
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
         if (weapon == null)
         {
-            if (ammoText != null)
-                ammoText.gameObject.SetActive(false);
-            if (crosshair != null)
-                crosshair.enabled = false;
+            if (ammoText) ammoText.gameObject.SetActive(false);
+            if (crosshair) crosshair.enabled = false;
             return;
         }
 
         WeaponData data = weapon.GetWeaponData();
         if (data == null) return;
 
-        if (ammoText != null)
+        if (ammoText)
         {
             if (!data.usesAmmo)
             {
@@ -71,14 +64,13 @@ public class WeaponUI : MonoBehaviour
             }
         }
 
-        if (crosshair != null)
+        if (crosshair)
             crosshair.enabled = weapon.CanFire();
     }
 
     private void UpdateHealthUI(float current, float max)
     {
         if (healthText == null) return;
-
         healthText.text = $"HP: {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
     }
 

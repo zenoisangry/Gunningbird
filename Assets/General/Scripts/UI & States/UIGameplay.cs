@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class UIGameplay : MonoBehaviour, IGameUI
 {
@@ -8,15 +6,25 @@ public class UIGameplay : MonoBehaviour, IGameUI
     [SerializeField] private GameObject hudPanel;
     [SerializeField] private WeaponUI weaponUI;
 
-    public void Init() { }
+    private PlayerInput player;
+
+    public void Init() {}
+    public void BindPlayer(PlayerInput playerInput)
+    {
+        player = playerInput;
+
+        if (player == null || weaponUI == null) return;
+
+        weaponUI.Bind(
+            player.GetComponent<WeaponManager>(),
+            player.GetHealthSystem()
+        );
+    }
 
     public void SetActive(bool active)
     {
-        if (hudPanel != null)
-            hudPanel.SetActive(active);
-
-        if (weaponUI != null)
-            weaponUI.enabled = active;
+        if (hudPanel) hudPanel.SetActive(active);
+        if (weaponUI) weaponUI.enabled = active;
     }
 
     public UIManager.UIType GetUIType()

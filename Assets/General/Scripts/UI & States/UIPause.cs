@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using UnityEngine.InputSystem;
 
 public class UIPause : MonoBehaviour, IGameUI
 {
@@ -9,6 +9,9 @@ public class UIPause : MonoBehaviour, IGameUI
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button optionsButton;
     [SerializeField] private Button quitButton;
+
+    [Header("Input")]
+    [SerializeField] private InputActionReference pauseAction;
 
     public void Init()
     {
@@ -22,6 +25,24 @@ public class UIPause : MonoBehaviour, IGameUI
             quitButton.onClick.AddListener(OnQuitClicked);
     }
 
+    private void OnEnable()
+    {
+        if (pauseAction != null)
+        {
+            pauseAction.action.performed += OnPausePerformed;
+            pauseAction.action.Enable();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (pauseAction != null)
+        {
+            pauseAction.action.performed -= OnPausePerformed;
+            pauseAction.action.Disable();
+        }
+    }
+
     public void SetActive(bool active)
     {
         if (pausePanel != null)
@@ -31,6 +52,18 @@ public class UIPause : MonoBehaviour, IGameUI
     public UIManager.UIType GetUIType()
     {
         return UIManager.UIType.Pause;
+    }
+
+    private void OnPausePerformed(InputAction.CallbackContext context)
+    {
+        if (pausePanel != null && pausePanel.activeSelf)
+        {
+            OnResumeClicked();
+        }
+        else
+        {
+            GameManager.Instance.PauseGame();
+        }
     }
 
     private void OnResumeClicked()
@@ -46,16 +79,5 @@ public class UIPause : MonoBehaviour, IGameUI
     private void OnQuitClicked()
     {
         GameManager.Instance.QuitGame();
-    }
-
-    private void Update()
-    {
-        if (pausePanel != null && pausePanel.activeSelf)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                OnResumeClicked();
-            }
-        }
     }
 }

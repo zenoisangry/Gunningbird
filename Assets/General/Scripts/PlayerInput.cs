@@ -15,7 +15,6 @@ public class PlayerInput : MonoBehaviour
     public float flightSpeed;
     public float jumpStrength;
     public float diveStrength;
-    
 
     [Header("Weapons")]
     [SerializeField] private WeaponManager weaponManager;
@@ -41,6 +40,7 @@ public class PlayerInput : MonoBehaviour
     private InputAction lookAction;
     private InputAction flyAction;
     private InputAction switchMovementAction;
+    private InputAction pauseAction;
 
     private InputAction fireAction;
     private InputAction secondaryFireAction;
@@ -58,6 +58,7 @@ public class PlayerInput : MonoBehaviour
         lookAction = actions["Player/Look"];
         flyAction = actions["Player/Fly"];
         switchMovementAction = actions["Player/SwitchMovement"];
+        pauseAction = actions["Player/Pause"];
 
         fireAction = actions["Player/Fire"];
         secondaryFireAction = actions["Player/SecondaryFire"];
@@ -78,6 +79,7 @@ public class PlayerInput : MonoBehaviour
         lookAction.Enable();
         flyAction.Enable();
         switchMovementAction.Enable();
+        pauseAction.Enable();
 
         fireAction.Enable();
         secondaryFireAction.Enable();
@@ -91,6 +93,7 @@ public class PlayerInput : MonoBehaviour
         switchMovementAction.started += SwitchMovement;
         flyAction.started += AltSwitch;
         lookAction.performed += Look;
+        pauseAction.performed += OnPause;
 
         fireAction.performed += Fire;
         secondaryFireAction.performed += SecondaryFire;
@@ -105,7 +108,9 @@ public class PlayerInput : MonoBehaviour
     void OnDisable()
     {
         switchMovementAction.started -= SwitchMovement;
+        flyAction.started -= AltSwitch;
         lookAction.performed -= Look;
+        pauseAction.performed -= OnPause;
 
         fireAction.performed -= Fire;
         secondaryFireAction.performed -= SecondaryFire;
@@ -115,6 +120,7 @@ public class PlayerInput : MonoBehaviour
         lookAction.Disable();
         flyAction.Disable();
         switchMovementAction.Disable();
+        pauseAction.Disable();
 
         fireAction.Disable();
         secondaryFireAction.Disable();
@@ -130,6 +136,9 @@ public class PlayerInput : MonoBehaviour
     {
         currentSpeed = groundSpeed;
 
+        if (UIManager.Instance != null)
+            UIManager.Instance.RegisterPlayer(this);
+
         if (healthSystem != null)
         {
             healthSystem.DamageTaken += HandleDamageTaken;
@@ -137,7 +146,10 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"[PlayerInput] HealthSystem not found on {gameObject.name}. Player will not react to damage or death.", this);
+            Debug.LogWarning(
+                $"[PlayerInput] HealthSystem not found on {gameObject.name}.",
+                this
+            );
         }
     }
 
@@ -189,7 +201,6 @@ public class PlayerInput : MonoBehaviour
     {
         if (!flying)
         {
-            Debug.Log(!grounded);
             if (!grounded)
             {
                 flying = true;
@@ -198,6 +209,7 @@ public class PlayerInput : MonoBehaviour
             }
         }
     }
+
     void SwitchMovement(InputAction.CallbackContext ctx)
     {
         if (flying)
@@ -270,11 +282,17 @@ public class PlayerInput : MonoBehaviour
         if (weapon != null && weapon.CanReload()) weapon.Reload();
     }
 
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnPause(context);
+        }
+    }
+
     private void HandleDamageTaken(float damage)
     {
         if (isDead) return;
-
-        Debug.Log($"[PLAYER] Damage taken: {damage} | HP: {healthSystem.GetHealth()} / {healthSystem.GetMaxHealth()}", this);
 
         if (healthSystem.GetHealth() <= 0f)
         {
@@ -298,14 +316,8 @@ public class PlayerInput : MonoBehaviour
             body.linearVelocity = Vector3.zero;
             body.isKinematic = true;
         }
-
-        Debug.Log("[PlayerInput] Player has died!");
     }
 
     public bool IsDead() => isDead;
     public HealthSystem GetHealthSystem() => healthSystem;
-    public void OnPause(InputAction.CallbackContext context)
-    {
-        GameManager.Instance.OnPause(context);
-    }
 }
