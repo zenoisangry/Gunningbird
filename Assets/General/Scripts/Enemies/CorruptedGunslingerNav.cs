@@ -11,6 +11,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     [Header("Links to other objects")]
     public PlayerInput player;
     public GameObject body;
+    public GameObject weaponHolder;
     private EscapeManager escManager;
     private BoxCollider bodyCollider;
     private FeralColonistMovement movementScript;
@@ -318,8 +319,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private bool CheckLOS()
     {
         if (player == null) return false;
-        bool result = Physics.BoxCast(body.transform.position, bodyCollider.size/5, player.transform.position - body.transform.position,
-                                Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
+        bool result = Physics.BoxCast(weaponHolder.transform.position, bodyCollider.size/5, player.transform.position - weaponHolder.transform.position,
+                                Quaternion.identity, (player.transform.position - weaponHolder.transform.position).magnitude, LayerMask.GetMask("Default"));
         return !result;
     }
 

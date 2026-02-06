@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CorruptedGunslingerNav
   player: {fileID: 0}
   body: {fileID: 6493743809459716190}
+  weaponHolder: {fileID: 4343202572123529792}
   enemyRangedAttack: {fileID: 5608643920456250554}
   attackTarget: {fileID: 0}
   aggroRange: 10
