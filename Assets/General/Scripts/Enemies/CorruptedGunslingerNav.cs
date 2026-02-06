@@ -38,6 +38,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     public float formChangeSpeed;
     public float formChangeDistance;
     private bool canChangeForm = true;
+    private bool climbing = false;
 
     [Header("Damage / Death Reactions")]
     [SerializeField] private bool playHitReaction = true;
@@ -125,10 +126,23 @@ public class CorruptedGunslingerNav : MonoBehaviour
     {
         if (isDead) return;
 
+        climbing = false;
+
         if (currentBehavior == GunslingerBehavior.Closing)
         {
             if (player != null)
-                navigation.SetDestination(player.projectedPosition);
+            {
+                //Check current surface;
+                navigation.SamplePathPosition(NavMesh.AllAreas, 0.1f, out hit);
+                if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
+                {
+                    navigation.SetDestination(player.projectedPosition);
+                }
+                else
+                {
+                    climbing = true;
+                }
+            }
         }
 
         if (currentBehavior == GunslingerBehavior.Shooting)
@@ -142,7 +156,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
             }
         }
 
-        BehaviorSwitchCheck();
+        if (!climbing)
+        {
+            BehaviorSwitchCheck();
+        }
     }
 
     private void BehaviorSwitchCheck()

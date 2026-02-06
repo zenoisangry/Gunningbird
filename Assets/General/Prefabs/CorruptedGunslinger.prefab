@@ -105,7 +105,7 @@ MonoBehaviour:
   aggroRange: 10
   losAggroRange: 100
   escapeRange: 100
-  shootingMinRange: 10
+  shootingMinRange: 3
   shootingMaxRange: 150
   escapeRangePriority: 1
   escapeCheckCooldown: 3
