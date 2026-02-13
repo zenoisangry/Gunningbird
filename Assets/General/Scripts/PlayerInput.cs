@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -41,6 +42,8 @@ public class PlayerInput : MonoBehaviour
     private InputAction flyAction;
     private InputAction switchMovementAction;
     private InputAction pauseAction;
+    private InputAction jumpAction;
+    private InputAction diveAction;
 
     private InputAction fireAction;
     private InputAction secondaryFireAction;
@@ -59,6 +62,8 @@ public class PlayerInput : MonoBehaviour
         flyAction = actions["Player/Fly"];
         switchMovementAction = actions["Player/SwitchMovement"];
         pauseAction = actions["Player/Pause"];
+        jumpAction = actions["Player/Jump"];
+        diveAction = actions["Player/Dive"];
 
         fireAction = actions["Player/Fire"];
         secondaryFireAction = actions["Player/SecondaryFire"];
@@ -80,6 +85,8 @@ public class PlayerInput : MonoBehaviour
         flyAction.Enable();
         switchMovementAction.Enable();
         pauseAction.Enable();
+        jumpAction.Enable();
+        diveAction.Enable();
 
         fireAction.Enable();
         secondaryFireAction.Enable();
@@ -90,8 +97,12 @@ public class PlayerInput : MonoBehaviour
         slot3Action.Enable();
         slot4Action.Enable();
 
-        switchMovementAction.started += SwitchMovement;
+        //Movement
+        jumpAction.started += Jump;
+        jumpAction.performed += SwitchMovement;
         flyAction.started += AltSwitch;
+        diveAction.started += SwitchToGrounded;
+
         lookAction.performed += Look;
         pauseAction.performed += OnPause;
 
@@ -107,7 +118,6 @@ public class PlayerInput : MonoBehaviour
 
     void OnDisable()
     {
-        switchMovementAction.started -= SwitchMovement;
         flyAction.started -= AltSwitch;
         lookAction.performed -= Look;
         pauseAction.performed -= OnPause;
@@ -201,6 +211,25 @@ public class PlayerInput : MonoBehaviour
     {
         if (!flying)
         {
+            flying = true;
+            currentSpeed = flightSpeed;
+            body.useGravity = false;
+        }
+    }
+
+    void Jump(InputAction.CallbackContext ctx)
+    {
+        if (grounded)
+        {
+            body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y + jumpStrength, sideMovement.y);
+            grounded = false;
+        }
+    }
+
+    void SwitchMovement(InputAction.CallbackContext ctx)
+    {
+        if (ctx.interaction is HoldInteraction)
+        {
             if (!grounded)
             {
                 flying = true;
@@ -210,36 +239,11 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    void SwitchMovement(InputAction.CallbackContext ctx)
+    void SwitchToGrounded(InputAction.CallbackContext ctx)
     {
-        if (flying)
-        {
-            body.linearVelocity = new Vector3(
-                sideMovement.x,
-                body.linearVelocity.y - diveStrength,
-                sideMovement.y
-            );
-            flying = false;
-            body.useGravity = true;
-        }
-        else
-        {
-            if (!grounded)
-            {
-                flying = true;
-                currentSpeed = flightSpeed;
-                body.useGravity = false;
-            }
-            else
-            {
-                body.linearVelocity = new Vector3(
-                    sideMovement.x,
-                    body.linearVelocity.y + jumpStrength,
-                    sideMovement.y
-                );
-            }
-            grounded = false;
-        }
+        body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y - diveStrength, sideMovement.y);
+        flying = false;
+        body.useGravity = true;
     }
 
     void Look(InputAction.CallbackContext ctx)
