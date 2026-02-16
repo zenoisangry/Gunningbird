@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 
 [CreateAssetMenu(fileName = "New Weapon", menuName = "Weapon System/Weapon Data")]
 public class WeaponData : ScriptableObject
@@ -87,6 +89,10 @@ public class WeaponData : ScriptableObject
 
     [Tooltip("Scale in first person view. Use (1,1,1) to use prefab defaults, or adjust per weapon.")]
     public Vector3 weaponViewScale = Vector3.one;
+
+    [Header("Pattern fire settings")]
+    public float projectileNumber;
+    public List<Vector2> projectileAngles;
 }
 
 public enum WeaponType
@@ -97,7 +103,9 @@ public enum WeaponType
     SMG,
     Sniper,
     Heavy,
-    Melee
+    Melee,
+    Spread,
+    Fan
 }
 
 public enum AmmoType
