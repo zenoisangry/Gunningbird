@@ -10,6 +10,7 @@ TagManager:
   - BulletSpawn
   - Enemy
   - Head
+  - Projectile
   layers:
   - Default
   - TransparentFX

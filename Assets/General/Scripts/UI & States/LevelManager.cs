@@ -154,6 +154,7 @@ public class LevelManager : MonoBehaviour
         }
 
         DestroyAllEnemies();
+        DestroyAllProjectiles();
 
         if (currentLevelInstance != null)
         {
@@ -180,6 +181,7 @@ public class LevelManager : MonoBehaviour
         }
 
         DestroyAllEnemies();
+        DestroyAllProjectiles();
 
         if (currentLevelInstance != null)
         {
@@ -302,6 +304,33 @@ public class LevelManager : MonoBehaviour
         spawnedEnemies.Clear();
 
         Debug.Log("[LevelManager] All enemies destroyed");
+    }
+
+    private void DestroyAllProjectiles()
+    {
+        Projectile[] projectiles = FindObjectsByType<Projectile>(FindObjectsSortMode.None);
+
+        int count = 0;
+        foreach (Projectile projectile in projectiles)
+        {
+            if (projectile != null)
+            {
+                Destroy(projectile.gameObject);
+                count++;
+            }
+        }
+
+        GameObject[] projectileObjects = GameObject.FindGameObjectsWithTag("Projectile");
+        foreach (GameObject proj in projectileObjects)
+        {
+            if (proj != null)
+            {
+                Destroy(proj);
+                count++;
+            }
+        }
+
+        Debug.Log($"[LevelManager] Destroyed {count} projectiles");
     }
 
     public void LoadLevel(int levelIndex)

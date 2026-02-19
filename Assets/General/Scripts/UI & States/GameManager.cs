@@ -3,7 +3,6 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Singleton")]
     private static GameManager _instance;
     public static GameManager Instance
     {
@@ -56,7 +55,6 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-
         isGameActive = true;
         isGamePaused = false;
         Time.timeScale = 1f;
@@ -79,9 +77,9 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
     public void EndGame()
     {
-
         isGameActive = false;
         isGamePaused = false;
 
@@ -187,7 +185,7 @@ public class GameManager : MonoBehaviour
 
     public void QuitGame()
     {
-         Application.Quit();
+        Application.Quit();
     }
 
     private void OnPlayerDeath()
@@ -204,14 +202,6 @@ public class GameManager : MonoBehaviour
             {
                 playerHealth.Died -= OnPlayerDeath;
             }
-        }
-    }
-
-    private void Update()
-    {
-        if (playerInstance != null)
-        {
-            var input = playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
         }
     }
 }

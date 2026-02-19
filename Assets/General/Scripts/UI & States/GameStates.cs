@@ -15,9 +15,9 @@ public class GSMainMenu : IGameState
         GameManager.Instance.isGamePaused = false;
     }
 
-    public void OnStateUpdate(){}
+    public void OnStateUpdate() { }
 
-    public void OnStateExit(){}
+    public void OnStateExit() { }
 }
 
 public class GSOptions : IGameState
@@ -34,15 +34,102 @@ public class GSOptions : IGameState
         {
             Time.timeScale = 0f;
             GameManager.Instance.isGamePaused = true;
+            DisablePlayerInput();
         }
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    public void OnStateUpdate(){}
+    public void OnStateUpdate()
+    {
+        if (wasInGameplay && Time.timeScale != 0f)
+        {
+            Time.timeScale = 0f;
+        }
+    }
 
-    public void OnStateExit(){}
+    public void OnStateExit()
+    {
+        if (wasInGameplay && GameManager.Instance.isGameActive)
+        {
+            EnablePlayerInput();
+        }
+    }
+
+    private void DisablePlayerInput()
+    {
+        if (GameManager.Instance.playerInstance == null)
+        {
+            return;
+        }
+
+        var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        if (playerInputComponent != null)
+        {
+            playerInputComponent.SwitchCurrentActionMap("UI");
+        }
+
+        GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
+
+        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in allScripts)
+        {
+            if (script != null && script.GetType().Name != "HealthSystem")
+            {
+                script.enabled = false;
+            }
+        }
+
+        var rb = playerObj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
+
+        var characterController = playerObj.GetComponent<CharacterController>();
+        if (characterController != null)
+        {
+            characterController.enabled = false;
+        }
+    }
+
+    private void EnablePlayerInput()
+    {
+        if (GameManager.Instance.playerInstance == null)
+        {
+            return;
+        }
+
+        var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        if (playerInputComponent != null)
+        {
+            playerInputComponent.SwitchCurrentActionMap("Player");
+        }
+
+        GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
+
+        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in allScripts)
+        {
+            if (script != null)
+            {
+                script.enabled = true;
+            }
+        }
+
+        var rb = playerObj.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+        }
+
+        var characterController = playerObj.GetComponent<CharacterController>();
+        if (characterController != null)
+        {
+            characterController.enabled = true;
+        }
+    }
 }
 
 public class GSPause : IGameState
@@ -92,24 +179,10 @@ public class GSPause : IGameState
 
         GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
 
-        var movementScripts = new string[]
+        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in allScripts)
         {
-            "PlayerMovement",
-            "FirstPersonController",
-            "PlayerController",
-            "FPSController",
-            "CharacterMovement",
-            "PlayerLook",
-            "MouseLook",
-            "CameraController",
-            "WeaponController",
-            "PlayerShooting"
-        };
-
-        foreach (string scriptName in movementScripts)
-        {
-            var script = playerObj.GetComponent(scriptName) as MonoBehaviour;
-            if (script != null)
+            if (script != null && script.GetType().Name != "HealthSystem")
             {
                 script.enabled = false;
             }
@@ -143,23 +216,9 @@ public class GSPause : IGameState
 
         GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
 
-        var movementScripts = new string[]
+        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in allScripts)
         {
-            "PlayerMovement",
-            "FirstPersonController",
-            "PlayerController",
-            "FPSController",
-            "CharacterMovement",
-            "PlayerLook",
-            "MouseLook",
-            "CameraController",
-            "WeaponController",
-            "PlayerShooting"
-        };
-
-        foreach (string scriptName in movementScripts)
-        {
-            var script = playerObj.GetComponent(scriptName) as MonoBehaviour;
             if (script != null)
             {
                 script.enabled = true;
@@ -186,13 +245,17 @@ public class GSGameplay : IGameState
     {
         UIManager.Instance.ShowUI(UIManager.UIType.Gameplay);
 
-        GameManager.Instance.StartGame();
+        bool wasResuming = GameManager.Instance.isGameActive && !GameManager.Instance.isGamePaused;
+
+        if (!wasResuming)
+        {
+            GameManager.Instance.StartGame();
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         Time.timeScale = 1f;
-        Debug.Log($"[GSGameplay] Time.timeScale set to {Time.timeScale}");
 
         EnsurePlayerInputEnabled();
     }
@@ -227,23 +290,9 @@ public class GSGameplay : IGameState
 
         GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
 
-        var movementScripts = new string[]
+        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in allScripts)
         {
-            "PlayerMovement",
-            "FirstPersonController",
-            "PlayerController",
-            "FPSController",
-            "CharacterMovement",
-            "PlayerLook",
-            "MouseLook",
-            "CameraController",
-            "WeaponController",
-            "PlayerShooting"
-        };
-
-        foreach (string scriptName in movementScripts)
-        {
-            var script = playerObj.GetComponent(scriptName) as MonoBehaviour;
             if (script != null && !script.enabled)
             {
                 script.enabled = true;
@@ -288,7 +337,7 @@ public class GSGameOver : IGameState
         }
     }
 
-    public void OnStateUpdate(){}
+    public void OnStateUpdate() { }
 
-    public void OnStateExit(){}
+    public void OnStateExit() { }
 }
