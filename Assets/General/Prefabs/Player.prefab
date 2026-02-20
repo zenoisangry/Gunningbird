@@ -137,7 +137,7 @@ MonoBehaviour:
   jumpStrength: 6
   diveStrength: 10
   weaponManager: {fileID: 5725789863219392728}
-  healthSystem: {fileID: 0}
+  healthSystem: {fileID: 3208829876065403440}
   projectedPosition: {x: 0, y: 0, z: 0}
   height: 0
 --- !u!33 &3025159574481230761
@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
   maxHealth: 100
-  currentHealth: 0
+  currentHealth: 100
   isDead: 0
   enableRegeneration: 1
   regenerationDelay: 3
@@ -354,7 +354,7 @@ Transform:
   m_GameObject: {fileID: 9180429886455192656}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5999985, y: -0.07999992, z: 0.40000153}
+  m_LocalPosition: {x: 0.61, y: -0.66, z: 0.69}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []

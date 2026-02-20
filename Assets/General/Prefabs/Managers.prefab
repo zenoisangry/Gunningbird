@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 6782517535901646149}
   - component: {fileID: 8884571073872069144}
   - component: {fileID: 7753445314605625612}
+  - component: {fileID: 4077731257289078742}
+  - component: {fileID: 2220450397603885576}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -48,7 +50,7 @@ MonoBehaviour:
   startingGameState: 0
   isGameActive: 0
   isGamePaused: 0
-  playerInstance: {fileID: 0}
+  playerInstance: {fileID: 3049692797684000032, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
 --- !u!114 &7753445314605625612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,3 +63,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69b7f074f7c1e2a4699c791664279ab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateManager
+--- !u!114 &4077731257289078742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2320541227979509936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 752ed66e968394a48b3b61a9bc4d340a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelManager
+  availableLevels:
+  - levelName: Level_1
+    levelPrefab: {fileID: 8147643819078352089, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+  currentLevelIndex: 0
+  playerPrefab: {fileID: 3670304794437903089, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
+  onLevelInstantiated:
+    m_PersistentCalls:
+      m_Calls: []
+  onLevelStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onLevelReset:
+    m_PersistentCalls:
+      m_Calls: []
+  onPlayerSpawned:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &2220450397603885576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2320541227979509936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b797a93cf6d03f44868fc786f898d1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  uiContainer: {fileID: 0}

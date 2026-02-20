@@ -2096,6 +2096,7 @@ MonoBehaviour:
   resumeButton: {fileID: 3776266023789160144}
   optionsButton: {fileID: 5477792825481416348}
   quitButton: {fileID: 1129313672300707771}
+  pauseAction: {fileID: -7250021918649065686, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &3955752543617446434
 GameObject:
   m_ObjectHideFlags: 0
@@ -2405,6 +2406,7 @@ GameObject:
   - component: {fileID: 8765158373751408408}
   - component: {fileID: 6777294666874583732}
   - component: {fileID: 6629535986237246917}
+  - component: {fileID: 6715346498885646495}
   m_Layer: 5
   m_Name: UIGameplay
   m_TagString: Untagged
@@ -2512,7 +2514,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIGameplay
   hudPanel: {fileID: 4108934908395118889}
-  weaponUI: {fileID: 0}
+  weaponUI: {fileID: 6715346498885646495}
+--- !u!114 &6715346498885646495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4108934908395118889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fdf8a3abbbbcd3479e365c1b75160cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponUI
+  ammoText: {fileID: 5730996220135479774}
+  crosshair: {fileID: 1599755519124832934}
+  weaponIconImage: {fileID: 3104235244676028743}
+  healthText: {fileID: 3417411860948354026}
 --- !u!1 &4345927671653879605
 GameObject:
   m_ObjectHideFlags: 0
