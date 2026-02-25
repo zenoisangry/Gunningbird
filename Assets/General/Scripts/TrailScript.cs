@@ -24,7 +24,6 @@ public class TrailScript : MonoBehaviour
         {
             m_Renderer.widthMultiplier = Mathf.Lerp(0, baseScale, time/startingTime);
             time -= Time.deltaTime;
-            Debug.Log(m_Renderer.widthMultiplier);
             yield return null;
         }
         Destroy(gameObject);

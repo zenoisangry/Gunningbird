@@ -16,6 +16,7 @@ public class FeralColonistNav : MonoBehaviour
     public Transform meleeAimPoint;
     public CapsuleCollider jumpHitBox;
     public JumpAttackDetector jumpAttackDetector;
+    public ProjectileAggro bulletDetection;
 
     private MeleeWeapon meleeAttack;
     private Rigidbody jumpRB;
@@ -33,6 +34,7 @@ public class FeralColonistNav : MonoBehaviour
     [Header("AI variables")]
     public float aggroRange;
     public float losAggroRange;
+    public float aggroSpreadRange;
     public float escapeRange;
     public float escapeRangePriority;
     public float escapeCheckCooldown;
@@ -172,6 +174,7 @@ public class FeralColonistNav : MonoBehaviour
             if (navigation.remainingDistance <= navigation.stoppingDistance)
             {
                 currentBehavior = FeralColonistBehavior.Idle;
+                bulletDetection.Activate();
             }
         }
     }
@@ -180,6 +183,15 @@ public class FeralColonistNav : MonoBehaviour
     {
         NavMesh.SamplePosition(transform.position, out hit, 0.1f, NavMesh.AllAreas);
         canJump = hit.mask == 1;
+    }
+
+    private void CallOthers()
+    {
+        Collider[] hit = Physics.OverlapSphere(transform.position, aggroSpreadRange, LayerMask.GetMask("Enemy"));
+        foreach (Collider collider in hit)
+        {
+            collider.gameObject.transform.parent.GetComponentInChildren<ProjectileAggro>().awake = true;
+        }
     }
 
     private void BehaviorSwitchCheck()
@@ -194,9 +206,10 @@ public class FeralColonistNav : MonoBehaviour
         switch (currentBehavior)
         {
             case FeralColonistBehavior.Idle:
-                if ((CheckLOS() && playerDistance <= losAggroRange) || playerDistance <= aggroRange)
+                if ((CheckLOS() && playerDistance <= losAggroRange) || playerDistance <= aggroRange || bulletDetection.awake)
                 {
                     currentBehavior = FeralColonistBehavior.Closing;
+                    CallOthers();
                 }
                 break;
 

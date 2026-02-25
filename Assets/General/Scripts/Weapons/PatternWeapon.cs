@@ -27,6 +27,25 @@ public class PatternWeapon : BaseWeapon
         }
     }
 
+    public override void PrimaryFire()
+    {
+        if (!CanFire() || isReloading) return;
+
+        FireWeapon();
+        lastFireTime = Time.time;
+        currentAmmo--;
+
+        UpdateSpread();
+        ApplyRecoil();
+        PlayFireEffects();
+
+        if (currentAmmo <= 0)
+        {
+            if (CanReload())
+                Reload();
+        }
+    }
+
     protected virtual void FireSpread()
     {
 

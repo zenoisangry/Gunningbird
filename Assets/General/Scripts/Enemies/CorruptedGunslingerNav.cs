@@ -19,6 +19,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private float playerDistance;
     private HealthSystem healthSystem;
     private Animator animator;
+    public ProjectileAggro bulletDetection;
 
     [Header("Enemy Attack Logic")]
     [SerializeField] private EnemyRangedAttack enemyRangedAttack;
@@ -27,6 +28,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     [Header("AI variables")]
     public float aggroRange;
     public float losAggroRange;
+    public float aggroSpreadRange;
     public float escapeRange;
     public float shootingMinRange;
     public float shootingMaxRange;
@@ -163,6 +165,15 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
     }
 
+    private void CallOthers()
+    {
+        Collider[] hit = Physics.OverlapSphere(transform.position, aggroSpreadRange, LayerMask.GetMask("Enemy"));
+        foreach (Collider collider in hit)
+        {
+            Debug.Log(collider.gameObject);
+            collider.gameObject.GetComponentInChildren<ProjectileAggro>().awake = true;
+        }
+    }
     private void BehaviorSwitchCheck()
     {
         if (player == null) return;
@@ -172,9 +183,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
         switch (currentBehavior)
         {
             case GunslingerBehavior.Idle:
-                if ((CheckLOS() && playerDistance <= losAggroRange) || playerDistance <= aggroRange)
+                if ((CheckLOS() && playerDistance <= losAggroRange) || playerDistance <= aggroRange || bulletDetection.awake)
                 {
                     currentBehavior = GunslingerBehavior.Closing;
+                    CallOthers();
                 }
                 break;
 

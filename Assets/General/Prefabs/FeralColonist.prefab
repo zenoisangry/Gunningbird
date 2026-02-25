@@ -31,6 +31,73 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4309424284287511740}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3904179213953417424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2251288256911835870}
+  - component: {fileID: 6493767755469406246}
+  - component: {fileID: 4027206034732370583}
+  m_Layer: 2
+  m_Name: PerceptionRadius
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2251288256911835870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3904179213953417424}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2589106728729552499}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &6493767755469406246
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3904179213953417424}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 4
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4027206034732370583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3904179213953417424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e5e9d135d487f40b17013edebe37b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileAggro
+  awake: 0
 --- !u!1 &5043014186131888016
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,11 +219,13 @@ MonoBehaviour:
   body: {fileID: 6493743809459716190}
   meleeAimPoint: {fileID: 4737721415466516782}
   jumpHitBox: {fileID: 3633808791388390542}
-  jumpAttackDetector: {fileID: 0}
+  jumpAttackDetector: {fileID: 8974050707936385254}
+  bulletDetection: {fileID: 4027206034732370583}
   enemyWeaponAttack: {fileID: 8029248531387426070}
   attackTarget: {fileID: 0}
   aggroRange: 15
   losAggroRange: 100
+  aggroSpreadRange: 10
   escapeRange: 100
   escapeRangePriority: 1
   escapeCheckCooldown: 3
@@ -322,6 +391,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 991639024309803296}
+  - {fileID: 2251288256911835870}
   m_Father: {fileID: 1236932388917383469}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &757776075973654445
