@@ -57,7 +57,7 @@ MonoBehaviour:
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
-    FieldOfView: 90
+    FieldOfView: 100.00001
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -135,7 +135,7 @@ MonoBehaviour:
   groundSpeed: 15
   flightSpeed: 6
   jumpStrength: 6
-  diveStrength: 10
+  diveStrength: 16
   weaponManager: {fileID: 5725789863219392728}
   healthSystem: {fileID: 3208829876065403440}
   projectedPosition: {x: 0, y: 0, z: 0}
