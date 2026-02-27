@@ -132,9 +132,9 @@ MonoBehaviour:
   actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   camSensitivity: 1
   cameraPosition: {fileID: 8022013687539662599}
-  groundSpeed: 15
-  flightSpeed: 6
-  jumpStrength: 6
+  groundSpeed: 17
+  flightSpeed: 10
+  jumpStrength: 8
   diveStrength: 16
   weaponManager: {fileID: 5725789863219392728}
   healthSystem: {fileID: 3208829876065403440}

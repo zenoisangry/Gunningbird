@@ -31,6 +31,12 @@ public class FeralColonistMovement : MonoBehaviour
             transform.position += new Vector3(horizontalShift.x, verticalShift, horizontalShift.y);
         }
     }
+
+    void RotateTowardsTarget()
+    {
+        //If moving, look towards navmeshagent
+        //If shooting, look towards player
+    }
     private void FollowNavAgent()
     {
         verticalShift = navAimPoint.transform.position.y - (transform.position.y - verticalOffset);
