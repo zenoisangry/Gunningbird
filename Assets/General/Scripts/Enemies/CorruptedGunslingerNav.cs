@@ -163,6 +163,16 @@ public class CorruptedGunslingerNav : MonoBehaviour
         {
             BehaviorSwitchCheck();
         }
+
+        //Ruota il corpo
+        if (currentBehavior != GunslingerBehavior.Shooting && currentBehavior != GunslingerBehavior.Idle)
+        {
+            movementScript.RotateTowardsTarget(transform.position);
+        }
+        else if (currentBehavior == GunslingerBehavior.Shooting)
+        {
+            movementScript.RotateTowardsTarget(player.transform.position);
+        }
     }
 
     private void CallOthers()
