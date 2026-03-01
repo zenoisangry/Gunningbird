@@ -20,7 +20,7 @@ public class FeralColonistNav : MonoBehaviour
 
     private MeleeWeapon meleeAttack;
     private Rigidbody jumpRB;
-    private BoxCollider bodyCollider;
+    private MeshCollider bodyCollider;
     private FeralColonistMovement movementScript;
     private NavMeshAgent navigation;
     private float playerDistance;
@@ -91,7 +91,7 @@ public class FeralColonistNav : MonoBehaviour
         // Componenti generici
         navigation = GetComponent<NavMeshAgent>();
         jumpRB = body.GetComponent<Rigidbody>();
-        bodyCollider = body.GetComponent<BoxCollider>();
+        bodyCollider = body.GetComponent<MeshCollider>();
         movementScript = body.GetComponent<FeralColonistMovement>();
         animator = body != null ? body.GetComponentInChildren<Animator>() : GetComponentInChildren<Animator>();
 
@@ -440,7 +440,7 @@ public class FeralColonistNav : MonoBehaviour
         if (player == null) return false;
         if (playerDistance < losAggroRange)
         {
-            bool result = Physics.BoxCast(body.transform.position, bodyCollider.size / 3, player.transform.position - body.transform.position,
+            bool result = Physics.BoxCast(body.transform.position, new Vector3(0.4f,0.4f,0.4f), player.transform.position - body.transform.position,
                                 Quaternion.identity, (player.transform.position - body.transform.position).magnitude, LayerMask.GetMask("Default"));
             return !result;
         }

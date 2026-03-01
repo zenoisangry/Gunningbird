@@ -26,6 +26,7 @@ public class PlayerInput : MonoBehaviour
     private float currentSpeed;
     private bool flying = false;
     private bool grounded = true;
+    private bool diving = false;
     private Vector2 sideMovement = Vector2.zero;
     private float verticalMovement = 0;
     private bool isDead = false;
@@ -181,6 +182,7 @@ public class PlayerInput : MonoBehaviour
             if (!grounded && !flying) currentSpeed = groundSpeed;
 
             grounded = true;
+            diving = false;
 
             if (flying)
             {
@@ -209,7 +211,7 @@ public class PlayerInput : MonoBehaviour
 
     void AltSwitch(InputAction.CallbackContext ctx)
     {
-        if (!flying)
+        if (!flying && !diving)
         {
             flying = true;
             currentSpeed = flightSpeed;
@@ -230,7 +232,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (ctx.interaction is HoldInteraction)
         {
-            if (!grounded)
+            if (!grounded && !diving)
             {
                 flying = true;
                 currentSpeed = flightSpeed;
@@ -241,9 +243,13 @@ public class PlayerInput : MonoBehaviour
 
     void SwitchToGrounded(InputAction.CallbackContext ctx)
     {
-        body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y - diveStrength, sideMovement.y);
-        flying = false;
-        body.useGravity = true;
+        if (flying == true)
+        {
+            body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y - diveStrength, sideMovement.y);
+            flying = false;
+            body.useGravity = true;
+            diving = true;
+        }
     }
 
     void Look(InputAction.CallbackContext ctx)

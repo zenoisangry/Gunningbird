@@ -13,7 +13,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     public GameObject body;
     public GameObject weaponHolder;
     private EscapeManager escManager;
-    private BoxCollider bodyCollider;
+    private MeshCollider bodyCollider;
     private FeralColonistMovement movementScript;
     private NavMeshAgent navigation;
     private float playerDistance;
@@ -72,7 +72,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
         player = FindFirstObjectByType<PlayerInput>();
         escManager = FindFirstObjectByType<EscapeManager>();
         navigation = GetComponent<NavMeshAgent>();
-        bodyCollider = body.GetComponent<BoxCollider>();
+        bodyCollider = body.GetComponent<MeshCollider>();
         movementScript = body.GetComponent<FeralColonistMovement>();
         animator = body != null ? body.GetComponentInChildren<Animator>() : GetComponentInChildren<Animator>();
 
@@ -331,7 +331,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private bool CheckLOS()
     {
         if (player == null) return false;
-        bool result = Physics.BoxCast(weaponHolder.transform.position, bodyCollider.size/5, player.transform.position - weaponHolder.transform.position,
+        bool result = Physics.BoxCast(weaponHolder.transform.position, new Vector3(0.3f, 0.3f, 0.3f), player.transform.position - weaponHolder.transform.position,
                                 Quaternion.identity, (player.transform.position - weaponHolder.transform.position).magnitude, LayerMask.GetMask("Default"));
         return !result;
     }
