@@ -177,6 +177,16 @@ public class FeralColonistNav : MonoBehaviour
                 bulletDetection.Activate();
             }
         }
+
+        //Ruota il corpo
+        if (currentBehavior != FeralColonistBehavior.Attacking && currentBehavior != FeralColonistBehavior.Jumping && currentBehavior != FeralColonistBehavior.Idle)
+        {
+            movementScript.RotateTowardsTarget(transform.position);
+        }
+        else if (currentBehavior == FeralColonistBehavior.Attacking)
+        {
+            movementScript.RotateTowardsTarget(player.transform.position);
+        }
     }
 
     private void MovementKindCheck()
@@ -341,6 +351,7 @@ public class FeralColonistNav : MonoBehaviour
         {
             if (isDead) yield break;
 
+            movementScript.RotateTowardsTarget(player.transform.position);
             if (!CheckLOS()) abortTimer += Time.deltaTime;
             else abortTimer = 0;
 
