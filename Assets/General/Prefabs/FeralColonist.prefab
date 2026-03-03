@@ -224,7 +224,7 @@ MonoBehaviour:
   enemyWeaponAttack: {fileID: 8029248531387426070}
   attackTarget: {fileID: 0}
   aggroRange: 15
-  losAggroRange: 100
+  losAggroRange: 35
   aggroSpreadRange: 10
   escapeRange: 100
   escapeRangePriority: 1

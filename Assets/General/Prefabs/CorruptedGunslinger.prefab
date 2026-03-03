@@ -103,8 +103,8 @@ MonoBehaviour:
   bulletDetection: {fileID: 7966151770397407209}
   enemyRangedAttack: {fileID: 5608643920456250554}
   attackTarget: {fileID: 0}
-  aggroRange: 10
-  losAggroRange: 100
+  aggroRange: 5
+  losAggroRange: 50
   aggroSpreadRange: 10
   escapeRange: 100
   shootingMinRange: 3
