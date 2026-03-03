@@ -10,7 +10,7 @@ NavMeshProjectSettings:
   - name: Not Walkable
     cost: 1
   - name: Jump
-    cost: 1.39
+    cost: 1
   - name: Climb
     cost: 1.4
   - name: 
@@ -91,7 +91,7 @@ NavMeshProjectSettings:
       m_Flags: 0
   - serializedVersion: 3
     agentTypeID: 1479372276
-    agentRadius: 0.15
+    agentRadius: 0.5
     agentHeight: 2
     agentSlope: 45
     agentClimb: 0.4
