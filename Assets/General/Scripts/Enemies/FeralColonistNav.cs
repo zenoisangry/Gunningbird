@@ -1,11 +1,12 @@
-using System.Collections;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections.Generic;
 using UnityEngine.UIElements;
-using Unity.Mathematics;
+using static CorruptedGunslingerNav;
 
 public class FeralColonistNav : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class FeralColonistNav : MonoBehaviour
     private float playerDistance;
     private HealthSystem healthSystem;
     private Animator animator;
+    private float stunTimer;
 
     [Header("Enemy Attack Logic")]
     [SerializeField] private EnemyWeaponAttack enemyWeaponAttack;
@@ -291,6 +293,8 @@ public class FeralColonistNav : MonoBehaviour
                 }
                 break;
 
+            case FeralColonistBehavior.Stunned: break;
+
             default:
                 currentBehavior = FeralColonistBehavior.Closing;
                 break;
@@ -471,9 +475,9 @@ public class FeralColonistNav : MonoBehaviour
         // Play hit reaction (brief stun)
         if (playHitReaction && hitStunTime > 0f)
         {
-            if (hitReactCoroutine != null)
-                StopCoroutine(hitReactCoroutine);
-            hitReactCoroutine = StartCoroutine(HitReactRoutine());
+            stunTimer += hitStunTime;
+            if (hitReactCoroutine == null)
+                hitReactCoroutine = StartCoroutine(HitReactRoutine());
         }
 
         // Trigger hit animation
@@ -485,16 +489,14 @@ public class FeralColonistNav : MonoBehaviour
 
     private IEnumerator HitReactRoutine()
     {
-        // Briefly pause attack decision-making
-        bool prevAttacking = attacking;
-        attacking = true;
-
-        yield return new WaitForSeconds(hitStunTime);
-
-        // Restore attacking state only if still alive
-        if (!isDead)
-            attacking = prevAttacking;
-
+        navigation.SetDestination(transform.position);
+        currentBehavior = FeralColonistBehavior.Stunned;
+        while (stunTimer > 0)
+        {
+            stunTimer -= Time.deltaTime;
+            yield return null;
+        }
+        currentBehavior = FeralColonistBehavior.Closing;
         hitReactCoroutine = null;
     }
 
@@ -525,6 +527,7 @@ public class FeralColonistNav : MonoBehaviour
         Closing,
         Attacking,
         Jumping,
-        Escaping
+        Escaping,
+        Stunned
     }
 }

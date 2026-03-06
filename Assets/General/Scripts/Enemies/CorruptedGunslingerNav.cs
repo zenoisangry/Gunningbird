@@ -42,6 +42,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     public float formChangeDistance;
     private bool canChangeForm = true;
     private bool climbing = false;
+    private float stunTimer = 0;
 
     [Header("Damage / Death Reactions")]
     [SerializeField] private bool playHitReaction = true;
@@ -276,6 +277,11 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     navigation.speed = baseSpeed;
                 }
                 break;
+
+            case GunslingerBehavior.Stunned: break;
+
+            default:
+                break;
         }
     }
 
@@ -359,9 +365,9 @@ public class CorruptedGunslingerNav : MonoBehaviour
         // Play hit reaction (brief stun)
         if (playHitReaction && hitStunTime > 0f)
         {
-            if (hitReactCoroutine != null)
-                StopCoroutine(hitReactCoroutine);
-            hitReactCoroutine = StartCoroutine(HitReactRoutine());
+            stunTimer += hitStunTime;
+            if (hitReactCoroutine == null)
+                hitReactCoroutine = StartCoroutine(HitReactRoutine());
         }
 
         // Trigger hit animation
@@ -373,8 +379,14 @@ public class CorruptedGunslingerNav : MonoBehaviour
 
     private IEnumerator HitReactRoutine()
     {
-
-        yield return new WaitForSeconds(hitStunTime);
+        navigation.SetDestination(transform.position);
+        currentBehavior = GunslingerBehavior.Stunned;
+        while (stunTimer > 0)
+        {
+            stunTimer -= Time.deltaTime;
+            yield return null;
+        }
+        currentBehavior = GunslingerBehavior.Closing;
         hitReactCoroutine = null;
     }
 
@@ -455,6 +467,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
         Closing,
         Shooting,
         Reloading,
-        Escaping
+        Escaping,
+        Stunned
     }
 }

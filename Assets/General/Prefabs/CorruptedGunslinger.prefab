@@ -116,7 +116,7 @@ MonoBehaviour:
   formChangeCooldown: 30
   formChangeSpeed: 20
   formChangeDistance: 25
-  playHitReaction: 0
+  playHitReaction: 1
   hitStunTime: 0.15
   hitAnimationTrigger: Hit
   deathAnimationTrigger: Die
@@ -124,7 +124,7 @@ MonoBehaviour:
   disableNavOnDeath: 1
   disableWeaponAttackOnDeath: 1
   destroyEnemyRootOnDeath: 1
-  destroyDelay: 2
+  destroyDelay: 0
   currentBehavior: 0
 --- !u!195 &680255248503217877
 NavMeshAgent:

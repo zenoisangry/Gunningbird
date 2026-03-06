@@ -13,6 +13,7 @@ public class JumpAttackDetector : MonoBehaviour
         if (hitBox != null)
         {
             hitBox.isTrigger = true;
+            hitBox.enabled = false;
         }
     }
 
@@ -29,6 +30,7 @@ public class JumpAttackDetector : MonoBehaviour
                 Debug.Log($"[JumpAttack] Hit player! Damage: {damage}");
 
                 hasAttacked = true;
+                DisableHitBox();
             }
         }
     }
