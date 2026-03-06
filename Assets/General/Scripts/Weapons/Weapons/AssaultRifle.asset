@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36226041ef227214d88cab4f1cba0852, type: 3}
   m_Name: AssaultRifle
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  weaponName: 
+  weaponName: Rifle
   description: 
   weaponType: 1
   weaponIcon: {fileID: 21300000, guid: d43b9b6b048b5a549b5e6596633196a9, type: 3}
   weaponPrefab: {fileID: 3532154221099903998, guid: 82a436fa96ac14745912de15136623b4, type: 3}
   pickupPrefab: {fileID: 3532154221099903998, guid: 82a436fa96ac14745912de15136623b4, type: 3}
-  bulletPrefab: {fileID: 8058749452768088809, guid: 684f4c5c9a2c9aa4190fb75f2aedb9ec, type: 3}
+  bulletPrefab: {fileID: 8058749452768088809, guid: dadb523bfe1ed174a9c97492b42156db, type: 3}
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   emptySound: {fileID: 0}
@@ -29,7 +29,7 @@ MonoBehaviour:
   reloadAnimationTrigger: Reload
   drawAnimationTrigger: Draw
   meleeAnimationTrigger: Melee
-  damage: 25
+  damage: 400
   headshotMultiplier: 2
   meleeDamage: 50
   meleeInstaKillThreshold: 30
@@ -41,11 +41,11 @@ MonoBehaviour:
   usesAmmo: 1
   magazineSize: 1
   totalAmmo: 120
-  reloadTime: 2
+  reloadTime: 2.5
   ammoType: 1
   hasInfiniteAmmo: 0
   baseSpread: 0
-  maxSpread: 5
+  maxSpread: 0
   spreadIncreasePerShot: 0.5
   spreadDecreaseSpeed: 2
   recoilPattern: {x: 1, y: 1}

@@ -62,11 +62,6 @@ public class RangedWeapon : BaseWeapon
         {
             CreateBulletTrail(firePosition, targetPoint);
         }
-
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, maxDistance, hitLayers))
-        {
-            ProcessHit(hit, fireDirection);
-        }
     }
 
     protected virtual void FireShotgun()
@@ -114,7 +109,6 @@ public class RangedWeapon : BaseWeapon
             if (Physics.Raycast(cameraTransform.position, spreadDirection, out RaycastHit hit, maxDistance, hitLayers))
             {
                 targetPoint = hit.point;
-                ProcessHit(hit, spreadDirection, weaponData.damage / pelletCount);
                 Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
             }
             else
@@ -144,7 +138,6 @@ public class RangedWeapon : BaseWeapon
             if (Physics.Raycast(cameraTransform.position, spreadDirection, out RaycastHit hit, maxDistance, hitLayers))
             {
                 targetPoint = hit.point;
-                ProcessHit(hit, spreadDirection, weaponData.damage / pelletCount);
                 Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
             }
             else
@@ -177,7 +170,6 @@ public class RangedWeapon : BaseWeapon
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, maxDistance, hitLayers))
         {
             targetPoint = hit.point;
-            ProcessHit(hit, cameraTransform.forward, 1f, true);
             Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
         }
         else
@@ -272,7 +264,6 @@ public class RangedWeapon : BaseWeapon
         if (Physics.Raycast(cameraTransform.position, fireDirection, out RaycastHit hit, maxDistance, hitLayers))
         {
             float damageMultiplier = weaponData.secondaryFireDamage / weaponData.damage;
-            ProcessHit(hit, fireDirection, damageMultiplier);
             CreateExplosion(hit.point);
         }
     }
@@ -289,36 +280,6 @@ public class RangedWeapon : BaseWeapon
         RaycastHit[] hits = Physics.RaycastAll(cameraTransform.position, fireDirection, maxDistance, hitLayers);
 
         float damageMultiplier = (weaponData.secondaryFireDamage * 0.7f) / weaponData.damage;
-        foreach (var hit in hits)
-        {
-            ProcessHit(hit, fireDirection, damageMultiplier, true);
-        }
-    }
-
-    protected virtual void ProcessHit(RaycastHit hit, Vector3 fireDirection, float damageMultiplier = 1f, bool ignoreArmor = false)
-    {
-        if (weaponData == null) return;
-
-        IDamageable damageable = hit.collider.GetComponent<IDamageable>();
-        if (damageable != null)
-        {
-            float finalDamage = weaponData.damage * damageMultiplier;
-            if (hit.collider.CompareTag("Head"))
-                finalDamage *= weaponData.headshotMultiplier;
-
-            if (ignoreArmor)
-                damageable.TakeDamage(finalDamage, DamageType.ArmorPiercing);
-            else
-                damageable.TakeDamage(finalDamage, DamageType.Bullet);
-        }
-
-        if (weaponData.bulletHolePrefab != null)
-        {
-            GameObject bulletHole = Instantiate(weaponData.bulletHolePrefab, hit.point + hit.normal * 0.01f, Quaternion.LookRotation(hit.normal));
-            if (hit.transform != null)
-                bulletHole.transform.parent = hit.transform;
-            Destroy(bulletHole, 30f);
-        }
     }
 
     protected virtual void CreateBulletTrail(Vector3 start, Vector3 end)

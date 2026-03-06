@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36226041ef227214d88cab4f1cba0852, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  weaponName: Pistola
+  weaponName: Pistol
   description: 
   weaponType: 0
   weaponIcon: {fileID: 21300000, guid: c2f64ac25c371b64893906ebb705a741, type: 3}
@@ -29,7 +29,7 @@ MonoBehaviour:
   reloadAnimationTrigger: Reload
   drawAnimationTrigger: Draw
   meleeAnimationTrigger: Melee
-  damage: 25
+  damage: 150
   headshotMultiplier: 2
   meleeDamage: 50
   meleeInstaKillThreshold: 30
@@ -39,12 +39,12 @@ MonoBehaviour:
   isFullAuto: 1
   isFullAutoSecondary: 0
   usesAmmo: 1
-  magazineSize: 12
+  magazineSize: 6
   totalAmmo: 60
-  reloadTime: 1.5
+  reloadTime: 2.25
   ammoType: 0
-  hasInfiniteAmmo: 0
-  baseSpread: 0
+  hasInfiniteAmmo: 1
+  baseSpread: 1
   maxSpread: 3
   spreadIncreasePerShot: 0.5
   spreadDecreaseSpeed: 2
