@@ -41,13 +41,13 @@ MonoBehaviour:
   usesAmmo: 1
   magazineSize: 6
   totalAmmo: 60
-  reloadTime: 2.25
+  reloadTime: 2
   ammoType: 0
   hasInfiniteAmmo: 1
-  baseSpread: 1
-  maxSpread: 3
-  spreadIncreasePerShot: 0.5
-  spreadDecreaseSpeed: 2
+  baseSpread: 15
+  maxSpread: 15
+  spreadIncreasePerShot: 10
+  spreadDecreaseSpeed: 0
   recoilPattern: {x: 1, y: 1}
   recoilRecoverySpeed: 5
   secondaryFireType: 0

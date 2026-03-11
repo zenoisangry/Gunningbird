@@ -34,20 +34,20 @@ MonoBehaviour:
   meleeDamage: 50
   meleeInstaKillThreshold: 30
   fireRate: 75
-  bulletSpeed: 100
+  bulletSpeed: 50
   secondaryFireRate: 300
   isFullAuto: 1
   isFullAutoSecondary: 0
   usesAmmo: 1
   magazineSize: 2
   totalAmmo: 120
-  reloadTime: 2.5
+  reloadTime: 1.5
   ammoType: 2
   hasInfiniteAmmo: 1
-  baseSpread: 3
-  maxSpread: 10
-  spreadIncreasePerShot: 0.5
-  spreadDecreaseSpeed: 2
+  baseSpread: 40
+  maxSpread: 40
+  spreadIncreasePerShot: 30
+  spreadDecreaseSpeed: 0
   recoilPattern: {x: 1, y: 1}
   recoilRecoverySpeed: 5
   secondaryFireType: 0

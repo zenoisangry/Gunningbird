@@ -35,7 +35,6 @@ public class PatternWeapon : BaseWeapon
         lastFireTime = Time.time;
         currentAmmo--;
 
-        UpdateSpread();
         ApplyRecoil();
         PlayFireEffects();
 

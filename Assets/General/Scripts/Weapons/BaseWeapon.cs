@@ -44,6 +44,7 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
         currentAmmo = weaponData.magazineSize;
         currentReserveAmmo = weaponData.totalAmmo;
         fireRateCooldown = 60f / weaponData.fireRate;
+        currentSpread = weaponData.maxSpread;
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
@@ -57,7 +58,6 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
         lastFireTime = Time.time;
         currentAmmo--;
 
-        UpdateSpread();
         ApplyRecoil();
         PlayFireEffects();
 
@@ -161,11 +161,6 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     public abstract void FireWeapon();
     protected virtual void FireSecondaryWeapon() { }
 
-    protected virtual void UpdateSpread()
-    {
-        currentSpread = Mathf.Min(currentSpread + weaponData.spreadIncreasePerShot, weaponData.maxSpread);
-    }
-
     protected virtual void ApplyRecoil()
     {
         if (weaponData == null) return;
@@ -196,11 +191,6 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     protected virtual void Update()
     {
         if (weaponData == null) return;
-
-        if (currentSpread > 0)
-        {
-            currentSpread = Mathf.Max(0, currentSpread - weaponData.spreadDecreaseSpeed * Time.deltaTime);
-        }
     }
 
     protected virtual Vector3 CalculateSpreadDirection(Vector3 baseDirection)
