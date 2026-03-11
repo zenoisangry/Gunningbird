@@ -4380,10 +4380,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: TavernFrontPorti
       objectReference: {fileID: 0}
+    - target: {fileID: 1883595629145246164, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 219.83
+      objectReference: {fileID: 0}
+    - target: {fileID: 1883595629145246164, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 16.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 1883595629145246164, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 367.64
+      objectReference: {fileID: 0}
     - target: {fileID: 1979539704796932557, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: c470520523ec0744a9654e2775919f9a, type: 2}
+    - target: {fileID: 2150942673605647595, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 96.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2150942673605647595, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.04
+      objectReference: {fileID: 0}
     - target: {fileID: 2205768403578181841, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       propertyPath: aggroSpreadRange
       value: 12
@@ -4811,6 +4831,22 @@ PrefabInstance:
     - target: {fileID: 8716450729595166436, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       propertyPath: m_StartPoint.z
       value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8723169383416204201, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 19.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8723169383416204201, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 98.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 8723169383416204201, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 8723169383416204201, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 262.02
       objectReference: {fileID: 0}
     - target: {fileID: 8726630237217730064, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       propertyPath: m_Radius
