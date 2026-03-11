@@ -24,6 +24,9 @@ public class LevelManager : MonoBehaviour
     [Header("Player Setup")]
     [SerializeField] private GameObject playerPrefab;
 
+    [Header("Spawn Settings")]
+    [SerializeField] private bool spawnEnemiesAsChildren = false;
+
     [Header("Events")]
     public UnityEvent onLevelInstantiated;
     public UnityEvent onLevelStart;
@@ -286,6 +289,11 @@ public class LevelManager : MonoBehaviour
         GameObject enemy = Instantiate(spawnConfig.enemyPrefab, spawnPoint.position, spawnPoint.rotation);
         enemy.name = $"{spawnConfig.enemyPrefab.name}_Spawned";
 
+        if (!spawnEnemiesAsChildren)
+        {
+            enemy.transform.SetParent(null);
+        }
+
         spawnedEnemies.Add(enemy);
 
         Debug.Log($"[LevelManager] Spawned {enemy.name} at {spawnPoint.position}");
@@ -329,8 +337,6 @@ public class LevelManager : MonoBehaviour
                 count++;
             }
         }
-
-        Debug.Log($"[LevelManager] Destroyed {count} projectiles");
     }
 
     public void LoadLevel(int levelIndex)
