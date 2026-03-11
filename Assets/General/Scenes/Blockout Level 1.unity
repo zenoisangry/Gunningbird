@@ -4640,6 +4640,10 @@ PrefabInstance:
       propertyPath: m_GenerateLinks
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5395959139263554199, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_LayerMask.m_Bits
+      value: 4343
+      objectReference: {fileID: 0}
     - target: {fileID: 5639775549990259452, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       propertyPath: aggroSpreadRange
       value: 20
@@ -4743,6 +4747,10 @@ PrefabInstance:
     - target: {fileID: 7646868774028254086, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       propertyPath: m_LocalPosition.z
       value: 191.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7771318718702192677, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7855247807668522662, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       propertyPath: aggroSpreadRange

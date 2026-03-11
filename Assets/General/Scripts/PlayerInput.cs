@@ -202,7 +202,7 @@ public class PlayerInput : MonoBehaviour
             Quaternion.LookRotation(transform.forward, Vector3.up) *
             new Vector3(sideMovement.x, verticalMovement, sideMovement.y);
 
-        if (Physics.Raycast(transform.position, Vector3.down, out projectionHit, 100f, LayerMask.GetMask("Default")))
+        if (Physics.Raycast(transform.position, Vector3.down, out projectionHit, 100f, LayerMask.GetMask("Default", "Terrain")))
         {
             projectedPosition = projectionHit.point;
             height = projectionHit.distance;

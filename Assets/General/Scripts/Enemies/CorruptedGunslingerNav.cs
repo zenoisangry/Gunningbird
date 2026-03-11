@@ -166,7 +166,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
 
         //Ruota il corpo
-        if (currentBehavior != GunslingerBehavior.Shooting && currentBehavior != GunslingerBehavior.Idle)
+        if (currentBehavior != GunslingerBehavior.Shooting)
         {
             movementScript.RotateTowardsTarget(transform.position);
         }
@@ -348,7 +348,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
     {
         if (player == null) return false;
         bool result = Physics.BoxCast(weaponHolder.transform.position, new Vector3(0.3f, 0.3f, 0.3f), player.transform.position - weaponHolder.transform.position,
-                                Quaternion.identity, (player.transform.position - weaponHolder.transform.position).magnitude, LayerMask.GetMask("Default"));
+                                Quaternion.identity, (player.transform.position - weaponHolder.transform.position).magnitude, LayerMask.GetMask("Default", "Terrain"));
         return !result;
     }
 

@@ -14,6 +14,7 @@ public class FeralColonistMovement : MonoBehaviour
     private float verticalShift;
     private Vector3 navmeshResetPoint;
     private Rigidbody rb;
+    private Vector3 prevTarget;
 
     private bool navmeshFollow = true;
 
@@ -36,7 +37,15 @@ public class FeralColonistMovement : MonoBehaviour
 
     public void RotateTowardsTarget(Vector3 target)
     {
-        rb.MoveRotation(Quaternion.LookRotation (new Vector3 (target.x,0,target.z) - new Vector3(transform.position.x,0,transform.position.z))*Quaternion.Euler(Vector3.up*90));
+        if (target != prevTarget)
+        {
+            rb.MoveRotation(Quaternion.LookRotation(new Vector3(target.x, 0, target.z) - new Vector3(transform.position.x, 0, transform.position.z)) * Quaternion.Euler(Vector3.up * 90));
+            prevTarget = target;
+        }
+        else
+        {
+            rb.rotation = Quaternion.identity;
+        }
     }
     private void FollowNavAgent()
     {

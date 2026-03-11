@@ -197,7 +197,7 @@ Transform:
   m_GameObject: {fileID: 5526311039920142374}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -227,12 +227,12 @@ MonoBehaviour:
   losAggroRange: 35
   aggroSpreadRange: 10
   escapeRange: 100
-  escapeRangePriority: 1
+  escapeRangePriority: 2
   escapeCheckCooldown: 3
-  escapeSafetyPriority: 1
-  jumpRange: 20
-  jumpOvershootSpeed: -1
-  jumpChargeTime: 1
+  escapeSafetyPriority: 3
+  jumpRange: 35
+  jumpOvershootSpeed: 0
+  jumpChargeTime: 0.5
   jumpAbortTimer: 0.1
   meleeAttackRangeMultiplier: 2
   playHitReaction: 1
