@@ -1470,7 +1470,7 @@ Transform:
   m_GameObject: {fileID: 481771337}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 179, y: 1, z: 150.5}
+  m_LocalPosition: {x: 180, y: 1, z: 155.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1564,6 +1564,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582349288}
   m_CullTransparentMesh: 1
+--- !u!1 &673049053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 673049054}
+  - component: {fileID: 673049055}
+  m_Layer: 0
+  m_Name: HousePorticolonist (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &673049054
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673049053}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 180.5, y: 1, z: 160}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1212392429}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &673049055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673049053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64c5218edfb74b142bbe1631a3fc0d36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EscapePoint
+  areaRadius: 1
 --- !u!1 &780040260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1956,6 +2001,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3224905970887746283, guid: acb178ea4e1de844e9d681b1907c1799, type: 3}
   m_PrefabInstance: {fileID: 1951686169}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &973012006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 973012007}
+  - component: {fileID: 973012008}
+  m_Layer: 0
+  m_Name: House2Porticolonist (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &973012007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973012006}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 185, y: 1, z: 175}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1212392429}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &973012008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973012006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64c5218edfb74b142bbe1631a3fc0d36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EscapePoint
+  areaRadius: 1
 --- !u!1 &995905076
 GameObject:
   m_ObjectHideFlags: 0
@@ -2195,6 +2285,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4464195287729215421, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
   m_PrefabInstance: {fileID: 5150445395418419966}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1091427498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1091427499}
+  - component: {fileID: 1091427500}
+  m_Layer: 0
+  m_Name: HousePorticolonist (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1091427499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091427498}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 179, y: 1, z: 150.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1212392429}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1091427500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091427498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64c5218edfb74b142bbe1631a3fc0d36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EscapePoint
+  areaRadius: 1
 --- !u!1 &1121441715
 GameObject:
   m_ObjectHideFlags: 0
@@ -2597,7 +2732,7 @@ Transform:
   m_GameObject: {fileID: 1152627165}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 185, y: 1, z: 175}
+  m_LocalPosition: {x: 185.5, y: 1, z: 180}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2821,6 +2956,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
   m_PrefabInstance: {fileID: 5150445395418419966}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1357410891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1357410892}
+  - component: {fileID: 1357410893}
+  m_Layer: 0
+  m_Name: House2Porticolonist (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1357410892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357410891}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 186.5, y: 1, z: 183.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1212392429}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1357410893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357410891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64c5218edfb74b142bbe1631a3fc0d36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EscapePoint
+  areaRadius: 1
 --- !u!1 &1363139386
 GameObject:
   m_ObjectHideFlags: 0
@@ -5334,27 +5514,39 @@ PrefabInstance:
       addedObject: {fileID: 1152627166}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       insertIndex: 15
+      addedObject: {fileID: 973012007}
+    - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      insertIndex: 16
+      addedObject: {fileID: 1357410892}
+    - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      insertIndex: 17
       addedObject: {fileID: 481771338}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
-      insertIndex: 38
+      insertIndex: 18
+      addedObject: {fileID: 1091427499}
+    - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      insertIndex: 19
+      addedObject: {fileID: 673049054}
+    - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
+      insertIndex: 42
       addedObject: {fileID: 1210893638}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
-      insertIndex: 43
+      insertIndex: 47
       addedObject: {fileID: 1363139387}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
-      insertIndex: 44
+      insertIndex: 48
       addedObject: {fileID: 1855375700}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
-      insertIndex: 46
+      insertIndex: 50
       addedObject: {fileID: 6980774}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
-      insertIndex: 47
+      insertIndex: 51
       addedObject: {fileID: 2096934599}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
-      insertIndex: 48
+      insertIndex: 52
       addedObject: {fileID: 1197414707}
     - targetCorrespondingSourceObject: {fileID: 1518266100265646872, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
-      insertIndex: 49
+      insertIndex: 53
       addedObject: {fileID: 292548533}
     - targetCorrespondingSourceObject: {fileID: 3788029958259570533, guid: eed6852bde1cb7d49a71cb7524d2454d, type: 3}
       insertIndex: 1
