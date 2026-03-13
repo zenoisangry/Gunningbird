@@ -229,6 +229,7 @@ public class FeralColonistNav : MonoBehaviour
                 break;
 
             case FeralColonistBehavior.Closing:
+                NavMeshPath path = new NavMeshPath();
                 if (playerDistance <= meleeAttackRange)
                 {
                     navigation.SetDestination(transform.position);
@@ -246,7 +247,7 @@ public class FeralColonistNav : MonoBehaviour
                         jumpCoroutine = StartCoroutine(Jump());
                     }
                 }
-                else if (player.height > jumpRange || (player.transform.position.y - transform.position.y) > jumpRange)
+                else if (player.height > jumpRange || (player.transform.position.y - transform.position.y) > jumpRange || !navigation.CalculatePath(player.projectedPosition,path))
                 {
                     if (canEscape)
                     {

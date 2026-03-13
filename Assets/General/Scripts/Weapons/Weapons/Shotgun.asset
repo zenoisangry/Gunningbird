@@ -44,9 +44,9 @@ MonoBehaviour:
   reloadTime: 1.5
   ammoType: 2
   hasInfiniteAmmo: 1
-  baseSpread: 30
-  maxSpread: 30
-  spreadIncreasePerShot: 30
+  baseSpread: 25
+  maxSpread: 25
+  spreadIncreasePerShot: 25
   spreadDecreaseSpeed: 0
   recoilPattern: {x: 1, y: 1}
   recoilRecoverySpeed: 5
