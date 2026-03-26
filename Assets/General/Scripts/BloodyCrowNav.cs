@@ -9,9 +9,11 @@ public class BloodyCrowNav : MonoBehaviour
     public NavMeshAgent navAgent;
 
     private PlayerInput player;
+    public CapsuleCollider hitBox;
 
     public bool followingNav = false;
     public Vector3 target;
+    public float damage;
     private Rigidbody rb;
     private float distance;
     private float callCD = 0;
@@ -98,6 +100,19 @@ public class BloodyCrowNav : MonoBehaviour
         else
         {
             callCD -= Time.deltaTime;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == 3)
+        {
+            IDamageable damageable = other.GetComponentInParent<IDamageable>();
+            if (damageable != null)
+            {
+                damageable.TakeDamage(damage, DamageType.Melee);
+                Destroy(this.transform.parent.gameObject);
+            }
         }
     }
 }

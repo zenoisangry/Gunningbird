@@ -1358,26 +1358,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 680255248503217877, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_Height
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 680255248503217877, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_Radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 991639024309803296, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 991639024309803296, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 991639024309803296, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1236932388917383469, guid: 407b178597e0af442b9e008cfea82688, type: 3}
       propertyPath: m_LocalPosition.x
       value: 200.82
@@ -1417,22 +1397,6 @@ PrefabInstance:
     - target: {fileID: 1236932388917383469, guid: 407b178597e0af442b9e008cfea82688, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3633808791388390542, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_Height
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3633808791388390542, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_Radius
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3633808791388390542, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_Center.y
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5043014186131888016, guid: 407b178597e0af442b9e008cfea82688, type: 3}
-      propertyPath: m_Name
-      value: AttackBox
       objectReference: {fileID: 0}
     - target: {fileID: 5609910913689416305, guid: 407b178597e0af442b9e008cfea82688, type: 3}
       propertyPath: m_Name
