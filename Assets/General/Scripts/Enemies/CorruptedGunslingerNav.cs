@@ -352,6 +352,12 @@ public class CorruptedGunslingerNav : MonoBehaviour
         return !result;
     }
 
+    public void StayStill(float time)
+    {
+        stunTimer = time;
+        hitReactCoroutine = StartCoroutine(HitReactRoutine());
+    }
+
     private void HandleDamageTaken(float finalDamage)
     {
         if (isDead) return;
