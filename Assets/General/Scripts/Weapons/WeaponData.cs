@@ -93,6 +93,7 @@ public class WeaponData : ScriptableObject
     [Header("Pattern fire settings")]
     public float projectileNumber;
     public List<Vector2> projectileAngles;
+    public float fanDelay;
 }
 
 public enum WeaponType

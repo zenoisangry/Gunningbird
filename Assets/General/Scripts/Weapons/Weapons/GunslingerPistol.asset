@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36226041ef227214d88cab4f1cba0852, type: 3}
-  m_Name: CorruptedGunslinger
+  m_Name: GunslingerPistol
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: CorruptedGunslinger
   description: 
