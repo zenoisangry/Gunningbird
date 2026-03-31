@@ -773,6 +773,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 2320541227979509936, guid: fb2dd77bf04079c48b65bf3d3b89bebf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6782517535901646149, guid: fb2dd77bf04079c48b65bf3d3b89bebf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 123.85806
@@ -2597,6 +2601,10 @@ PrefabInstance:
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: db413c05e867f6b429582e97b479e8fc, type: 2}
+    - target: {fileID: 4020731941986627356, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: m_MaterialTemplate
+      value: 
+      objectReference: {fileID: 2100000, guid: 594ea882c5a793440b60ff72d896021e, type: 2}
     - target: {fileID: 4581445116822285291, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2651,7 +2659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7603828253822251631, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
