@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36226041ef227214d88cab4f1cba0852, type: 3}
-  m_Name: Pistol
+  m_Name: GunslingerSpread
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  weaponName: Pistol
+  weaponName: CorruptedGunslinger
   description: 
-  weaponType: 0
+  weaponType: 7
   weaponIcon: {fileID: 21300000, guid: c2f64ac25c371b64893906ebb705a741, type: 3}
-  weaponPrefab: {fileID: 1627798441711330751, guid: a06e7581beffcc848ad308e631c1f1b3, type: 3}
-  pickupPrefab: {fileID: 1627798441711330751, guid: a06e7581beffcc848ad308e631c1f1b3, type: 3}
-  bulletPrefab: {fileID: 8058749452768088809, guid: 684f4c5c9a2c9aa4190fb75f2aedb9ec, type: 3}
-  pitchRandomInterval: 0.2
-  shootSound: {fileID: 8300000, guid: c3be42d29b99e1e4fb211e821ef4aedc, type: 3}
-  reloadSound: {fileID: 8300000, guid: 87302d640323b354f908bbca015aa36c, type: 3}
+  weaponPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
+  pickupPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
+  bulletPrefab: {fileID: 8058749452768088809, guid: b165455e6aba38842b0c30097b189a0d, type: 3}
+  shootSound: {fileID: 0}
+  reloadSound: {fileID: 0}
   emptySound: {fileID: 0}
   muzzleFlash: {fileID: 0}
   bulletHolePrefab: {fileID: 0}
@@ -30,26 +29,26 @@ MonoBehaviour:
   reloadAnimationTrigger: Reload
   drawAnimationTrigger: Draw
   meleeAnimationTrigger: Melee
-  damage: 150
+  damage: 25
   headshotMultiplier: 2
   meleeDamage: 50
   meleeInstaKillThreshold: 30
-  fireRate: 150
-  bulletSpeed: 100
+  fireRate: 300
+  bulletSpeed: 25
   secondaryFireRate: 0
   isFullAuto: 1
   isFullAutoSecondary: 0
   usesAmmo: 1
-  magazineSize: 6
+  magazineSize: 1
   totalAmmo: 60
-  reloadTime: 2
+  reloadTime: 2.5
   ammoType: 0
   hasInfiniteAmmo: 1
-  baseSpread: 15
-  maxSpread: 15
-  spreadIncreasePerShot: 10
+  baseSpread: 0
+  maxSpread: 0
+  spreadIncreasePerShot: 0
   spreadDecreaseSpeed: 0
-  recoilPattern: {x: 1, y: 1}
+  recoilPattern: {x: 0, y: 0}
   recoilRecoverySpeed: 5
   secondaryFireType: 0
   secondaryFireDamage: 50
@@ -60,11 +59,20 @@ MonoBehaviour:
   meleeAngle: 90
   meleeHitDelay: 0.2
   useHorizontalSpread: 0
-  horizontalSpreadAngle: 15
-  verticalSpreadAngle: 3
+  horizontalSpreadAngle: 0
+  verticalSpreadAngle: 0
   weaponViewPosition: {x: 0, y: 0, z: 0}
   weaponViewRotation: {x: 0, y: 0, z: 0}
   weaponViewScale: {x: 1, y: 1, z: 1}
-  projectileNumber: 0
-  projectileAngles: []
+  projectileNumber: 9
+  projectileAngles:
+  - {x: 0, y: 0}
+  - {x: 10, y: 10}
+  - {x: -10, y: 10}
+  - {x: 10, y: -10}
+  - {x: -10, y: -10}
+  - {x: 20, y: 20}
+  - {x: 20, y: -20}
+  - {x: -20, y: 20}
+  - {x: -20, y: -20}
   fanDelay: 0

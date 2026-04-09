@@ -16,6 +16,7 @@ public class WeaponData : ScriptableObject
     public GameObject bulletPrefab;
 
     [Header("Visual & Audio")]
+    public float pitchRandomInterval;
     public AudioClip shootSound;
     public AudioClip reloadSound;
     public AudioClip emptySound;

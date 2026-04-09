@@ -70,6 +70,45 @@ public class RangedWeapon : BaseWeapon
         }
     }
 
+    protected virtual void FireSpread()
+    {
+        if (weaponData == null || owner == null) return;
+
+        Transform cameraTransform = owner.GetCameraTransform();
+        if (cameraTransform == null) return;
+
+        Vector3 firePosition = firePoint != null ? firePoint.position : transform.position;
+
+        Vector3 targetPoint;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, maxDistance, hitLayers))
+        {
+            targetPoint = hit.point;
+            Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
+        }
+        else
+        {
+            targetPoint = cameraTransform.position + cameraTransform.forward * maxDistance;
+        }
+
+        Vector3 fireDirection = (targetPoint - firePosition).normalized;
+        Vector3 adjustedFD;
+        float projectileNumber = weaponData.projectileNumber;
+        if (weaponData.bulletPrefab != null)
+        {
+            while (projectileNumber > 0)
+            {
+                adjustedFD = spreadProjectiles[(int)projectileNumber-1] * fireDirection;
+                GameObject projectileGO = Instantiate(weaponData.bulletPrefab, firePosition, Quaternion.LookRotation(adjustedFD));
+                Projectile projectile = projectileGO.GetComponent<Projectile>();
+                if (projectile != null)
+                {
+                    projectile.Initialize(weaponData.damage, owner, adjustedFD, weaponData.headshotMultiplier);
+                }
+                projectileNumber--;
+            }
+        }
+    }
+
     protected virtual void FireFan()
     {
         if (weaponData == null || owner == null) return;
@@ -125,54 +164,6 @@ public class RangedWeapon : BaseWeapon
             timer += Time.deltaTime;
             yield return null;
         }
-    }
-    protected virtual void FireSpread()
-    {
-        if (weaponData == null || owner == null) return;
-
-        Transform cameraTransform = owner.GetCameraTransform();
-        if (cameraTransform == null) return;
-
-        Vector3 firePosition = firePoint != null ? firePoint.position : transform.position;
-
-        Vector3 targetPoint;
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, maxDistance, hitLayers))
-        {
-            targetPoint = hit.point;
-            Debug.DrawLine(firePosition, targetPoint, Color.red, 1f);
-        }
-        else
-        {
-            targetPoint = cameraTransform.position + cameraTransform.forward * maxDistance;
-        }
-
-        Vector3 fireDirection = (targetPoint - firePosition).normalized;
-
-        //Calculate starting angle based on how many projectiles are there
-        float projectileNumber = weaponData.projectileNumber;
-        Vector2 startingAngle = weaponData.projectileAngles[0] * (projectileNumber - 1) / 2;
-
-        if (weaponData.bulletPrefab != null)
-        {
-            Vector3 adjustedFD = Quaternion.Euler(startingAngle.y, startingAngle.x, 0) * fireDirection;
-            while (projectileNumber > 0)
-            {
-                GameObject projectileGO = Instantiate(weaponData.bulletPrefab, firePosition, Quaternion.LookRotation(adjustedFD));
-                Projectile projectile = projectileGO.GetComponent<Projectile>();
-                if (projectile != null)
-                {
-                    projectile.Initialize(weaponData.damage, owner, adjustedFD, weaponData.headshotMultiplier);
-                }
-
-                if (weaponData.bulletTrailPrefab != null && firePoint != null)
-                {
-                    CreateBulletTrail(firePosition, targetPoint);
-                }
-                projectileNumber--;
-            }
-        }
-
-
     }
     protected virtual void FireShotgun()
     {

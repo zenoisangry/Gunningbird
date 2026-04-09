@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseWeapon : MonoBehaviour, IWeapon
@@ -19,9 +21,18 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     protected bool isSecondaryFiring;
     protected Coroutine reloadCoroutine;
     protected float fireRateCooldown;
+    protected List<Quaternion> spreadProjectiles = new List<Quaternion>();
 
     [Header("Audio")]
     [SerializeField] protected AudioSource audioSource;
+
+    void Start()
+    {
+        foreach (Vector2 angle in weaponData.projectileAngles)
+        {
+            spreadProjectiles.Add(Quaternion.Euler(new Vector3(angle.x, angle.y, 0)));
+        }
+    }
 
     public virtual void Initialize(WeaponData data, IWeaponOwner weaponOwner)
     {
@@ -175,7 +186,11 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
         if (weaponData == null) return;
 
         if (weaponData.shootSound != null && audioSource != null)
+        {
+            audioSource.pitch = 1*(1 + Random.Range(-weaponData.pitchRandomInterval, weaponData.pitchRandomInterval));
             audioSource.PlayOneShot(weaponData.shootSound);
+        }
+            
 
         if (weaponData.muzzleFlash != null)
         {

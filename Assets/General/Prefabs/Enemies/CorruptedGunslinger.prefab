@@ -278,7 +278,7 @@ MonoBehaviour:
   maxHealth: 500
   currentHealth: 0
   isDead: 0
-  enableRegeneration: 1
+  enableRegeneration: 0
   regenerationDelay: 3
   regenerationRate: 5
   regenerationPercentage: 0.5

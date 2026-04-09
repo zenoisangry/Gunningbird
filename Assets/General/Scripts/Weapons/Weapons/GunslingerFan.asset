@@ -64,7 +64,7 @@ MonoBehaviour:
   weaponViewPosition: {x: 0, y: 0, z: 0}
   weaponViewRotation: {x: 0, y: 0, z: 0}
   weaponViewScale: {x: 1, y: 1, z: 1}
-  projectileNumber: 8
+  projectileNumber: 12
   projectileAngles:
   - {x: 8, y: 0}
-  fanDelay: 0.08
+  fanDelay: 0.04

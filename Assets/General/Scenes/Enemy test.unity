@@ -2874,6 +2874,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 55f9c76f707edc042b4239689dfb0799, type: 2}
     - target: {fileID: 5608643920456250554, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
+      propertyPath: predictionMultiplier
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5608643920456250554, guid: a69ed82f50bc54047bed327cc7cb4a2d, type: 3}
       propertyPath: predictTargetMovement
       value: 0
       objectReference: {fileID: 0}
