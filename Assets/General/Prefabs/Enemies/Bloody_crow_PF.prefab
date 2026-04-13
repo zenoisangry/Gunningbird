@@ -48,9 +48,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 899a528963a13a345835f9faeb626851, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8a32522c465c83f419c3955c332d2038, type: 2}
     - target: {fileID: 919132149155446097, guid: 899a528963a13a345835f9faeb626851, type: 3}
       propertyPath: m_Name
-      value: corvo_fix
+      value: Bloody_crow_PF
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
