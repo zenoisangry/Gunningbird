@@ -54,7 +54,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 64c6267b89c321742aea9658f6cd9692, type: 2}
     - target: {fileID: 919132149155446097, guid: ccebeb5b62760c94ea01a5ca77efb865, type: 3}
       propertyPath: m_Name
-      value: wodden_plank_broken
+      value: PF_broken_wodden_plank
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ccebeb5b62760c94ea01a5ca77efb865, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

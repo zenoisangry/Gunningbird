@@ -52,9 +52,25 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 639c1fb3fc4fc2f4489ac81a3fe759f1, type: 2}
+    - target: {fileID: -6342128982567961882, guid: 7a66aa14b44ace543a1745a256175e6f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -6042341629038508441, guid: 7a66aa14b44ace543a1745a256175e6f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -5360234362364758730, guid: 7a66aa14b44ace543a1745a256175e6f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7a66aa14b44ace543a1745a256175e6f, type: 3}
       propertyPath: m_Name
       value: PF_ropes
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7a66aa14b44ace543a1745a256175e6f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 1418520550353037394, guid: 7a66aa14b44ace543a1745a256175e6f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

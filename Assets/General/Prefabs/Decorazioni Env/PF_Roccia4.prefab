@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Roccia4
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e6b51c1d74c089f419f8a84c4614d7d2, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

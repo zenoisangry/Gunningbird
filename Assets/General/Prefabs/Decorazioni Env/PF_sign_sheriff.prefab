@@ -54,7 +54,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 20c57d89f59a6eb419f595f10743b1ee, type: 2}
     - target: {fileID: 919132149155446097, guid: 21d372ad7467d0849811902f3be57e28, type: 3}
       propertyPath: m_Name
-      value: sign_sheriff
+      value: PF_sign_sheriff
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 21d372ad7467d0849811902f3be57e28, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
