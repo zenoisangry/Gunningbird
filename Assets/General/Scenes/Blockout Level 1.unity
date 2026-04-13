@@ -10910,6 +10910,30 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 168.5
       objectReference: {fileID: 0}
+    - target: {fileID: 4310899256964304783, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 4b594f54d6a883142acbd339d82cd397, type: 2}
+    - target: {fileID: 4310899256964304783, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4407250111087242176, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 4b594f54d6a883142acbd339d82cd397, type: 2}
+    - target: {fileID: 4407250111087242176, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4537628132286650502, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 55f9c76f707edc042b4239689dfb0799, type: 2}
+    - target: {fileID: 4537628132286650502, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4581445116822285291, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10986,6 +11010,14 @@ PrefabInstance:
       propertyPath: m_BounceIntensity
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5064128606596998504, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 22302a96f222efa419e8fd607248cc1c, type: 2}
+    - target: {fileID: 5064128606596998504, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5298810420340435582, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_LocalPosition.x
       value: 96
@@ -11026,6 +11058,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level 1.2
       objectReference: {fileID: 0}
+    - target: {fileID: 6600234801822938104, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 22302a96f222efa419e8fd607248cc1c, type: 2}
+    - target: {fileID: 6600234801822938104, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6627762378924450549, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_Range
       value: 15
@@ -11058,6 +11098,14 @@ PrefabInstance:
       propertyPath: m_BounceIntensity
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6715094154278088307, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 19561211754c8fe45817656dad5605a0, type: 2}
+    - target: {fileID: 6715094154278088307, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6811844366181087029, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_Range
       value: 15
@@ -11073,6 +11121,14 @@ PrefabInstance:
     - target: {fileID: 6811844366181087029, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_BounceIntensity
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855989215542422435, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: e65eb825094d8d04ca8ef58a58f7f440, type: 2}
+    - target: {fileID: 6855989215542422435, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6888069824924105390, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11148,7 +11204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7603828253822251631, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7857889228072130157, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11157,6 +11213,14 @@ PrefabInstance:
     - target: {fileID: 7857889228072130157, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_LocalPosition.z
       value: 241.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7894411613576866961, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 55f9c76f707edc042b4239689dfb0799, type: 2}
+    - target: {fileID: 7894411613576866961, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7997181437500941555, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_Range
@@ -11225,6 +11289,14 @@ PrefabInstance:
     - target: {fileID: 8601320380570940507, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_BounceIntensity
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8623039892549996376, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 55f9c76f707edc042b4239689dfb0799, type: 2}
+    - target: {fileID: 8623039892549996376, guid: 232bd843786715445a34b6593ca10000, type: 3}
+      propertyPath: predictTargetMovement
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8783427341331542354, guid: 232bd843786715445a34b6593ca10000, type: 3}
       propertyPath: m_Range

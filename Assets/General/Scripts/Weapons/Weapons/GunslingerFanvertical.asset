@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 36226041ef227214d88cab4f1cba0852, type: 3}
-  m_Name: GunslingerSpread
+  m_Name: GunslingerFanvertical
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: CorruptedGunslinger
   description: 
-  weaponType: 7
+  weaponType: 8
   weaponIcon: {fileID: 21300000, guid: c2f64ac25c371b64893906ebb705a741, type: 3}
   weaponPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
   pickupPrefab: {fileID: 7797442051283886472, guid: b90f9b6c455c2fd46a7e7f2bb21c8e7d, type: 3}
   bulletPrefab: {fileID: 8058749452768088809, guid: b165455e6aba38842b0c30097b189a0d, type: 3}
+  pitchRandomInterval: 0
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   emptySound: {fileID: 0}
@@ -64,15 +65,7 @@ MonoBehaviour:
   weaponViewPosition: {x: 0, y: 0, z: 0}
   weaponViewRotation: {x: 0, y: 0, z: 0}
   weaponViewScale: {x: 1, y: 1, z: 1}
-  projectileNumber: 9
+  projectileNumber: 12
   projectileAngles:
-  - {x: 0, y: 0}
-  - {x: 10, y: 10}
-  - {x: -10, y: 10}
-  - {x: 10, y: -10}
-  - {x: -10, y: -10}
-  - {x: 20, y: 20}
-  - {x: 20, y: -20}
-  - {x: -20, y: 20}
-  - {x: -20, y: -20}
-  fanDelay: 0
+  - {x: 0, y: 8}
+  fanDelay: 0.04
