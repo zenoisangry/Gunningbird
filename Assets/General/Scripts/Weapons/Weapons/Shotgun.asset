@@ -19,8 +19,9 @@ MonoBehaviour:
   weaponPrefab: {fileID: 2299532287543969901, guid: 1caf738251a22e848bc27b33839db54a, type: 3}
   pickupPrefab: {fileID: 2299532287543969901, guid: 1caf738251a22e848bc27b33839db54a, type: 3}
   bulletPrefab: {fileID: 8058749452768088809, guid: 21280da6e14cda34587f8cf2f763b0a6, type: 3}
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
+  pitchRandomInterval: 0.2
+  shootSound: {fileID: 8300000, guid: f5db3594a20ba8344aac43e01acad23f, type: 3}
+  reloadSound: {fileID: 8300000, guid: 82c23222cd1cfb34c8fd5fca40eb59e0, type: 3}
   emptySound: {fileID: 0}
   muzzleFlash: {fileID: 0}
   bulletHolePrefab: {fileID: 0}
@@ -66,3 +67,4 @@ MonoBehaviour:
   weaponViewScale: {x: 1, y: 1, z: 1}
   projectileNumber: 0
   projectileAngles: []
+  fanDelay: 0
