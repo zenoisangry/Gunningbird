@@ -8,7 +8,8 @@ public class WeaponUI : MonoBehaviour
     [SerializeField] private TMP_Text ammoText;
     [SerializeField] private Image crosshair;
     [SerializeField] private Image weaponIconImage;
-    [SerializeField] private TMP_Text healthText;
+    //[SerializeField] private TMP_Text healthText; //ฅ^•ﻌ•^ฅ non serve nella modifica apportata, ma lascio per sicurezza!
+    [SerializeField] private Image healthBarFill; //Meow Meow ฅ^•ﻌ•^ฅ
 
     private WeaponManager weaponManager;
     private HealthSystem healthSystem;
@@ -70,8 +71,15 @@ public class WeaponUI : MonoBehaviour
 
     private void UpdateHealthUI(float current, float max)
     {
-        if (healthText == null) return;
-        healthText.text = $"HP: {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";
+        /* if (healthText == null) return;
+         healthText.text = $"HP: {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";*/ //ฅ^•ﻌ•^ฅ lascio per sicurezza, ma non serve!
+
+        if (healthBarFill == null) return;
+
+        float fillValue = current / max;
+
+        healthBarFill.fillAmount = fillValue;
+        //ฅ^•ﻌ•^ฅ
     }
 
     public void SetWeaponIcon(Sprite icon)
