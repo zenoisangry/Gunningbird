@@ -131,13 +131,16 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
     {
         if (animator != null && !string.IsNullOrEmpty(weaponData.drawAnimationTrigger))
             animator.SetTrigger(weaponData.drawAnimationTrigger);
+        if (currentAmmo == 0)
+        {
+            reloadCoroutine = StartCoroutine(ReloadRoutine());
+        }
     }
 
     public virtual void Holster()
     {
         isFiring = false;
         isSecondaryFiring = false;
-
         if (reloadCoroutine != null)
         {
             StopCoroutine(reloadCoroutine);
