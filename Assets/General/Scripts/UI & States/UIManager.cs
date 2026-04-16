@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
         None,
         MainMenu,
         Options,
+        Credits, //=^..^=
         Pause,
         Gameplay,
         GameOver

@@ -27,6 +27,7 @@ public class GameStateManager : MonoBehaviour
     {
         MainMenu,
         Options,
+        Credits, //Cat was there for a bit! =^..^=
         Gameplay,
         Pause,
         GameOver,

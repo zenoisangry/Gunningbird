@@ -8,6 +8,7 @@ public class UIMainMenu : MonoBehaviour, IGameUI
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private Button startButton;
     [SerializeField] private Button optionsButton;
+    [SerializeField] private Button creditsButton; //Cat was here!=^..^=
     [SerializeField] private Button quitButton;
     [SerializeField] private TMP_Text titleText;
 
@@ -21,6 +22,11 @@ public class UIMainMenu : MonoBehaviour, IGameUI
 
         if (quitButton != null)
             quitButton.onClick.AddListener(OnQuitClicked);
+
+        //Cat was here!
+        if (creditsButton != null)
+            quitButton.onClick.AddListener(OnCreditsClicked);
+        //=^..^=
     }
 
     public void SetActive(bool active)
@@ -44,6 +50,12 @@ public class UIMainMenu : MonoBehaviour, IGameUI
         GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Options);
     }
 
+    //Cat was here too!
+    private void OnCreditsClicked()
+    {
+        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Credits);
+    }
+    //=^..^=
     private void OnQuitClicked()
     {
         GameManager.Instance.QuitGame();
