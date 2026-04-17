@@ -6,6 +6,7 @@ using UnityEngine.InputSystem.Interactions;
 public class PlayerInput : MonoBehaviour
 {
     public InputActionAsset actions;
+    public MotionLinestoggle motionlines;
 
     [Header("Camera")]
     public float camSensitivity;
@@ -26,7 +27,7 @@ public class PlayerInput : MonoBehaviour
     private float currentSpeed;
     private bool flying = false;
     private bool grounded = true;
-    private bool diving = false;
+    public bool diving = false;
     private Vector2 sideMovement = Vector2.zero;
     private float verticalMovement = 0;
     private bool isDead = false;
