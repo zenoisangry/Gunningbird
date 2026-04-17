@@ -235,6 +235,8 @@ MonoBehaviour:
   jumpChargeTime: 0.5
   jumpAbortTimer: 0.1
   meleeAttackRangeMultiplier: 2
+  pathfindingInterval: 10
+  rotationInterval: 3
   playHitReaction: 1
   hitStunTime: 0.07
   hitAnimationTrigger: Hit

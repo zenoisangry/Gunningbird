@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
-using static CorruptedGunslingerNav;
 
 public class FeralColonistNav : MonoBehaviour
 {
@@ -49,6 +49,12 @@ public class FeralColonistNav : MonoBehaviour
     public float jumpAbortTimer;
     public float meleeAttackRangeMultiplier;
     private float meleeAttackRange;
+    public float pathfindingInterval;
+    private float pathfindingTimer = 0;
+    public float rotationInterval;
+    private float rotationTimer = 0;
+    NavMeshPath path;
+
 
     [Header("Damage / Death Reactions")]
     [SerializeField] private bool playHitReaction = true;
@@ -75,6 +81,8 @@ public class FeralColonistNav : MonoBehaviour
     // Start is called once before the first execution of Update
     void Start()
     {
+        path = new NavMeshPath();
+
         //Cerca player
         player = FindFirstObjectByType<PlayerInput>();
 
@@ -151,20 +159,25 @@ public class FeralColonistNav : MonoBehaviour
     {
         if (isDead) return;
 
-        if (!attacking)
+        pathfindingTimer++;
+        rotationTimer++;
+
+        if (pathfindingTimer >= pathfindingInterval)
         {
-            BehaviorSwitchCheck();
+            if (currentBehavior == FeralColonistBehavior.Closing)
+            {
+                if (player != null)
+                    navigation.SetDestination(player.projectedPosition);
+            }
+            if (!attacking)
+            {
+                BehaviorSwitchCheck();
+            }
         }
 
-        if (navigation.updatePosition)
+        if (navigation.updatePosition && currentBehavior == FeralColonistBehavior.Closing)
         {
             MovementKindCheck();
-        }
-
-        if (currentBehavior == FeralColonistBehavior.Closing)
-        {
-            if (player != null)
-                navigation.SetDestination(player.projectedPosition);
         }
 
         if (currentBehavior == FeralColonistBehavior.Attacking || currentBehavior == FeralColonistBehavior.Jumping)
@@ -183,13 +196,25 @@ public class FeralColonistNav : MonoBehaviour
         }
 
         //Ruota il corpo
-        if (currentBehavior != FeralColonistBehavior.Attacking && currentBehavior != FeralColonistBehavior.Jumping)
+        if (rotationTimer >= rotationInterval)
         {
-            movementScript.RotateTowardsTarget(transform.position);
+            if (currentBehavior != FeralColonistBehavior.Attacking && currentBehavior != FeralColonistBehavior.Jumping)
+            {
+                movementScript.RotateTowardsTarget(transform.position);
+            }
+            else if (currentBehavior == FeralColonistBehavior.Attacking)
+            {
+                movementScript.RotateTowardsTarget(player.transform.position);
+            }
         }
-        else if (currentBehavior == FeralColonistBehavior.Attacking)
+
+        if (pathfindingTimer >= pathfindingInterval)
         {
-            movementScript.RotateTowardsTarget(player.transform.position);
+            pathfindingTimer = 0;
+        }
+        if (rotationTimer >= rotationInterval)
+        {
+            rotationTimer = 0;
         }
     }
 
@@ -229,7 +254,6 @@ public class FeralColonistNav : MonoBehaviour
                 break;
 
             case FeralColonistBehavior.Closing:
-                NavMeshPath path = new NavMeshPath();
                 if (playerDistance <= meleeAttackRange)
                 {
                     navigation.SetDestination(transform.position);

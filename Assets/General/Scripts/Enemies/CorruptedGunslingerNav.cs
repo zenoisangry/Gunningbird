@@ -20,6 +20,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private HealthSystem healthSystem;
     private Animator animator;
     public ProjectileAggro bulletDetection;
+    public float pathfindingInterval;
+    private float pathfindingTimer = 0;
+    public float rotationInterval;
+    private float rotationTimer = 0;
 
     [Header("Enemy Attack Logic")]
     [SerializeField] private EnemyRangedAttack enemyRangedAttack;
@@ -77,6 +81,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
         movementScript = body.GetComponent<FeralColonistMovement>();
         animator = body != null ? body.GetComponentInChildren<Animator>() : GetComponentInChildren<Animator>();
 
+        climbing = false;
+
         // Resolve HealthSystem even if it's not on this GameObject (e.g. on Body).
         if (healthSystem == null)
         {
@@ -130,22 +136,32 @@ public class CorruptedGunslingerNav : MonoBehaviour
     {
         if (isDead) return;
 
-        climbing = false;
+        pathfindingTimer++;
+        rotationTimer++;
 
-        if (currentBehavior == GunslingerBehavior.Closing)
+        if (pathfindingTimer >= pathfindingInterval)
         {
-            if (player != null)
+            if (currentBehavior == GunslingerBehavior.Closing)
             {
-                //Check current surface;
-                navigation.SamplePathPosition(NavMesh.AllAreas, 0.1f, out hit);
-                if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
+                if (player != null)
                 {
-                    navigation.SetDestination(player.projectedPosition);
+                    //Check current surface;
+                    navigation.SamplePathPosition(NavMesh.AllAreas, 0.1f, out hit);
+                    if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
+                    {
+                        climbing = false;
+                        navigation.SetDestination(player.projectedPosition);
+                    }
+                    else
+                    {
+                        climbing = true;
+                    }
                 }
-                else
-                {
-                    climbing = true;
-                }
+            }
+
+            if (!climbing)
+            {
+                BehaviorSwitchCheck();
             }
         }
 
@@ -160,19 +176,26 @@ public class CorruptedGunslingerNav : MonoBehaviour
             }
         }
 
-        if (!climbing)
-        {
-            BehaviorSwitchCheck();
+
+        if (rotationTimer >= rotationInterval){
+            //Ruota il corpo
+            if (currentBehavior != GunslingerBehavior.Shooting)
+            {
+                movementScript.RotateTowardsTarget(transform.position);
+            }
+            else if (currentBehavior == GunslingerBehavior.Shooting)
+            {
+                movementScript.RotateTowardsTarget(player.transform.position);
+            }
         }
 
-        //Ruota il corpo
-        if (currentBehavior != GunslingerBehavior.Shooting)
+        if (pathfindingTimer >= pathfindingInterval)
         {
-            movementScript.RotateTowardsTarget(transform.position);
+            pathfindingTimer = 0;
         }
-        else if (currentBehavior == GunslingerBehavior.Shooting)
+        if (rotationTimer >= rotationInterval)
         {
-            movementScript.RotateTowardsTarget(player.transform.position);
+            rotationTimer = 0;
         }
     }
 
@@ -182,7 +205,10 @@ public class CorruptedGunslingerNav : MonoBehaviour
         foreach (Collider collider in hit)
         {
             Debug.Log(collider.gameObject);
-            collider.gameObject.GetComponentInChildren<ProjectileAggro>().awake = true;
+            if (collider.gameObject.GetComponentInChildren<ProjectileAggro>() != null)
+            {
+                collider.gameObject.GetComponentInChildren<ProjectileAggro>().awake = true;
+            }
         }
     }
     private void BehaviorSwitchCheck()
