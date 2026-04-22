@@ -26,7 +26,7 @@ public class PlayerInput : MonoBehaviour
 
     private float currentSpeed;
     private bool flying = false;
-    private bool grounded = true;
+    public bool grounded = true;
     public bool diving = false;
     private Vector2 sideMovement = Vector2.zero;
     private float verticalMovement = 0;
