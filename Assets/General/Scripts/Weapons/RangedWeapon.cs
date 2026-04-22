@@ -8,9 +8,14 @@ public class RangedWeapon : BaseWeapon
     [SerializeField] protected LayerMask hitLayers;
     [SerializeField] protected float maxDistance = 100f;
     [SerializeField] protected float bulletForce = 1000f;
+    [SerializeField] protected ParticleSystem muzzleEffect1;
+    [SerializeField] protected ParticleSystem muzzleEffect2;
+    public ParticleSystem reloadVFX;
 
     public override void FireWeapon()
     {
+        ActivateMuzzleFlash();
+
         switch (weaponData.weaponType)
         {
             case WeaponType.Shotgun:
@@ -69,7 +74,25 @@ public class RangedWeapon : BaseWeapon
             CreateBulletTrail(firePosition, targetPoint);
         }
     }
-
+    public void ActivateMuzzleFlash()
+    {
+        if (muzzleEffect1 != null)
+        {
+            if (muzzleEffect1.isPlaying)
+            {
+                muzzleEffect1.Stop();
+            }
+            muzzleEffect1.Play();
+        }
+        if (muzzleEffect2 != null)
+        {
+            if (muzzleEffect2.isPlaying)
+            {
+                muzzleEffect2.Stop();
+            }
+            muzzleEffect2.Play();
+        }
+    }
     protected virtual void FireSpread()
     {
         if (weaponData == null || owner == null) return;

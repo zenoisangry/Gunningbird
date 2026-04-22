@@ -101,8 +101,9 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
         if (!CanReload() || isReloading) return;
 
         if (reloadCoroutine != null)
+        {
             StopCoroutine(reloadCoroutine);
-
+        }
         reloadCoroutine = StartCoroutine(ReloadRoutine());
     }
 
