@@ -488,8 +488,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
 
         if (destroyEnemyRootOnDeath)
         {
-            GameObject root = transform.root != null ? transform.root.gameObject : gameObject;
-            Destroy(root, Mathf.Max(0f, destroyDelay));
+            Destroy(transform.parent.gameObject, Mathf.Max(0f, destroyDelay));
         }
     }
 
