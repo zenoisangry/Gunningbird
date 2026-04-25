@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: ImpactData_Deafault
   m_EditorClassIdentifier: Assembly-CSharp::ImpactData
   impactParticlePrefab: {fileID: 0}
-  impactDecalSprite: {fileID: 0}
+  impactDecalSprite: {fileID: 21300000, guid: 5eebd24c93fd1f24a92396db7efb662c, type: 3}
   decalSizeRange: {x: 0.08, y: 0.18}
-  decalDuration: 8
-  impactSound: {fileID: 0}
-  volume: 0.8
+  decalDuration: 5
+  impactSound: {fileID: 8300000, guid: 8d5a425e24ccdd546bab2c5a09c9ef14, type: 3}
+  volume: 1
   changeMaterial: 0
   impactMaterial: {fileID: 0}
   materialDuration: 0.5
