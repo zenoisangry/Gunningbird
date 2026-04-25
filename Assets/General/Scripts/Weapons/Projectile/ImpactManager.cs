@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+// ฅ^•ﻌ•^ฅ
 public class ImpactManager : MonoBehaviour
 {
     public static ImpactManager Instance { get; private set; }
@@ -8,11 +8,14 @@ public class ImpactManager : MonoBehaviour
     [System.Serializable]
     public struct SurfaceEntry
     {
+        
         public string tag;
         public ImpactData data;
     }
 
+    
     [SerializeField] private SurfaceEntry[] surfaceEntries;
+   
     [SerializeField] private ImpactData defaultImpact;
 
     private Dictionary<string, ImpactData> _map;
