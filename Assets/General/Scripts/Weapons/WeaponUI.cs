@@ -82,11 +82,11 @@ public class WeaponUI : MonoBehaviour
         else if (data.hasInfiniteAmmo)
         {
             SetAllIconsVisible(false);
-            if (ammoText)
-            {
-                ammoText.gameObject.SetActive(true);
-                ammoText.text = "∞";
-            }
+            // if (ammoText) //mi stava dando problemi //ฅ^•ﻌ•^ฅ
+            // {
+            //     ammoText.gameObject.SetActive(true);
+            //     ammoText.text = "∞";
+            // }
         }
         else
         {
