@@ -1,5 +1,5 @@
 using UnityEngine;
-// ฅ^•ﻌ•^ฅ
+// ฅ^•ﻌ•^ฅ v2 con glow invece del cambio materiale
 [CreateAssetMenu(fileName = "ImpactData", menuName = "Weapon System/Impact Data")]
 public class ImpactData : ScriptableObject
 {
@@ -17,12 +17,11 @@ public class ImpactData : ScriptableObject
     public AudioClip impactSound;
     [Range(0f, 1f)] public float volume = 0.8f;
 
-    [Header("Materiale")]
-    
+    [Header("Glow")]
     public bool changeMaterial = false;
-    public Material impactMaterial;
-    
-    public float materialDuration = 0.5f;
+    public Color glowColor = Color.white;
+    public float glowIntensity = 3f;
+    public float materialDuration = 0.15f;
 
     [Header("Emitter figlio")]
    
