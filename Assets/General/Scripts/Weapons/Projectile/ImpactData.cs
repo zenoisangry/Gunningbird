@@ -8,26 +8,20 @@ public class ImpactData : ScriptableObject
 
     [Header("Decal")]
     public Sprite impactDecalSprite;
-    
     public Vector2 decalSizeRange = new Vector2(0.08f, 0.18f);
-    
     public float decalDuration = 8f;
 
     [Header("Audio")]
     public AudioClip impactSound;
     [Range(0f, 1f)] public float volume = 0.8f;
 
-    [Header("Glow")]
+    [Header("Materiale")]
     public bool changeMaterial = false;
-    public Color glowColor = Color.white;
-    public float glowIntensity = 3f;
+    public Material impactMaterial;
     public float materialDuration = 0.15f;
 
     [Header("Emitter figlio")]
-   
     public bool activateChildEmitter = false;
-    
     public string childEmitterName = "";
-    
     public float childEmitterDuration = 3f;
 }

@@ -371,6 +371,7 @@ GameObject:
   - component: {fileID: 2042240617366751700}
   - component: {fileID: 4602118480208352115}
   - component: {fileID: 7603368539798740290}
+  - component: {fileID: 3526150846912759444}
   m_Layer: 8
   m_Name: Body
   m_TagString: Enemy
@@ -565,3 +566,15 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -195480989591521046, guid: 5b236f9d5951427468beb0d802010191, type: 3}
+--- !u!114 &3526150846912759444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493743809459716190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ae39dcc35a8c81438145e2e7138f1f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitMaterialEffect
