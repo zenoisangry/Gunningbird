@@ -246,4 +246,5 @@ public abstract class BaseWeapon : MonoBehaviour, IWeapon
 
     public virtual int GetCurrentAmmo() => currentAmmo;
     public virtual int GetReserveAmmo() => currentReserveAmmo;
+    public virtual float GetCurrentSpread() => currentSpread; //ฅ^•ﻌ•^ฅ
 }
