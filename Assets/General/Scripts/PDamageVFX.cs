@@ -28,7 +28,6 @@ public class PDamageVFX : MonoBehaviour
     // Shake variables
     private Vector3 originalCamPos;
     private float shakeTimer;
-
     void Start()
     {
         // Cache HealthSystem safely
