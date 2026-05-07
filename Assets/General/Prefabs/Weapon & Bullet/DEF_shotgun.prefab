@@ -9861,15 +9861,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cb80d2695d62f4344b1cf80ff008a9c0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cb80d2695d62f4344b1cf80ff008a9c0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.25
+      value: -0.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cb80d2695d62f4344b1cf80ff008a9c0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.5
+      value: -3.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cb80d2695d62f4344b1cf80ff008a9c0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9959,6 +9959,7 @@ MonoBehaviour:
   bulletForce: 1000
   muzzleEffect1: {fileID: 134774510750452348}
   muzzleEffect2: {fileID: 7587713338273332950}
+  reloadVFX: {fileID: 0}
 --- !u!82 &7306301957414449438
 AudioSource:
   m_ObjectHideFlags: 0
