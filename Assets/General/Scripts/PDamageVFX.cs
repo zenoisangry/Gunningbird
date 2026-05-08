@@ -52,9 +52,6 @@ public class PDamageVFX : MonoBehaviour
 
     void Update()
     {
-        // ======================
-        // FLASH FADE
-        // ======================
         currentAlpha = Mathf.Lerp(currentAlpha, 0f, Time.deltaTime * fadeSpeed);
 
         if (damageOverlay != null)
@@ -63,10 +60,7 @@ public class PDamageVFX : MonoBehaviour
             c.a = currentAlpha;
             damageOverlay.color = c;
         }
-
-        // ======================
-        // CAMERA SHAKE
-        // ======================
+        
         if (cameraTransform != null)
         {
             if (shakeTimer > 0)
@@ -74,7 +68,7 @@ public class PDamageVFX : MonoBehaviour
                 shakeTimer -= Time.deltaTime;
 
                 Vector3 shakeOffset = Random.insideUnitSphere * shakeAmount;
-                shakeOffset.z = 0f; // evita effetto strano in profondità
+                shakeOffset.z = 0f;
 
                 cameraTransform.localPosition = originalCamPos + shakeOffset;
             }
@@ -88,20 +82,9 @@ public class PDamageVFX : MonoBehaviour
     void OnDamageTaken(float damage)
     {
         float intensity = Mathf.Clamp01(damage / 50f);
-
-        // ======================
-        // FLASH
-        // ======================
         currentAlpha = Mathf.Max(currentAlpha, intensity * maxAlpha);
-
-        // ======================
-        // CAMERA SHAKE TRIGGER
-        // ======================
         shakeTimer = shakeDuration * intensity;
-
-        // ======================
-        // AUDIO
-        // ======================
+    
         if (audioSource != null)
         {
             audioSource.pitch = Random.Range(0.95f, 1.05f);

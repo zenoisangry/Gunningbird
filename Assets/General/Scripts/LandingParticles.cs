@@ -5,6 +5,9 @@ public class LandingParticles : MonoBehaviour
     public ParticleSystem dustPrefab;
     public PlayerInput movement;
 
+    [Header("References")]
+    public Transform cameraTransform;
+
     [Header("Fall Settings")]
     public float minFallHeight = 2f;
     public float minImpactSpeed = -8f;
@@ -15,10 +18,16 @@ public class LandingParticles : MonoBehaviour
     [Header("Spawn Settings")]
     public float groundOffset = 0.9f;
 
+    [Header("Camera Shake")]
+    public float shakeAmount = 0.1f;
+    public float shakeDuration = 0.2f;
+
     private bool wasGrounded;
     private bool wasDiving;
     private float highestY;
     private float lastVerticalSpeed;
+    private Vector3 originalCamPos;
+    private float shakeTimer;
 
     void Start()
     {
@@ -69,5 +78,6 @@ public class LandingParticles : MonoBehaviour
         spawnPos += Vector3.down * groundOffset;
 
         Instantiate(dustPrefab, spawnPos, Quaternion.identity);
+
     }
 }
