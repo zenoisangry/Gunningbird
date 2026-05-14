@@ -101,6 +101,8 @@ MonoBehaviour:
   body: {fileID: 6493743809459716190}
   weaponHolder: {fileID: 4343202572123529792}
   bulletDetection: {fileID: 7966151770397407209}
+  pathfindingInterval: 0
+  rotationInterval: 0
   enemyRangedAttack: {fileID: 5608643920456250554}
   attackTarget: {fileID: 0}
   aggroRange: 5
@@ -275,7 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ac0bcc4a60acc54d9361b19279fdc8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
-  maxHealth: 500
+  maxHealth: 300
   currentHealth: 0
   isDead: 0
   enableRegeneration: 0
@@ -342,6 +344,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &1539900294317707518
 MeshCollider:
