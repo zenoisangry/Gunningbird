@@ -30,7 +30,7 @@ MonoBehaviour:
   reloadAnimationTrigger: Reload
   drawAnimationTrigger: Draw
   meleeAnimationTrigger: Melee
-  damage: 25
+  damage: 12
   headshotMultiplier: 2
   meleeDamage: 50
   meleeInstaKillThreshold: 30

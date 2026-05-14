@@ -19,6 +19,7 @@ MonoBehaviour:
   weaponPrefab: {fileID: 0}
   pickupPrefab: {fileID: 0}
   bulletPrefab: {fileID: 0}
+  pitchRandomInterval: 0
   shootSound: {fileID: 0}
   reloadSound: {fileID: 0}
   emptySound: {fileID: 0}
@@ -31,7 +32,7 @@ MonoBehaviour:
   meleeAnimationTrigger: Melee
   damage: 25
   headshotMultiplier: 2
-  meleeDamage: 50
+  meleeDamage: 25
   meleeInstaKillThreshold: 0
   fireRate: 600
   bulletSpeed: 100
@@ -58,3 +59,12 @@ MonoBehaviour:
   meleeCooldown: 0.5
   meleeAngle: 90
   meleeHitDelay: 0.2
+  useHorizontalSpread: 0
+  horizontalSpreadAngle: 15
+  verticalSpreadAngle: 3
+  weaponViewPosition: {x: 0, y: 0, z: 0}
+  weaponViewRotation: {x: 0, y: 0, z: 0}
+  weaponViewScale: {x: 1, y: 1, z: 1}
+  projectileNumber: 0
+  projectileAngles: []
+  fanDelay: 0
