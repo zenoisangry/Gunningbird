@@ -7,6 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class FeralColonistNav : MonoBehaviour
 {
@@ -49,10 +50,6 @@ public class FeralColonistNav : MonoBehaviour
     public float jumpAbortTimer;
     public float meleeAttackRangeMultiplier;
     private float meleeAttackRange;
-    public float pathfindingInterval;
-    private float pathfindingTimer = 0;
-    public float rotationInterval;
-    private float rotationTimer = 0;
     NavMeshPath path;
 
 
@@ -78,16 +75,31 @@ public class FeralColonistNav : MonoBehaviour
     private Coroutine attackCoroutine;
     private Coroutine jumpCoroutine;
 
+    private bool hasLOS;
+    private int playerRange;
+
+    private Vector3 previousPlayerPosition;
+    private Vector3 previousPlayerProjection;
+    [SerializeField] private float rotationChangeAngle;
+    [SerializeField] private float navChangeMaxDistance;
+    [SerializeField] private float navChangeMinDistance;
+    private float playerAngle;
+    private bool updateRotation = true;
+    private bool updateNavigation = true;
+
+    private float attackDistance;
+    private Vector3 attackPoint;
+
     // Start is called once before the first execution of Update
     void Start()
     {
         path = new NavMeshPath();
 
         //Cerca player
-        player = FindFirstObjectByType<PlayerInput>();
+        player = FindAnyObjectByType<PlayerInput>();
 
         //Cerca luoghi di cover segnati
-        escManager = FindFirstObjectByType<EscapeManager>();
+        escManager = FindAnyObjectByType<EscapeManager>();
 
         // Inizializza MeleeWeapon se presente
         meleeAttack = GetComponent<MeleeWeapon>();
@@ -154,25 +166,74 @@ public class FeralColonistNav : MonoBehaviour
         }
     }
 
+    private void CheckPlayerPosition()
+    {
+        playerDistance = (player.transform.position - transform.position).magnitude;
+        playerHorizontalDistance = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.z - transform.position.z).magnitude;
+        if(playerDistance <= meleeAttackRange)
+        {
+            playerRange = 0;
+        }
+        else if (playerDistance <= aggroRange)
+        {
+            playerRange = 1;
+        } else if (playerDistance <= losAggroRange)
+        {
+            playerRange = 2;
+        } else if (playerDistance > losAggroRange)
+        {
+            playerRange = 3;
+        }
+
+        playerAngle = Math.Abs(Vector3.SignedAngle(player.transform.position - transform.position, previousPlayerPosition - transform.position, Vector3.zero));
+        if (playerAngle > rotationChangeAngle)
+        {
+            updateRotation = true;
+        }
+        if (playerDistance >= aggroRange)
+        {
+            if ((player.projectedPosition - previousPlayerProjection).magnitude >= navChangeMaxDistance)
+            {
+                updateNavigation = true;
+            }
+        }
+        else
+        {
+            if ((player.projectedPosition - previousPlayerProjection).magnitude >= (playerDistance/aggroRange)*(navChangeMaxDistance-navChangeMinDistance)+navChangeMinDistance)
+            {
+                updateNavigation = true;
+            }
+        }
+
+    }
+
     // Update is called once per frame
     void Update()
     {
+        CheckPlayerPosition();
+        hasLOS = CheckLOS();
+
         if (isDead) return;
 
-        pathfindingTimer++;
-        rotationTimer++;
-
-        if (pathfindingTimer >= pathfindingInterval)
+        if (currentBehavior == FeralColonistBehavior.Closing)
         {
-            if (currentBehavior == FeralColonistBehavior.Closing)
+            if (updateRotation)
             {
-                if (player != null)
+                movementScript.RotateTowardsTarget(transform.position);
+                updateRotation = false;
+            }
+            if (player != null)
+                if (updateNavigation)
+                {
                     navigation.SetDestination(player.projectedPosition);
-            }
-            if (!attacking)
-            {
-                BehaviorSwitchCheck();
-            }
+                    updateNavigation = false;
+                    previousPlayerPosition = player.transform.position;
+                    previousPlayerProjection = player.projectedPosition;
+                }
+        }
+        if (!attacking)
+        {
+            BehaviorSwitchCheck();
         }
 
         if (navigation.updatePosition && currentBehavior == FeralColonistBehavior.Closing)
@@ -191,30 +252,15 @@ public class FeralColonistNav : MonoBehaviour
             {
                 Debug.Log("Escape target reached");
                 currentBehavior = FeralColonistBehavior.Idle;
+                movementScript.DisableNavmeshFollow();
                 bulletDetection.Activate();
             }
         }
 
         //Ruota il corpo
-        if (rotationTimer >= rotationInterval)
+        if (currentBehavior == FeralColonistBehavior.Attacking)
         {
-            if (currentBehavior != FeralColonistBehavior.Attacking && currentBehavior != FeralColonistBehavior.Jumping)
-            {
-                movementScript.RotateTowardsTarget(transform.position);
-            }
-            else if (currentBehavior == FeralColonistBehavior.Attacking)
-            {
-                movementScript.RotateTowardsTarget(player.transform.position);
-            }
-        }
-
-        if (pathfindingTimer >= pathfindingInterval)
-        {
-            pathfindingTimer = 0;
-        }
-        if (rotationTimer >= rotationInterval)
-        {
-            rotationTimer = 0;
+            movementScript.RotateTowardsTarget(player.transform.position);
         }
     }
 
@@ -237,43 +283,47 @@ public class FeralColonistNav : MonoBehaviour
     {
         if (player == null) return;
 
-        playerDistance = (player.transform.position - transform.position).magnitude;
-        playerHorizontalDistance = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.z - transform.position.z).magnitude;
-
-        Vector3 attackPoint = meleeAimPoint != null ? meleeAimPoint.position : transform.position;
-        float attackDistance = Vector3.Distance(player.transform.position, attackPoint);
+        attackPoint = meleeAimPoint != null ? meleeAimPoint.position : transform.position;
+        attackDistance = Vector3.Distance(player.transform.position, attackPoint);
 
         switch (currentBehavior)
         {
             case FeralColonistBehavior.Idle:
-                if ((CheckLOS() && playerHorizontalDistance <= losAggroRange) || playerDistance <= aggroRange || bulletDetection.awake)
+                if ((hasLOS && playerRange == 2) || playerRange < 2 || bulletDetection.awake)
                 {
                     currentBehavior = FeralColonistBehavior.Closing;
+                    movementScript.RotateTowardsTarget(player.transform.position);
+                    movementScript.EnableNavmeshFollow();
                     CallOthers();
+                    navigation.isStopped = false;
                 }
                 break;
 
             case FeralColonistBehavior.Closing:
-                if (playerDistance <= meleeAttackRange)
+                if (playerRange == 0)
                 {
-                    navigation.SetDestination(transform.position);
+                    navigation.isStopped = true;
                     currentBehavior = FeralColonistBehavior.Attacking;
                 }
-                else if ((player.height > meleeAttackRange + 1) && playerDistance <= jumpRange && CheckLOS() && canJump)
+                else  if ((player.height > meleeAttackRange + 1) && playerDistance <= jumpRange && hasLOS)
                 {
-                    if (player.height > ((player.transform.position - new Vector3(0, player.height, 0)) - transform.position).magnitude)
+                    MovementKindCheck();
+                    if (canJump)
                     {
-                        currentBehavior = FeralColonistBehavior.Jumping;
-                        navigation.SetDestination(transform.position);
-                        navigation.updatePosition = false;
-                        if (jumpCoroutine != null)
-                            StopCoroutine(jumpCoroutine);
-                        jumpCoroutine = StartCoroutine(Jump());
+                        if (player.height > ((player.transform.position - new Vector3(0, player.height, 0)) - transform.position).magnitude)
+                        {
+                            currentBehavior = FeralColonistBehavior.Jumping;
+                            navigation.SetDestination(transform.position);
+                            navigation.updatePosition = false;
+                            if (jumpCoroutine != null)
+                                StopCoroutine(jumpCoroutine);
+                            jumpCoroutine = StartCoroutine(Jump());
+                        }
                     }
                 }
-                else if (player.height > jumpRange || (player.transform.position.y - transform.position.y) > jumpRange || !navigation.CalculatePath(player.projectedPosition,path))
+                else if (canEscape)
                 {
-                    if (canEscape)
+                    if (player.height > jumpRange || (player.transform.position.y - transform.position.y) > jumpRange || !navigation.CalculatePath(player.projectedPosition, path))
                     {
                         FindEscapeZone();
                     }
@@ -281,9 +331,12 @@ public class FeralColonistNav : MonoBehaviour
                 break;
 
             case FeralColonistBehavior.Attacking:
-                if (playerDistance > meleeAttackRange)
+                if (playerRange > 0)
                 {
                     currentBehavior = FeralColonistBehavior.Closing;
+                    movementScript.RotateTowardsTarget(player.transform.position);
+                    movementScript.EnableNavmeshFollow();
+                    navigation.isStopped = false;
                 }
                 break;
 
@@ -309,17 +362,21 @@ public class FeralColonistNav : MonoBehaviour
                             {
                                 jumpHitBox.enabled = false;
                             }
-
                             currentBehavior = FeralColonistBehavior.Closing;
+                            movementScript.RotateTowardsTarget(player.transform.position);
+                            movementScript.EnableNavmeshFollow();
+                            navigation.isStopped = false;
                         }
                     }
                 }
                 break;
 
             case FeralColonistBehavior.Escaping:
-                if ((player.height < jumpRange/2) && CheckLOS() && playerHorizontalDistance <= losAggroRange)
+                if ((player.height < jumpRange/2) && hasLOS && playerHorizontalDistance <= losAggroRange)
                 {
                     currentBehavior = FeralColonistBehavior.Closing;
+                    movementScript.RotateTowardsTarget(player.transform.position);
+                    navigation.isStopped = false;
                 }
                 break;
 
@@ -327,6 +384,8 @@ public class FeralColonistNav : MonoBehaviour
 
             default:
                 currentBehavior = FeralColonistBehavior.Closing;
+                movementScript.RotateTowardsTarget(player.transform.position);
+                navigation.isStopped = false;
                 break;
         }
     }
@@ -385,9 +444,7 @@ public class FeralColonistNav : MonoBehaviour
         while (timer < jumpChargeTime)
         {
             if (isDead) yield break;
-
-            movementScript.RotateTowardsTarget(player.transform.position);
-            if (!CheckLOS()) abortTimer += Time.deltaTime;
+            if (!hasLOS) abortTimer += Time.deltaTime;
             else abortTimer = 0;
 
             if (abortTimer >= jumpAbortTimer)

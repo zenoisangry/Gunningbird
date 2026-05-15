@@ -16,12 +16,14 @@ public class FeralColonistMovement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 prevTarget;
 
-    private bool navmeshFollow = true;
+    private bool navmeshFollow = false;
+
+    public float navForwardOffset = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        navmeshResetPoint = new Vector3 (0,-verticalOffset,0.5f);
+        navmeshResetPoint = new Vector3 (navForwardOffset,-verticalOffset,0);
         rb = GetComponent<Rigidbody>();
     }
 
@@ -50,7 +52,7 @@ public class FeralColonistMovement : MonoBehaviour
     private void FollowNavAgent()
     {
         verticalShift = navAimPoint.transform.position.y - (transform.position.y - verticalOffset);
-        horizontalShift = new Vector2(navAimPoint.transform.position.x, navAimPoint.transform.position.z) - new Vector2(transform.position.x, transform.position.z);
+        horizontalShift = new Vector2(navAimPoint.transform.position.x, navAimPoint.transform.position.z) - new Vector2(transform.position.x -navForwardOffset, transform.position.z);
         if (horizontalShift.magnitude > horizontalConstraint)
         {
             horizontalShift = horizontalShift - horizontalShift * (horizontalConstraint/horizontalShift.magnitude);

@@ -235,14 +235,15 @@ MonoBehaviour:
   jumpChargeTime: 0.5
   jumpAbortTimer: 0.1
   meleeAttackRangeMultiplier: 2
-  pathfindingInterval: 10
-  rotationInterval: 3
   playHitReaction: 1
   hitStunTime: 0.07
   hitAnimationTrigger: Hit
   deathAnimationTrigger: Die
   destroyDelay: 0
   currentBehavior: 0
+  rotationChangeAngle: 5
+  navChangeMaxDistance: 5
+  navChangeMinDistance: 1
 --- !u!195 &680255248503217877
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -410,8 +411,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeralColonistMovement
   AI: {fileID: 2604263428331699232}
   navAimPoint: {fileID: 5526311039920142374}
-  horizontalConstraint: 1
+  horizontalConstraint: 1.6
   verticalOffset: 0
+  navForwardOffset: 1.5
 --- !u!54 &4278019014520587685
 Rigidbody:
   m_ObjectHideFlags: 0
