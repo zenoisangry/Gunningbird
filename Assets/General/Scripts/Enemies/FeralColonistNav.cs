@@ -86,6 +86,8 @@ public class FeralColonistNav : MonoBehaviour
     private float playerAngle;
     private bool updateRotation = true;
     private bool updateNavigation = true;
+    private Vector3 previousPlayerRotation;
+    private Vector3 previousNavTarget = Vector3.zero;
 
     private float attackDistance;
     private Vector3 attackPoint;
@@ -185,7 +187,7 @@ public class FeralColonistNav : MonoBehaviour
             playerRange = 3;
         }
 
-        playerAngle = Math.Abs(Vector3.SignedAngle(player.transform.position - transform.position, previousPlayerPosition - transform.position, Vector3.zero));
+        playerAngle = Math.Abs(Vector3.SignedAngle(player.transform.position - transform.position, previousPlayerRotation, Vector3.zero));
         if (playerAngle > rotationChangeAngle)
         {
             updateRotation = true;
@@ -205,32 +207,21 @@ public class FeralColonistNav : MonoBehaviour
             }
         }
 
+        if (navigation.steeringTarget != previousNavTarget)
+        {
+            updateRotation = true;
+            previousNavTarget = navigation.steeringTarget;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isDead) return;
+
         CheckPlayerPosition();
         hasLOS = CheckLOS();
 
-        if (isDead) return;
-
-        if (currentBehavior == FeralColonistBehavior.Closing)
-        {
-            if (updateRotation)
-            {
-                movementScript.RotateTowardsTarget(transform.position);
-                updateRotation = false;
-            }
-            if (player != null)
-                if (updateNavigation)
-                {
-                    navigation.SetDestination(player.projectedPosition);
-                    updateNavigation = false;
-                    previousPlayerPosition = player.transform.position;
-                    previousPlayerProjection = player.projectedPosition;
-                }
-        }
         if (!attacking)
         {
             BehaviorSwitchCheck();
@@ -244,6 +235,29 @@ public class FeralColonistNav : MonoBehaviour
         if (currentBehavior == FeralColonistBehavior.Attacking || currentBehavior == FeralColonistBehavior.Jumping)
         {
             AttackCheck();
+        }
+
+        if (currentBehavior == FeralColonistBehavior.Closing)
+        {
+            if (navigation.path.corners.Length == 2)
+            {
+                movementScript.RotateTowardsTarget(player.transform.position);
+                updateRotation = false;
+            }
+            if (updateRotation)
+            {
+                previousPlayerRotation = player.transform.position - transform.position;
+                movementScript.RotateTowardsTarget(navigation.steeringTarget);
+                updateRotation = false;
+            }
+            if (player != null)
+                if (updateNavigation)
+                {
+                    navigation.SetDestination(player.projectedPosition);
+                    updateNavigation = false;
+                    previousPlayerPosition = player.transform.position;
+                    previousPlayerProjection = player.projectedPosition;
+                }
         }
 
         if (currentBehavior == FeralColonistBehavior.Escaping)
@@ -260,7 +274,12 @@ public class FeralColonistNav : MonoBehaviour
         //Ruota il corpo
         if (currentBehavior == FeralColonistBehavior.Attacking)
         {
-            movementScript.RotateTowardsTarget(player.transform.position);
+            if (updateRotation)
+            {
+                previousPlayerRotation = player.transform.position - transform.position;
+                movementScript.RotateTowardsTarget(player.transform.position);
+                updateRotation = false;
+            }
         }
     }
 
@@ -292,7 +311,7 @@ public class FeralColonistNav : MonoBehaviour
                 if ((hasLOS && playerRange == 2) || playerRange < 2 || bulletDetection.awake)
                 {
                     currentBehavior = FeralColonistBehavior.Closing;
-                    movementScript.RotateTowardsTarget(player.transform.position);
+                    //movementScript.RotateTowardsTarget(player.transform.position);
                     movementScript.EnableNavmeshFollow();
                     CallOthers();
                     navigation.isStopped = false;
@@ -334,7 +353,7 @@ public class FeralColonistNav : MonoBehaviour
                 if (playerRange > 0)
                 {
                     currentBehavior = FeralColonistBehavior.Closing;
-                    movementScript.RotateTowardsTarget(player.transform.position);
+                    //movementScript.RotateTowardsTarget(player.transform.position);
                     movementScript.EnableNavmeshFollow();
                     navigation.isStopped = false;
                 }
@@ -363,7 +382,7 @@ public class FeralColonistNav : MonoBehaviour
                                 jumpHitBox.enabled = false;
                             }
                             currentBehavior = FeralColonistBehavior.Closing;
-                            movementScript.RotateTowardsTarget(player.transform.position);
+                            //movementScript.RotateTowardsTarget(player.transform.position);
                             movementScript.EnableNavmeshFollow();
                             navigation.isStopped = false;
                         }
@@ -375,7 +394,7 @@ public class FeralColonistNav : MonoBehaviour
                 if ((player.height < jumpRange/2) && hasLOS && playerHorizontalDistance <= losAggroRange)
                 {
                     currentBehavior = FeralColonistBehavior.Closing;
-                    movementScript.RotateTowardsTarget(player.transform.position);
+                    //movementScript.RotateTowardsTarget(player.transform.position);
                     navigation.isStopped = false;
                 }
                 break;
@@ -384,7 +403,7 @@ public class FeralColonistNav : MonoBehaviour
 
             default:
                 currentBehavior = FeralColonistBehavior.Closing;
-                movementScript.RotateTowardsTarget(player.transform.position);
+                //movementScript.RotateTowardsTarget(player.transform.position);
                 navigation.isStopped = false;
                 break;
         }

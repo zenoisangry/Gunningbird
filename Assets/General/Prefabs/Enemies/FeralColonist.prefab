@@ -253,7 +253,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 5526311039920142374}
   m_Enabled: 1
   m_AgentTypeID: 1479372276
-  m_Radius: 0.5
+  m_Radius: 0.1
   m_Speed: 14
   m_Acceleration: 50
   avoidancePriority: 50
@@ -411,7 +411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FeralColonistMovement
   AI: {fileID: 2604263428331699232}
   navAimPoint: {fileID: 5526311039920142374}
-  horizontalConstraint: 1.6
+  horizontalConstraint: 1.5
   verticalOffset: 0
   navForwardOffset: 1.5
 --- !u!54 &4278019014520587685
@@ -422,7 +422,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6493743809459716190}
   serializedVersion: 5
-  m_Mass: 10
+  m_Mass: 0.0000001
   m_LinearDamping: 0
   m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -440,7 +440,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 1
 --- !u!114 &1939356918662690604
 MonoBehaviour:
   m_ObjectHideFlags: 0

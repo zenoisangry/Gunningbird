@@ -20,10 +20,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private HealthSystem healthSystem;
     private Animator animator;
     public ProjectileAggro bulletDetection;
-    public float pathfindingInterval;
-    private float pathfindingTimer = 0;
-    public float rotationInterval;
-    private float rotationTimer = 0;
 
     [Header("Enemy Attack Logic")]
     [SerializeField] private EnemyRangedAttack enemyRangedAttack;
@@ -71,11 +67,24 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private Coroutine attackCoroutine;
     private Coroutine jumpCoroutine;
 
+    private bool hasLOS;
+    private int playerRange;
+    private float playerHorizontalDistance;
+
+    private Vector3 previousPlayerPosition;
+    private Vector3 previousPlayerProjection;
+    [SerializeField] private float rotationChangeAngle;
+    [SerializeField] private float navChangeMaxDistance;
+    [SerializeField] private float navChangeMinDistance;
+    private float playerAngle;
+    private bool updateRotation = true;
+    private bool updateNavigation = true;
+
     // Start is called once before the first execution of Update
     void Start()
     {
-        player = FindFirstObjectByType<PlayerInput>();
-        escManager = FindFirstObjectByType<EscapeManager>();
+        player = FindAnyObjectByType<PlayerInput>();
+        escManager = FindAnyObjectByType<EscapeManager>();
         navigation = GetComponent<NavMeshAgent>();
         bodyCollider = body.GetComponent<MeshCollider>();
         movementScript = body.GetComponent<FeralColonistMovement>();
@@ -131,38 +140,73 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
     }
 
+    private void CheckPlayerPosition()
+    {
+        playerDistance = (player.transform.position - transform.position).magnitude;
+        playerHorizontalDistance = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.z - transform.position.z).magnitude;
+        if (playerDistance <= aggroRange)
+        {
+            playerRange = 0;
+        }
+        else if (playerDistance <= losAggroRange)
+        {
+            playerRange = 1;
+        }
+        else if (playerDistance > losAggroRange)
+        {
+            playerRange = 2;
+        }
+
+        playerAngle = Math.Abs(Vector3.SignedAngle(player.transform.position - transform.position, previousPlayerPosition - transform.position, Vector3.zero));
+        if (playerAngle > rotationChangeAngle)
+        {
+            updateRotation = true;
+        }
+        if (playerDistance >= aggroRange)
+        {
+            if ((player.projectedPosition - previousPlayerProjection).magnitude >= navChangeMaxDistance)
+            {
+                updateNavigation = true;
+            }
+        }
+        else
+        {
+            if ((player.projectedPosition - previousPlayerProjection).magnitude >= (playerDistance / aggroRange) * (navChangeMaxDistance - navChangeMinDistance) + navChangeMinDistance)
+            {
+                updateNavigation = true;
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        CheckPlayerPosition();
+        hasLOS = CheckLOS();
+
         if (isDead) return;
 
-        pathfindingTimer++;
-        rotationTimer++;
-
-        if (pathfindingTimer >= pathfindingInterval)
+        if (currentBehavior == GunslingerBehavior.Closing)
         {
-            if (currentBehavior == GunslingerBehavior.Closing)
+            if (player != null)
             {
-                if (player != null)
+                //Check current surface;
+                navigation.SamplePathPosition(NavMesh.AllAreas, 0.1f, out hit);
+                if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
                 {
-                    //Check current surface;
-                    navigation.SamplePathPosition(NavMesh.AllAreas, 0.1f, out hit);
-                    if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
-                    {
-                        climbing = false;
-                        navigation.SetDestination(player.projectedPosition);
-                    }
-                    else
-                    {
-                        climbing = true;
-                    }
+                    climbing = false;
+                    navigation.SetDestination(player.projectedPosition);
+                }
+                else
+                {
+                    climbing = true;
                 }
             }
+        }
 
-            if (!climbing)
-            {
-                BehaviorSwitchCheck();
-            }
+        if (!climbing)
+        {
+            BehaviorSwitchCheck();
         }
 
         if (currentBehavior == GunslingerBehavior.Shooting)
@@ -177,25 +221,13 @@ public class CorruptedGunslingerNav : MonoBehaviour
         }
 
 
-        if (rotationTimer >= rotationInterval){
-            //Ruota il corpo
-            if (currentBehavior != GunslingerBehavior.Shooting)
-            {
-                movementScript.RotateTowardsTarget(transform.position);
-            }
-            else if (currentBehavior == GunslingerBehavior.Shooting)
-            {
-                movementScript.RotateTowardsTarget(player.transform.position);
-            }
-        }
-
-        if (pathfindingTimer >= pathfindingInterval)
+        if (currentBehavior != GunslingerBehavior.Shooting)
         {
-            pathfindingTimer = 0;
+            movementScript.RotateTowardsTarget(transform.position);
         }
-        if (rotationTimer >= rotationInterval)
+        else if (currentBehavior == GunslingerBehavior.Shooting)
         {
-            rotationTimer = 0;
+            movementScript.RotateTowardsTarget(player.transform.position);
         }
     }
 
