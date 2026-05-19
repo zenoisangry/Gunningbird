@@ -3,7 +3,6 @@ using UnityEngine.Rendering.Universal;
 
 public class FeralColonistMovement : MonoBehaviour
 {
-    public FeralColonistNav AI;
     public GameObject navAimPoint;
 
     [Header("Navigation variables")]

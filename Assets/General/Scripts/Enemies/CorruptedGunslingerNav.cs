@@ -128,6 +128,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
 
         //Set speed
         navigation.speed = baseSpeed;
+        movementScript.EnableNavmeshFollow();
     }
 
     private void OnDestroy()
@@ -181,10 +182,15 @@ public class CorruptedGunslingerNav : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead) return;
+
         CheckPlayerPosition();
         hasLOS = CheckLOS();
 
-        if (isDead) return;
+        if (!climbing)
+        {
+            BehaviorSwitchCheck();
+        }
 
         if (currentBehavior == GunslingerBehavior.Closing)
         {
@@ -195,18 +201,24 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
                 {
                     climbing = false;
-                    navigation.SetDestination(player.projectedPosition);
                 }
                 else
                 {
                     climbing = true;
                 }
+                if (updateNavigation)
+                {
+                    navigation.SetDestination(player.projectedPosition);
+                    updateNavigation = false;
+                    previousPlayerPosition = player.transform.position;
+                    previousPlayerProjection = player.projectedPosition;
+                }
             }
-        }
-
-        if (!climbing)
-        {
-            BehaviorSwitchCheck();
+            if (updateRotation)
+            {
+                movementScript.RotateTowardsTarget(navigation.steeringTarget);
+                updateRotation = false;
+            }
         }
 
         if (currentBehavior == GunslingerBehavior.Shooting)
@@ -218,15 +230,6 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     enemyRangedAttack.Fire();
                 }
             }
-        }
-
-
-        if (currentBehavior != GunslingerBehavior.Shooting)
-        {
-            movementScript.RotateTowardsTarget(transform.position);
-        }
-        else if (currentBehavior == GunslingerBehavior.Shooting)
-        {
             movementScript.RotateTowardsTarget(player.transform.position);
         }
     }
