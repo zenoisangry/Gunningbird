@@ -119,6 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &43650108
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 141.15633
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 115.21454
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_Name
+      value: Feral_Colonist_Rigged
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 903d321d2b6ba244cac29965354d9f71, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
 --- !u!1001 &92457099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2214,67 +2275,6 @@ Transform:
   - {fileID: 2510105774433660379}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1318535344
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 141.50497
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 22
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 116.4377
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_Name
-      value: Feral_Colonist_Rigged
-      objectReference: {fileID: 0}
-    - target: {fileID: 5866666021909216657, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 903d321d2b6ba244cac29965354d9f71, type: 2}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
 --- !u!1 &1345180707
 GameObject:
   m_ObjectHideFlags: 0
@@ -3975,4 +3975,4 @@ SceneRoots:
   - {fileID: 1284664011}
   - {fileID: 2196590054235734386}
   - {fileID: 1670812279648832402}
-  - {fileID: 1318535344}
+  - {fileID: 43650108}
