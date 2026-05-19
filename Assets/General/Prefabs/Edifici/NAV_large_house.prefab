@@ -90,6 +90,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &3205281563441302241
 MeshCollider:
@@ -357,12 +358,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: -3.4, y: 0, z: 0}
-  m_EndPoint: {x: -3.2, y: 0.2, z: 0}
+  m_StartPoint: {x: -3.4, y: -0.3, z: 0}
+  m_EndPoint: {x: -3.2, y: -0.1, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
-  m_Width: 5.4
+  m_Width: 5
   m_CostModifier: 1
   m_IsOverridingCost: 0
   m_Bidirectional: 1
@@ -566,6 +567,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &2678261987436383095
 MeshCollider:
@@ -761,6 +763,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!64 &8949081461073078385
 MeshCollider:
@@ -1137,8 +1140,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: -2.95, y: 0, z: 0}
-  m_EndPoint: {x: -2.75, y: 0.2, z: 0}
+  m_StartPoint: {x: -2.95, y: -0.27, z: 0}
+  m_EndPoint: {x: -2.75, y: -0.07, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -1313,63 +1316,6 @@ MonoBehaviour:
   m_Bidirectional: 1
   m_AutoUpdatePosition: 0
   m_Area: 3
---- !u!1 &8164600302205919354
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8445266616335612440}
-  - component: {fileID: 2202074330177626484}
-  m_Layer: 0
-  m_Name: FrontLinks
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8445266616335612440
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8164600302205919354}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3835304541070849297}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2202074330177626484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8164600302205919354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eeb5dc026fdf4b488bc7ae0138ab719, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
-  m_SerializedVersion: 1
-  m_AgentTypeID: 1479372276
-  m_StartPoint: {x: -2.95, y: 0, z: 0}
-  m_EndPoint: {x: -2.75, y: 0.19999999, z: 0}
-  m_StartTransform: {fileID: 0}
-  m_EndTransform: {fileID: 0}
-  m_Activated: 1
-  m_Width: 6
-  m_CostModifier: 1
-  m_IsOverridingCost: 0
-  m_Bidirectional: 1
-  m_AutoUpdatePosition: 0
-  m_Area: 3
 --- !u!1 &8706584765804904025
 GameObject:
   m_ObjectHideFlags: 0
@@ -1513,9 +1459,6 @@ PrefabInstance:
       addedObject: {fileID: 1103690456893072783}
     - targetCorrespondingSourceObject: {fileID: 2193867308198916113, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8445266616335612440}
-    - targetCorrespondingSourceObject: {fileID: 2193867308198916113, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 795691108002117900}
     - targetCorrespondingSourceObject: {fileID: 2193867308198916113, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
       insertIndex: -1
@@ -1550,7 +1493,7 @@ PrefabInstance:
       addedObject: {fileID: 8380997674945725789}
     - targetCorrespondingSourceObject: {fileID: -3340657421404738118, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7976507311639391685}
+      addedObject: {fileID: 4817791048597059814}
     - targetCorrespondingSourceObject: {fileID: 2940880065679365013, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7313252127305206261}
@@ -1758,8 +1701,8 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -3340657421404738118, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
   m_PrefabInstance: {fileID: 3119749454680392960}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &7976507311639391685
-MeshCollider:
+--- !u!65 &4817791048597059814
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1776,7 +1719,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 508633926194338025, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 5.5, y: 6.5050383, z: 6.408661}
+  m_Center: {x: 0, y: 2.9474807, z: -0.009506226}
