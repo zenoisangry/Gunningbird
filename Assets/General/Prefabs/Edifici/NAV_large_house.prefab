@@ -834,8 +834,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: -2.7, y: 0, z: 0}
-  m_EndPoint: {x: -2.5, y: 0.2, z: 0}
+  m_StartPoint: {x: -2.71, y: -0.3, z: 0}
+  m_EndPoint: {x: -2.51, y: -0.1, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -859,8 +859,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: -2.51, y: 7.8, z: 0}
-  m_EndPoint: {x: -2.31, y: 8, z: 0}
+  m_StartPoint: {x: -2.52, y: 7.8, z: 0}
+  m_EndPoint: {x: -2.32, y: 8, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -1165,8 +1165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshLink
   m_SerializedVersion: 1
   m_AgentTypeID: 1479372276
-  m_StartPoint: {x: -2.75, y: 6, z: 0}
-  m_EndPoint: {x: -2.55, y: 6.2, z: 0}
+  m_StartPoint: {x: -2.76, y: 6, z: 0}
+  m_EndPoint: {x: -2.56, y: 6.2, z: 0}
   m_StartTransform: {fileID: 0}
   m_EndTransform: {fileID: 0}
   m_Activated: 1
@@ -1482,15 +1482,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6855695182259672612}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: -7347196599238213626, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7031999235512522686}
     - targetCorrespondingSourceObject: {fileID: 4364475465337972078, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7782573143161587472}
     - targetCorrespondingSourceObject: {fileID: 4958184668128516285, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8380997674945725789}
+      addedObject: {fileID: 8003919521183911657}
     - targetCorrespondingSourceObject: {fileID: -3340657421404738118, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4817791048597059814}
@@ -1595,33 +1592,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
   m_PrefabInstance: {fileID: 3119749454680392960}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3549417079327376646 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -7347196599238213626, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
-  m_PrefabInstance: {fileID: 3119749454680392960}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &7031999235512522686
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3549417079327376646}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2339060060573283970, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
 --- !u!1 &3643438925574068861 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7360135235622805635, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
@@ -1669,8 +1639,8 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4958184668128516285, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
   m_PrefabInstance: {fileID: 3119749454680392960}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &8380997674945725789
-MeshCollider:
+--- !u!65 &8003919521183911657
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1687,10 +1657,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 1853459701752403799, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 5.4934387, y: 8.280599, z: 9.354126}
+  m_Center: {x: -0.24427795, y: 3.8401446, z: 0.00881958}
 --- !u!4 &8467079996913395574 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -2392941938985196938, guid: 93194ec3f99d2424e86685a1d274598f, type: 3}
@@ -1720,5 +1689,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5.5, y: 6.5050383, z: 6.408661}
-  m_Center: {x: 0, y: 2.9474807, z: -0.009506226}
+  m_Size: {x: 5.5, y: 6.4965544, z: 6.408661}
+  m_Center: {x: 0, y: 2.9432387, z: -0.009506226}
