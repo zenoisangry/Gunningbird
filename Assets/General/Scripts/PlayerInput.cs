@@ -146,7 +146,9 @@ public class PlayerInput : MonoBehaviour
 
     void Start()
     {
+        //Disattivare quando serve//
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         currentSpeed = groundSpeed;
 
         if (UIManager.Instance != null)
