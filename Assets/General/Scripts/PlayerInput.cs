@@ -146,6 +146,7 @@ public class PlayerInput : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = false;
         currentSpeed = groundSpeed;
 
         if (UIManager.Instance != null)
