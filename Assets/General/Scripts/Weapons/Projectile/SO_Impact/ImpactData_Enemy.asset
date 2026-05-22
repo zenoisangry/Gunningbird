@@ -19,7 +19,7 @@ MonoBehaviour:
   impactSound: {fileID: 8300000, guid: 09c5247f176278b46929faa0fb5f61bb, type: 3}
   volume: 1
   changeMaterial: 1
-  impactMaterial: {fileID: -2450817860853600111, guid: 978115760225ffd40a47c862dd633c8d, type: 3}
+  impactMaterial: {fileID: 2100000, guid: 8a32522c465c83f419c3955c332d2038, type: 2}
   materialDuration: 0.15
   activateChildEmitter: 0
   childEmitterName: 
