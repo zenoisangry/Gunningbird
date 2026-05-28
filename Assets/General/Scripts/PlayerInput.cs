@@ -24,6 +24,13 @@ public class PlayerInput : MonoBehaviour
     [Header("Health")]
     [SerializeField] private HealthSystem healthSystem;
 
+    [Header("Footsteps")]
+    [SerializeField] private AudioSource footstepSource;
+    [SerializeField] private AudioClip[] footstepClips;
+    [SerializeField] private float footstepInterval = 0.45f;
+
+    private float footstepTimer;
+
     private float currentSpeed;
     private bool flying = false;
     public bool grounded = true;
@@ -99,7 +106,7 @@ public class PlayerInput : MonoBehaviour
         slot3Action.Enable();
         slot4Action.Enable();
 
-        //Movement
+        // Movement
         jumpAction.started += Jump;
         jumpAction.performed += SwitchMovement;
         flyAction.started += AltSwitch;
@@ -133,6 +140,8 @@ public class PlayerInput : MonoBehaviour
         flyAction.Disable();
         switchMovementAction.Disable();
         pauseAction.Disable();
+        jumpAction.Disable();
+        diveAction.Disable();
 
         fireAction.Disable();
         secondaryFireAction.Disable();
@@ -146,9 +155,9 @@ public class PlayerInput : MonoBehaviour
 
     void Start()
     {
-        //Disattivare quando serve//
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
         currentSpeed = groundSpeed;
 
         if (UIManager.Instance != null)
@@ -183,7 +192,8 @@ public class PlayerInput : MonoBehaviour
 
         if (Physics.Raycast(transform.position, Vector3.down, 1.1f))
         {
-            if (!grounded && !flying) currentSpeed = groundSpeed;
+            if (!grounded && !flying)
+                currentSpeed = groundSpeed;
 
             grounded = true;
             diving = false;
@@ -195,18 +205,33 @@ public class PlayerInput : MonoBehaviour
                 body.useGravity = true;
             }
         }
-        else grounded = false;
+        else
+        {
+            grounded = false;
+        }
 
         SideMove();
 
-        if (flying) VerticalMove();
-        else verticalMovement = body.linearVelocity.y;
+        HandleFootsteps();
+
+        if (flying)
+            VerticalMove();
+        else
+            verticalMovement = body.linearVelocity.y;
 
         body.linearVelocity =
             Quaternion.LookRotation(transform.forward, Vector3.up) *
             new Vector3(sideMovement.x, verticalMovement, sideMovement.y);
 
-        if (Physics.Raycast(transform.position, Vector3.down, out projectionHit, 100f, LayerMask.GetMask("Default", "Terrain")))
+        if (
+            Physics.Raycast(
+                transform.position,
+                Vector3.down,
+                out projectionHit,
+                100f,
+                LayerMask.GetMask("Default", "Terrain")
+            )
+        )
         {
             projectedPosition = projectionHit.point;
             height = projectionHit.distance;
@@ -227,7 +252,12 @@ public class PlayerInput : MonoBehaviour
     {
         if (grounded)
         {
-            body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y + jumpStrength, sideMovement.y);
+            body.linearVelocity = new Vector3(
+                sideMovement.x,
+                body.linearVelocity.y + jumpStrength,
+                sideMovement.y
+            );
+
             grounded = false;
         }
     }
@@ -247,9 +277,14 @@ public class PlayerInput : MonoBehaviour
 
     void SwitchToGrounded(InputAction.CallbackContext ctx)
     {
-        if (flying == true)
+        if (flying)
         {
-            body.linearVelocity = new Vector3(sideMovement.x, body.linearVelocity.y - diveStrength, sideMovement.y);
+            body.linearVelocity = new Vector3(
+                sideMovement.x,
+                body.linearVelocity.y - diveStrength,
+                sideMovement.y
+            );
+
             flying = false;
             body.useGravity = true;
             diving = true;
@@ -259,41 +294,104 @@ public class PlayerInput : MonoBehaviour
     void Look(InputAction.CallbackContext ctx)
     {
         Vector2 look = ctx.ReadValue<Vector2>();
+
         cameraPosition.Rotate(-look.y * camSensitivity, 0, 0);
 
         if (Vector3.Angle(transform.forward, cameraPosition.forward) > 90)
         {
-            if (Vector3.Angle(Vector3.up, cameraPosition.forward) > Vector3.Angle(Vector3.down, cameraPosition.forward))
+            if (
+                Vector3.Angle(Vector3.up, cameraPosition.forward)
+                > Vector3.Angle(Vector3.down, cameraPosition.forward)
+            )
+            {
                 cameraPosition.localRotation = Quaternion.Euler(90, 0, 0);
+            }
             else
+            {
                 cameraPosition.localRotation = Quaternion.Euler(-90, 0, 0);
+            }
         }
 
         transform.Rotate(0, look.x * camSensitivity, 0);
     }
 
-    void SideMove() => sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
-    void VerticalMove() => verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
+    void SideMove()
+    {
+        sideMovement = moveAction.ReadValue<Vector2>() * currentSpeed;
+    }
+
+    void VerticalMove()
+    {
+        verticalMovement = flyAction.ReadValue<float>() * (currentSpeed / 3f) * 2f;
+    }
+
+    void HandleFootsteps()
+    {
+        if (isDead) return;
+
+        // Solo a terra
+        if (!grounded) return;
+
+        // Niente passi mentre vola
+        if (flying) return;
+
+        Vector2 movement = moveAction.ReadValue<Vector2>();
+
+        // Player fermo
+        if (movement.magnitude < 0.1f)
+        {
+            footstepTimer = 0f;
+            return;
+        }
+
+        footstepTimer -= Time.fixedDeltaTime;
+
+        if (footstepTimer <= 0f)
+        {
+            PlayFootstep();
+            footstepTimer = footstepInterval;
+        }
+    }
+
+    void PlayFootstep()
+    {
+        if (footstepSource == null) return;
+
+        if (footstepClips == null || footstepClips.Length == 0) return;
+
+        int index = Random.Range(0, footstepClips.Length);
+
+        footstepSource.PlayOneShot(footstepClips[index]);
+    }
 
     void Fire(InputAction.CallbackContext ctx)
     {
         if (isDead) return;
+
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
-        if (weapon != null && weapon.CanFire()) weapon.PrimaryFire();
+
+        if (weapon != null && weapon.CanFire())
+            weapon.PrimaryFire();
     }
 
     void SecondaryFire(InputAction.CallbackContext ctx)
     {
         if (isDead) return;
+
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
-        if (weapon != null && weapon.CanSecondaryFire()) weapon.SecondaryFire();
+
+        if (weapon != null && weapon.CanSecondaryFire())
+            weapon.SecondaryFire();
     }
 
     void Reload(InputAction.CallbackContext ctx)
     {
         if (isDead) return;
+
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
-        if (weapon != null && weapon.CanReload()) weapon.Reload();
+
+        if (weapon != null && weapon.CanReload())
+            weapon.Reload();
     }
 
     public void OnPause(InputAction.CallbackContext context)
@@ -318,6 +416,7 @@ public class PlayerInput : MonoBehaviour
     private void HandleDeath()
     {
         if (isDead) return;
+
         isDead = true;
 
         OnDisable();
@@ -333,5 +432,6 @@ public class PlayerInput : MonoBehaviour
     }
 
     public bool IsDead() => isDead;
+
     public HealthSystem GetHealthSystem() => healthSystem;
 }
