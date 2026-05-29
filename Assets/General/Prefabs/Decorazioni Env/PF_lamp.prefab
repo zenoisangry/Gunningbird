@@ -324,10 +324,34 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3365a3acd60a8484ab4a028844946c63, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2678059262245975846}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3365a3acd60a8484ab4a028844946c63, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2866308716626089120}
   m_SourcePrefab: {fileID: 100100000, guid: 3365a3acd60a8484ab4a028844946c63, type: 3}
 --- !u!4 &2709472795642853309 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3365a3acd60a8484ab4a028844946c63, type: 3}
   m_PrefabInstance: {fileID: 2455379182710755414}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3373806944208825607 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3365a3acd60a8484ab4a028844946c63, type: 3}
+  m_PrefabInstance: {fileID: 2455379182710755414}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2866308716626089120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3373806944208825607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1b303e8704f53498e63cd106845380, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightFlickerEffect
+  light: {fileID: 4992401819769554129}
+  minIntensity: 0
+  maxIntensity: 5
+  smoothing: 38
