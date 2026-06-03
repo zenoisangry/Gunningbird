@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class FeralColonistNav : MonoBehaviour
 {
@@ -89,6 +90,7 @@ public class FeralColonistNav : MonoBehaviour
 
     private float attackDistance;
     private Vector3 attackPoint;
+    private bool climbing;
 
     // Start is called once before the first execution of Update
     void Start()
@@ -249,6 +251,25 @@ public class FeralColonistNav : MonoBehaviour
                 updateRotation = false;
             }
             if (player != null)
+            {
+                //Check current surface;
+                navigation.SamplePathPosition(NavMesh.AllAreas, 0.1f, out hit);
+                if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
+                {
+                    climbing = false;
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Climb"))
+                    {
+                        animator.Play("Chase");
+                    }
+                }
+                else
+                {
+                    climbing = true;
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Chase"))
+                    {
+                        animator.Play("Climb");
+                    }
+                }
                 if (updateNavigation)
                 {
                     navigation.SetDestination(player.projectedPosition);
@@ -256,6 +277,7 @@ public class FeralColonistNav : MonoBehaviour
                     previousPlayerPosition = player.transform.position;
                     previousPlayerProjection = player.projectedPosition;
                 }
+            }
         }
 
         if (currentBehavior == FeralColonistBehavior.Escaping)
@@ -264,6 +286,7 @@ public class FeralColonistNav : MonoBehaviour
             {
                 Debug.Log("Escape target reached");
                 currentBehavior = FeralColonistBehavior.Idle;
+                animator.Play("Idle");
                 movementScript.DisableNavmeshFollow();
                 bulletDetection.Activate();
             }
@@ -312,6 +335,7 @@ public class FeralColonistNav : MonoBehaviour
                     //movementScript.RotateTowardsTarget(player.transform.position);
                     movementScript.EnableNavmeshFollow();
                     CallOthers();
+                    animator.Play("Chase");
                     navigation.isStopped = false;
                 }
                 break;
@@ -321,6 +345,7 @@ public class FeralColonistNav : MonoBehaviour
                 {
                     navigation.isStopped = true;
                     currentBehavior = FeralColonistBehavior.Attacking;
+                    animator.Play("Attack");
                 }
                 else  if ((player.height > meleeAttackRange + 1) && playerDistance <= jumpRange && hasLOS)
                 {
@@ -330,6 +355,7 @@ public class FeralColonistNav : MonoBehaviour
                         if (player.height > ((player.transform.position - new Vector3(0, player.height, 0)) - transform.position).magnitude)
                         {
                             currentBehavior = FeralColonistBehavior.Jumping;
+                            animator.Play("JumpCharge");
                             navigation.SetDestination(transform.position);
                             navigation.updatePosition = false;
                             if (jumpCoroutine != null)
@@ -350,6 +376,7 @@ public class FeralColonistNav : MonoBehaviour
             case FeralColonistBehavior.Attacking:
                 if (playerRange > 0)
                 {
+                    animator.Play("Chase");
                     currentBehavior = FeralColonistBehavior.Closing;
                     //movementScript.RotateTowardsTarget(player.transform.position);
                     movementScript.EnableNavmeshFollow();
@@ -380,6 +407,7 @@ public class FeralColonistNav : MonoBehaviour
                                 jumpHitBox.enabled = false;
                             }
                             currentBehavior = FeralColonistBehavior.Closing;
+                            animator.Play("Chase");
                             //movementScript.RotateTowardsTarget(player.transform.position);
                             movementScript.EnableNavmeshFollow();
                             navigation.isStopped = false;
