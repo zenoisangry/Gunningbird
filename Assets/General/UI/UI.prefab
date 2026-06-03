@@ -516,6 +516,7 @@ GameObject:
   - component: {fileID: 7115414031857477373}
   - component: {fileID: 4512009190010815898}
   - component: {fileID: 8897981593232370817}
+  - component: {fileID: 1510416892329465665}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -569,7 +570,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!114 &4512009190010815898
 MonoBehaviour:
@@ -611,6 +612,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1510416892329465665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284840641606647553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b797a93cf6d03f44868fc786f898d1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  uiContainer: {fileID: 5909108325454263550}
 --- !u!1 &1461848059966090189
 GameObject:
   m_ObjectHideFlags: 0
@@ -3761,9 +3775,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIGameOver
   gameOverPanel: {fileID: 7710639635440997301}
-  restartButton: {fileID: 5456508626779136773}
+  retryButton: {fileID: 0}
   mainMenuButton: {fileID: 4292874754695857636}
   quitButton: {fileID: 13363310468504676}
+  titleText: {fileID: 0}
+  subtitleText: {fileID: 0}
 --- !u!1 &7892245163154167752
 GameObject:
   m_ObjectHideFlags: 0

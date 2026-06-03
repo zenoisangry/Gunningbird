@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static GameStateManager;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -14,44 +12,70 @@ public class GameStateManager : MonoBehaviour
             {
                 _instance = FindAnyObjectByType<GameStateManager>();
                 if (_instance == null)
-                {
-                    Debug.LogError("Error can't instantiate singleton");
-                }
+                    Debug.LogError("[GameStateManager] Singleton not found in scene!");
             }
             return _instance;
         }
     }
 
-    Dictionary<GameStates, IGameState> registeredGameStates = new Dictionary<GameStates, IGameState>();
     public enum GameStates
     {
         MainMenu,
         Options,
-        Credits, //Cat was there for a bit! =^..^=
+        Credits,
         Gameplay,
         Pause,
         GameOver,
+        Win
     }
 
-    public IGameState currentGameState = null;
+    private Dictionary<GameStates, IGameState> registeredGameStates = new Dictionary<GameStates, IGameState>();
+    public IGameState currentGameState { get; private set; } = null;
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     public void RegisterState(GameStates gstate, IGameState state)
     {
+        if (registeredGameStates.ContainsKey(gstate))
+        {
+            Debug.LogWarning($"[GameStateManager] State {gstate} already registered. Overwriting.");
+            registeredGameStates[gstate] = state;
+            return;
+        }
         registeredGameStates.Add(gstate, state);
-
     }
+
     public void SetCurrentGameState(GameStates gstate)
     {
-        if (currentGameState != null)
+        if (!registeredGameStates.ContainsKey(gstate))
         {
-            currentGameState.OnStateExit();
+            Debug.LogError($"[GameStateManager] State {gstate} not registered!");
+            return;
         }
+
+        currentGameState?.OnStateExit();
+
         IGameState newState = registeredGameStates[gstate];
         newState.OnStateEnter();
         currentGameState = newState;
     }
 
-    void Update()
+    public bool IsInState(GameStates gstate)
+    {
+        if (!registeredGameStates.ContainsKey(gstate)) return false;
+        return currentGameState == registeredGameStates[gstate];
+    }
+
+    private void Update()
     {
         currentGameState?.OnStateUpdate();
     }

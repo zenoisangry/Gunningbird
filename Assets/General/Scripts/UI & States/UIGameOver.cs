@@ -1,24 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIGameOver : MonoBehaviour, IGameUI
 {
     [Header("UI Elements")]
     [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private Button restartButton;
+    [SerializeField] private Button retryButton;
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button quitButton;
+    [SerializeField] private TMP_Text titleText;      // opzionale, per "GAME OVER"
+    [SerializeField] private TMP_Text subtitleText;   // opzionale, per messaggio extra
 
     public void Init()
     {
-        if (restartButton != null)
-            restartButton.onClick.AddListener(OnRestartClicked);
-
-        if (mainMenuButton != null)
-            mainMenuButton.onClick.AddListener(OnMainMenuClicked);
-
-        if (quitButton != null)
-            quitButton.onClick.AddListener(OnQuitClicked);
+        if (retryButton != null) retryButton.onClick.AddListener(OnRetryClicked);
+        if (mainMenuButton != null) mainMenuButton.onClick.AddListener(OnMainMenuClicked);
+        if (quitButton != null) quitButton.onClick.AddListener(OnQuitClicked);
     }
 
     public void SetActive(bool active)
@@ -27,14 +25,11 @@ public class UIGameOver : MonoBehaviour, IGameUI
             gameOverPanel.SetActive(active);
     }
 
-    public UIManager.UIType GetUIType()
-    {
-        return UIManager.UIType.GameOver;
-    }
+    public UIManager.UIType GetUIType() => UIManager.UIType.GameOver;
 
-    private void OnRestartClicked()
+    private void OnRetryClicked()
     {
-        GameManager.Instance.RestartLevel();
+        GameManager.Instance.RestartGame();
     }
 
     private void OnMainMenuClicked()

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  MAIN MENU
+// ─────────────────────────────────────────────────────────────────────────────
 public class GSMainMenu : IGameState
 {
     public void OnStateEnter()
@@ -7,131 +10,166 @@ public class GSMainMenu : IGameState
         UIManager.Instance.ShowUI(UIManager.UIType.MainMenu);
 
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Cursor.visible   = true;
+        Time.timeScale   = 1f;
 
-        Time.timeScale = 1f;
-
-        GameManager.Instance.isGameActive = false;
-        GameManager.Instance.isGamePaused = false;
+        GameManager.Instance.SetGameActive(false);
+        GameManager.Instance.SetGamePaused(false);
+        GameManager.Instance.SetGameplayCameraActive(false);
     }
 
     public void OnStateUpdate() { }
-
-    public void OnStateExit() { }
+    public void OnStateExit()   { }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  OPTIONS
+// ─────────────────────────────────────────────────────────────────────────────
 public class GSOptions : IGameState
 {
-    private bool wasInGameplay = false;
+    private bool _wasInGameplay;
 
     public void OnStateEnter()
     {
-        wasInGameplay = GameManager.Instance.isGameActive;
+        _wasInGameplay = GameManager.Instance.isGameActive;
 
         UIManager.Instance.ShowUI(UIManager.UIType.Options);
 
-        if (wasInGameplay)
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+
+        if (_wasInGameplay)
         {
             Time.timeScale = 0f;
-            GameManager.Instance.isGamePaused = true;
-            DisablePlayerInput();
+            GameManager.Instance.SetGamePaused(true);
+            SetPlayerInput(false);
         }
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
     }
 
     public void OnStateUpdate()
     {
-        if (wasInGameplay && Time.timeScale != 0f)
-        {
+        // Mantieni timescale a 0 se eravamo in gameplay
+        if (_wasInGameplay)
             Time.timeScale = 0f;
-        }
     }
 
     public void OnStateExit()
     {
-        if (wasInGameplay && GameManager.Instance.isGameActive)
-        {
-            EnablePlayerInput();
-        }
+        if (_wasInGameplay && GameManager.Instance.isGameActive)
+            SetPlayerInput(true);
     }
 
-    private void DisablePlayerInput()
+    private void SetPlayerInput(bool enabled)
     {
-        if (GameManager.Instance.playerInstance == null)
+        if (GameManager.Instance.playerInstance == null) return;
+
+        var uiInput = GameManager.Instance.playerInstance
+            .GetComponent<UnityEngine.InputSystem.PlayerInput>();
+
+        if (uiInput != null)
+            uiInput.SwitchCurrentActionMap(enabled ? "Player" : "UI");
+
+        foreach (var mb in GameManager.Instance.playerInstance.GetComponents<MonoBehaviour>())
         {
-            return;
+            if (mb != null && mb.GetType().Name != "HealthSystem")
+                mb.enabled = enabled;
         }
 
-        var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        if (playerInputComponent != null)
-        {
-            playerInputComponent.SwitchCurrentActionMap("UI");
-        }
+        var rb = GameManager.Instance.playerInstance.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = !enabled;
 
-        GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
-
-        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
-        foreach (MonoBehaviour script in allScripts)
-        {
-            if (script != null && script.GetType().Name != "HealthSystem")
-            {
-                script.enabled = false;
-            }
-        }
-
-        var rb = playerObj.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-        }
-
-        var characterController = playerObj.GetComponent<CharacterController>();
-        if (characterController != null)
-        {
-            characterController.enabled = false;
-        }
-    }
-
-    private void EnablePlayerInput()
-    {
-        if (GameManager.Instance.playerInstance == null)
-        {
-            return;
-        }
-
-        var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        if (playerInputComponent != null)
-        {
-            playerInputComponent.SwitchCurrentActionMap("Player");
-        }
-
-        GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
-
-        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
-        foreach (MonoBehaviour script in allScripts)
-        {
-            if (script != null)
-            {
-                script.enabled = true;
-            }
-        }
-
-        var rb = playerObj.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-        }
-
-        var characterController = playerObj.GetComponent<CharacterController>();
-        if (characterController != null)
-        {
-            characterController.enabled = true;
-        }
+        var cc = GameManager.Instance.playerInstance.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = enabled;
     }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  CREDITS
+// ─────────────────────────────────────────────────────────────────────────────
+public class GSCredits : IGameState
+{
+    public void OnStateEnter()
+    {
+        UIManager.Instance.ShowUI(UIManager.UIType.Credits);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+        Time.timeScale   = 1f;
+        GameManager.Instance.SetGameplayCameraActive(false);
+    }
+
+    public void OnStateUpdate() { }
+    public void OnStateExit()   { }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  GAMEPLAY
+// ─────────────────────────────────────────────────────────────────────────────
+public class GSGameplay : IGameState
+{
+    public void OnStateEnter()
+    {
+        UIManager.Instance.ShowUI(UIManager.UIType.Gameplay);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible   = false;
+        Time.timeScale   = 1f;
+
+        GameManager.Instance.SetGameplayCameraActive(true);
+
+        // Avvia il gioco solo se non era già attivo (primo avvio, non resume da pausa)
+        if (!GameManager.Instance.isGameActive)
+            GameManager.Instance.StartGame();
+
+        // Assicura che l'input del player sia sempre attivo
+        EnsurePlayerInputEnabled();
+    }
+
+    public void OnStateUpdate()
+    {
+        // Corregge timescale se qualcuno lo ha modificato esternamente
+        if (!GameManager.Instance.isGamePaused && Time.timeScale != 1f)
+            Time.timeScale = 1f;
+    }
+
+    public void OnStateExit()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+    }
+
+    private void EnsurePlayerInputEnabled()
+    {
+        if (GameManager.Instance.playerInstance == null) return;
+
+        var uiInput = GameManager.Instance.playerInstance
+            .GetComponent<UnityEngine.InputSystem.PlayerInput>();
+
+        if (uiInput != null)
+        {
+            uiInput.ActivateInput();
+            uiInput.SwitchCurrentActionMap("Player");
+        }
+
+        foreach (var mb in GameManager.Instance.playerInstance.GetComponents<MonoBehaviour>())
+        {
+            if (mb != null && !mb.enabled)
+                mb.enabled = true;
+        }
+
+        var rb = GameManager.Instance.playerInstance.GetComponent<Rigidbody>();
+        if (rb != null && rb.isKinematic)
+            rb.isKinematic = false;
+
+        var cc = GameManager.Instance.playerInstance.GetComponent<CharacterController>();
+        if (cc != null && !cc.enabled)
+            cc.enabled = true;
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  PAUSE
+// ─────────────────────────────────────────────────────────────────────────────
 public class GSPause : IGameState
 {
     public void OnStateEnter()
@@ -139,180 +177,53 @@ public class GSPause : IGameState
         UIManager.Instance.ShowUI(UIManager.UIType.Pause);
 
         Time.timeScale = 0f;
-
-        GameManager.Instance.isGamePaused = true;
+        GameManager.Instance.SetGamePaused(true);
 
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Cursor.visible   = true;
 
-        DisablePlayerInput();
+        SetPlayerInput(false);
     }
 
     public void OnStateUpdate()
     {
         if (Time.timeScale != 0f)
-        {
             Time.timeScale = 0f;
-        }
     }
 
     public void OnStateExit()
     {
         if (GameManager.Instance.isGameActive)
-        {
-            EnablePlayerInput();
-        }
+            SetPlayerInput(true);
     }
 
-    private void DisablePlayerInput()
+    private void SetPlayerInput(bool enabled)
     {
-        if (GameManager.Instance.playerInstance == null)
+        if (GameManager.Instance.playerInstance == null) return;
+
+        var uiInput = GameManager.Instance.playerInstance
+            .GetComponent<UnityEngine.InputSystem.PlayerInput>();
+
+        if (uiInput != null)
+            uiInput.SwitchCurrentActionMap(enabled ? "Player" : "UI");
+
+        foreach (var mb in GameManager.Instance.playerInstance.GetComponents<MonoBehaviour>())
         {
-            return;
+            if (mb != null && mb.GetType().Name != "HealthSystem")
+                mb.enabled = enabled;
         }
 
-        var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        if (playerInputComponent != null)
-        {
-            playerInputComponent.SwitchCurrentActionMap("UI");
-        }
+        var rb = GameManager.Instance.playerInstance.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = !enabled;
 
-        GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
-
-        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
-        foreach (MonoBehaviour script in allScripts)
-        {
-            if (script != null && script.GetType().Name != "HealthSystem")
-            {
-                script.enabled = false;
-            }
-        }
-
-        var rb = playerObj.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-        }
-
-        var characterController = playerObj.GetComponent<CharacterController>();
-        if (characterController != null)
-        {
-            characterController.enabled = false;
-        }
-    }
-
-    private void EnablePlayerInput()
-    {
-        if (GameManager.Instance.playerInstance == null)
-        {
-            return;
-        }
-
-        var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        if (playerInputComponent != null)
-        {
-            playerInputComponent.SwitchCurrentActionMap("Player");
-        }
-
-        GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
-
-        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
-        foreach (MonoBehaviour script in allScripts)
-        {
-            if (script != null)
-            {
-                script.enabled = true;
-            }
-        }
-
-        var rb = playerObj.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-        }
-
-        var characterController = playerObj.GetComponent<CharacterController>();
-        if (characterController != null)
-        {
-            characterController.enabled = true;
-        }
+        var cc = GameManager.Instance.playerInstance.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = enabled;
     }
 }
 
-public class GSGameplay : IGameState
-{
-    public void OnStateEnter()
-    {
-        UIManager.Instance.ShowUI(UIManager.UIType.Gameplay);
-
-        bool wasResuming = GameManager.Instance.isGameActive && !GameManager.Instance.isGamePaused;
-
-        if (!wasResuming)
-        {
-            GameManager.Instance.StartGame();
-        }
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        Time.timeScale = 1f;
-
-        EnsurePlayerInputEnabled();
-    }
-
-    public void OnStateUpdate()
-    {
-        if (!GameManager.Instance.isGamePaused && Time.timeScale != 1f)
-        {
-            Time.timeScale = 1f;
-        }
-    }
-
-    public void OnStateExit()
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    private void EnsurePlayerInputEnabled()
-    {
-        if (GameManager.Instance.playerInstance == null)
-        {
-            return;
-        }
-
-        var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        if (playerInputComponent != null)
-        {
-            playerInputComponent.ActivateInput();
-            playerInputComponent.SwitchCurrentActionMap("Player");
-        }
-
-        GameObject playerObj = GameManager.Instance.playerInstance.gameObject;
-
-        MonoBehaviour[] allScripts = playerObj.GetComponents<MonoBehaviour>();
-        foreach (MonoBehaviour script in allScripts)
-        {
-            if (script != null && !script.enabled)
-            {
-                script.enabled = true;
-            }
-        }
-
-        var rb = playerObj.GetComponent<Rigidbody>();
-        if (rb != null && rb.isKinematic)
-        {
-            rb.isKinematic = false;
-        }
-
-        var characterController = playerObj.GetComponent<CharacterController>();
-        if (characterController != null && !characterController.enabled)
-        {
-            characterController.enabled = true;
-        }
-    }
-}
-
+// ─────────────────────────────────────────────────────────────────────────────
+//  GAME OVER
+// ─────────────────────────────────────────────────────────────────────────────
 public class GSGameOver : IGameState
 {
     public void OnStateEnter()
@@ -320,24 +231,50 @@ public class GSGameOver : IGameState
         UIManager.Instance.ShowUI(UIManager.UIType.GameOver);
 
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Cursor.visible   = true;
+        Time.timeScale   = 1f;
 
-        Time.timeScale = 1f;
-
-        GameManager.Instance.isGameActive = false;
-        GameManager.Instance.isGamePaused = false;
+        GameManager.Instance.SetGameActive(false);
+        GameManager.Instance.SetGamePaused(false);
+        GameManager.Instance.SetGameplayCameraActive(false);
 
         if (GameManager.Instance.playerInstance != null)
         {
-            var playerInputComponent = GameManager.Instance.playerInstance.GetComponent<UnityEngine.InputSystem.PlayerInput>();
-            if (playerInputComponent != null)
-            {
-                playerInputComponent.SwitchCurrentActionMap("UI");
-            }
+            var uiInput = GameManager.Instance.playerInstance
+                .GetComponent<UnityEngine.InputSystem.PlayerInput>();
+            uiInput?.SwitchCurrentActionMap("UI");
         }
     }
 
     public void OnStateUpdate() { }
+    public void OnStateExit()   { }
+}
 
-    public void OnStateExit() { }
+// ─────────────────────────────────────────────────────────────────────────────
+//  WIN
+// ─────────────────────────────────────────────────────────────────────────────
+public class GSWin : IGameState
+{
+    public void OnStateEnter()
+    {
+        UIManager.Instance.ShowUI(UIManager.UIType.Win);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+        Time.timeScale   = 1f;
+
+        GameManager.Instance.SetGameActive(false);
+        GameManager.Instance.SetGamePaused(false);
+        GameManager.Instance.SetGameplayCameraActive(false);
+
+        if (GameManager.Instance.playerInstance != null)
+        {
+            var uiInput = GameManager.Instance.playerInstance
+                .GetComponent<UnityEngine.InputSystem.PlayerInput>();
+            uiInput?.SwitchCurrentActionMap("UI");
+        }
+    }
+
+    public void OnStateUpdate() { }
+    public void OnStateExit()   { }
 }

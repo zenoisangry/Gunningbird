@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    [Header("Singleton")]
+    // ─── Singleton ───────────────────────────────────────────────────────────
     private static UIManager _instance;
     public static UIManager Instance
     {
@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
             if (_instance == null)
                 _instance = FindAnyObjectByType<UIManager>();
             if (_instance == null)
-                Debug.LogError("Error can't instantiate singleton");
+                Debug.LogError("[UIManager] Singleton not found in scene!");
             return _instance;
         }
     }
@@ -22,20 +22,24 @@ public class UIManager : MonoBehaviour
         None,
         MainMenu,
         Options,
-        Credits, //=^..^=
+        Credits,
         Pause,
         Gameplay,
-        GameOver
+        GameOver,
+        Win
     }
 
-    [Header("UI References")]
+    // ─── Inspector ───────────────────────────────────────────────────────────
+    [Header("UI Container")]
+    [Tooltip("Parent che contiene tutti i pannelli UI come figli.")]
     [SerializeField] private Transform uiContainer;
 
+    // ─── State ───────────────────────────────────────────────────────────────
     private Dictionary<UIType, IGameUI> registeredUIs = new Dictionary<UIType, IGameUI>();
-    
     private IGameUI currentUI = null;
     private UIType currentUIType = UIType.None;
 
+    // ─── Lifecycle ───────────────────────────────────────────────────────────
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -48,65 +52,58 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         if (uiContainer != null)
-        {
             AutoRegisterUIs();
-        }
         else
-        {
-            Debug.LogWarning("[UIManager] UI Container not assigned.");
-        }
+            Debug.LogWarning("[UIManager] UI Container not assigned in Inspector.");
     }
 
+    // ─── Registration ────────────────────────────────────────────────────────
     private void AutoRegisterUIs()
     {
-        IGameUI[] foundUIs = uiContainer.GetComponentsInChildren<IGameUI>(true);
-        
-        foreach (IGameUI ui in foundUIs)
-        {
+        IGameUI[] found = uiContainer.GetComponentsInChildren<IGameUI>(true);
+        foreach (IGameUI ui in found)
             RegisterUI(ui.GetUIType(), ui);
-        }
 
+        // Nascondi tutto all'avvio
         ShowUI(UIType.None);
     }
 
-    public void RegisterUI(UIType uiType, IGameUI uiImplementation)
+    public void RegisterUI(UIType uiType, IGameUI uiImpl)
     {
+        if (uiType == UIType.None) return;
+
         if (registeredUIs.ContainsKey(uiType))
         {
+            Debug.LogWarning($"[UIManager] UI {uiType} already registered. Skipping.");
             return;
         }
 
-        registeredUIs.Add(uiType, uiImplementation);
-        uiImplementation.Init();
+        registeredUIs.Add(uiType, uiImpl);
+        uiImpl.Init();
     }
 
+    // ─── Show / Hide ─────────────────────────────────────────────────────────
     public void ShowUI(UIType uiType)
     {
-        if (currentUIType == uiType && currentUI != null)
-        {
-            return;
-        }
+        if (currentUIType == uiType && currentUI != null) return;
 
-        if (currentUI != null)
-        {
-            currentUI.SetActive(false);
-        }
-
+        currentUI?.SetActive(false);
         currentUIType = uiType;
-        
+
         if (uiType == UIType.None)
         {
             currentUI = null;
             return;
         }
 
-        if (registeredUIs.ContainsKey(uiType))
+        if (registeredUIs.TryGetValue(uiType, out IGameUI next))
         {
-            currentUI = registeredUIs[uiType];
+            currentUI = next;
             currentUI.SetActive(true);
         }
         else
         {
+            Debug.LogWarning($"[UIManager] UI {uiType} not registered.");
             currentUI = null;
         }
     }
@@ -114,31 +111,14 @@ public class UIManager : MonoBehaviour
     public void HideAllUI()
     {
         foreach (var kvp in registeredUIs)
-        {
             kvp.Value.SetActive(false);
-        }
+
         currentUI = null;
         currentUIType = UIType.None;
     }
 
-    public UIType GetCurrentUIType()
-    {
-        return currentUIType;
-    }
-
-    public bool IsUIActive(UIType uiType)
-    {
-        return currentUIType == uiType;
-    }
-
-    public IGameUI GetUI(UIType uiType)
-    {
-        if (registeredUIs.ContainsKey(uiType))
-        {
-            return registeredUIs[uiType];
-        }
-        return null;
-    }
+    // ─── Player Binding ──────────────────────────────────────────────────────
+    /// <summary>Rebinda la HUD al player (chiamato dopo ogni reset).</summary>
     public void RegisterPlayer(PlayerInput player)
     {
         if (player == null) return;
@@ -146,9 +126,16 @@ public class UIManager : MonoBehaviour
         if (registeredUIs.TryGetValue(UIType.Gameplay, out IGameUI ui))
         {
             if (ui is UIGameplay gameplayUI)
-            {
                 gameplayUI.BindPlayer(player);
-            }
         }
+    }
+
+    // ─── Queries ─────────────────────────────────────────────────────────────
+    public UIType GetCurrentUIType() => currentUIType;
+    public bool IsUIActive(UIType uiType) => currentUIType == uiType;
+    public IGameUI GetUI(UIType uiType)
+    {
+        registeredUIs.TryGetValue(uiType, out IGameUI ui);
+        return ui;
     }
 }

@@ -1,0 +1,44 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class UIWin : MonoBehaviour, IGameUI
+{
+    [Header("UI Elements")]
+    [SerializeField] private GameObject winPanel;
+    [SerializeField] private Button     retryButton;
+    [SerializeField] private Button     mainMenuButton;
+    [SerializeField] private Button     quitButton;
+    [SerializeField] private TMP_Text   titleText;    // opzionale, es. "VITTORIA!"
+    [SerializeField] private TMP_Text   subtitleText; // opzionale, es. tempo impiegato ecc.
+
+    public void Init()
+    {
+        if (retryButton    != null) retryButton.onClick.AddListener(OnRetryClicked);
+        if (mainMenuButton != null) mainMenuButton.onClick.AddListener(OnMainMenuClicked);
+        if (quitButton     != null) quitButton.onClick.AddListener(OnQuitClicked);
+    }
+
+    public void SetActive(bool active)
+    {
+        if (winPanel != null)
+            winPanel.SetActive(active);
+    }
+
+    public UIManager.UIType GetUIType() => UIManager.UIType.Win;
+
+    private void OnRetryClicked()
+    {
+        GameManager.Instance.RestartGame();
+    }
+
+    private void OnMainMenuClicked()
+    {
+        GameManager.Instance.ReturnToMainMenu();
+    }
+
+    private void OnQuitClicked()
+    {
+        GameManager.Instance.QuitGame();
+    }
+}
