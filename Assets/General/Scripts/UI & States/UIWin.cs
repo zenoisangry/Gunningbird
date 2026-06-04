@@ -5,13 +5,11 @@ using TMPro;
 public class UIWin : MonoBehaviour, IGameUI
 {
     [Header("UI Elements")]
-    [SerializeField] private GameObject winPanel;
-    [SerializeField] private GameObject menuBackground;
-    [SerializeField] private Button     retryButton;
-    [SerializeField] private Button     mainMenuButton;
-    [SerializeField] private Button     quitButton;
-    [SerializeField] private TMP_Text   titleText;
-    [SerializeField] private TMP_Text   subtitleText;
+    [SerializeField] private Button   retryButton;
+    [SerializeField] private Button   mainMenuButton;
+    [SerializeField] private Button   quitButton;
+    [SerializeField] private TMP_Text titleText;
+    [SerializeField] private TMP_Text subtitleText;
 
     public void Init()
     {
@@ -20,11 +18,7 @@ public class UIWin : MonoBehaviour, IGameUI
         if (quitButton     != null) quitButton.onClick.AddListener(OnQuitClicked);
     }
 
-    public void SetActive(bool active)
-    {
-        if (winPanel       != null) winPanel.SetActive(active);
-        if (menuBackground != null) menuBackground.SetActive(active);
-    }
+    public void SetActive(bool active) => gameObject.SetActive(active);
 
     public UIManager.UIType GetUIType() => UIManager.UIType.Win;
 

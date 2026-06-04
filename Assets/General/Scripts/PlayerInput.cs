@@ -419,7 +419,10 @@ public class PlayerInput : MonoBehaviour
 
         isDead = true;
 
-        OnDisable();
+        // Usa DisableGameplayInput invece di OnDisable() —
+        // OnDisable rimuove i listener delle action, che non vengono
+        // riagganci da EnableGameplayInput() al Revive, causando il freeze al restart.
+        DisableGameplayInput();
 
         if (weaponManager != null)
             weaponManager.enabled = false;
@@ -433,9 +436,44 @@ public class PlayerInput : MonoBehaviour
 
     public bool IsDead() => isDead;
 
-    /// <summary>
-    /// Resetta lo stato di morte del player. Chiamato da SceneResetManager dopo il reset della scena.
-    /// </summary>
+    /// <summary>Disabilita solo le action di gameplay, lasciando attiva la pauseAction.</summary>
+    public void DisableGameplayInput()
+    {
+        moveAction.Disable();
+        lookAction.Disable();
+        flyAction.Disable();
+        switchMovementAction.Disable();
+        jumpAction.Disable();
+        diveAction.Disable();
+        fireAction.Disable();
+        secondaryFireAction.Disable();
+        reloadAction.Disable();
+        slot1Action.Disable();
+        slot2Action.Disable();
+        slot3Action.Disable();
+        slot4Action.Disable();
+        // pauseAction rimane SEMPRE abilitata
+    }
+
+    /// <summary>Riabilita tutte le action di gameplay.</summary>
+    public void EnableGameplayInput()
+    {
+        moveAction.Enable();
+        lookAction.Enable();
+        flyAction.Enable();
+        switchMovementAction.Enable();
+        jumpAction.Enable();
+        diveAction.Enable();
+        fireAction.Enable();
+        secondaryFireAction.Enable();
+        reloadAction.Enable();
+        slot1Action.Enable();
+        slot2Action.Enable();
+        slot3Action.Enable();
+        slot4Action.Enable();
+    }
+
+    /// <summary>Resetta lo stato di morte. Chiamato da SceneResetManager dopo il reset.</summary>
     public void Revive()
     {
         if (!isDead) return;
@@ -451,8 +489,7 @@ public class PlayerInput : MonoBehaviour
         if (weaponManager != null)
             weaponManager.enabled = true;
 
-        // OnEnable() viene chiamato automaticamente da Unity quando enabled torna true
-        enabled = true;
+        EnableGameplayInput();
     }
 
     public HealthSystem GetHealthSystem() => healthSystem;

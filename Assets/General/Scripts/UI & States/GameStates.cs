@@ -11,9 +11,11 @@ internal static class PlayerInputHelper
         var player = GameManager.Instance.playerInstance;
         if (player == null) return;
 
-        // Abilita/disabilita il MonoBehaviour PlayerInput — OnEnable/OnDisable
-        // gestiscono internamente tutte le InputAction e i loro listener.
-        player.enabled = enabled;
+        // Usa i metodi dedicati che lasciano sempre attiva la pauseAction
+        if (enabled)
+            player.EnableGameplayInput();
+        else
+            player.DisableGameplayInput();
 
         // Rigidbody
         var rb = player.GetComponent<Rigidbody>();

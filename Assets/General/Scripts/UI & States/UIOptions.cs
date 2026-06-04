@@ -4,18 +4,13 @@ using TMPro;
 
 public class UIOptions : MonoBehaviour, IGameUI
 {
-    [Header("UI Elements")]
-    [SerializeField] private GameObject optionsPanel;
-    [SerializeField] private Button backButton;
-
     [Header("Settings")]
-    [SerializeField] private Slider volumeSlider;
-    [SerializeField] private Slider sensitivitySlider;
-    [SerializeField] private Toggle fullscreenToggle;
+    [SerializeField] private Slider   volumeSlider;
+    [SerializeField] private Slider   sensitivitySlider;
+    [SerializeField] private Toggle   fullscreenToggle;
     [SerializeField] private TMP_Text volumeValueText;
     [SerializeField] private TMP_Text sensitivityValueText;
-
-    private bool isInGameplay = false;
+    [SerializeField] private Button   backButton;
 
     public void Init()
     {
@@ -43,45 +38,26 @@ public class UIOptions : MonoBehaviour, IGameUI
 
     public void SetActive(bool active)
     {
-        if (optionsPanel != null)
-            optionsPanel.SetActive(active);
-
-        if (active)
-        {
-            isInGameplay = GameManager.Instance.isGameActive;
-            UpdateDisplayedValues();
-        }
+        gameObject.SetActive(active);
+        if (active) UpdateDisplayedValues();
     }
 
-    public UIManager.UIType GetUIType()
-    {
-        return UIManager.UIType.Options;
-    }
+    public UIManager.UIType GetUIType() => UIManager.UIType.Options;
 
     private void UpdateDisplayedValues()
     {
         if (volumeValueText != null && volumeSlider != null)
             volumeValueText.text = $"{Mathf.RoundToInt(volumeSlider.value * 100)}%";
-
         if (sensitivityValueText != null && sensitivitySlider != null)
             sensitivityValueText.text = $"{sensitivitySlider.value:F2}";
     }
 
     private void OnBackClicked()
     {
-        if (isInGameplay)
-        {
-            OnResumeClicked();
-        }
+        if (GameManager.Instance.isGameActive)
+            GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Pause);
         else
-        {
             GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.MainMenu);
-        }
-    }
-
-    private void OnResumeClicked()
-    {
-        GameManager.Instance.ResumeGame();
     }
 
     private void OnVolumeChanged(float value)
@@ -99,8 +75,5 @@ public class UIOptions : MonoBehaviour, IGameUI
             sensitivityValueText.text = $"{value:F2}";
     }
 
-    private void OnFullscreenChanged(bool isFullscreen)
-    {
-        Screen.fullScreen = isFullscreen;
-    }
+    private void OnFullscreenChanged(bool isFullscreen) => Screen.fullScreen = isFullscreen;
 }
