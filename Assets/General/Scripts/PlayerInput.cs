@@ -155,8 +155,8 @@ public class PlayerInput : MonoBehaviour
 
     void Start()
     {
-        //Cursor.visible = false;
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
         currentSpeed = groundSpeed;
 
@@ -432,6 +432,28 @@ public class PlayerInput : MonoBehaviour
     }
 
     public bool IsDead() => isDead;
+
+    /// <summary>
+    /// Resetta lo stato di morte del player. Chiamato da SceneResetManager dopo il reset della scena.
+    /// </summary>
+    public void Revive()
+    {
+        if (!isDead) return;
+
+        isDead = false;
+
+        if (body != null)
+        {
+            body.isKinematic = false;
+            body.linearVelocity = Vector3.zero;
+        }
+
+        if (weaponManager != null)
+            weaponManager.enabled = true;
+
+        // OnEnable() viene chiamato automaticamente da Unity quando enabled torna true
+        enabled = true;
+    }
 
     public HealthSystem GetHealthSystem() => healthSystem;
 }

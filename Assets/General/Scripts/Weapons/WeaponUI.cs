@@ -58,7 +58,7 @@ public class WeaponUI : MonoBehaviour
     {
         // Agganciati all'evento ogni volta che la HUD viene riattivata (es. dopo pausa)
         if (SceneResetManager.Instance != null)
-            SceneResetManager.Instance.OnEnemyDied += OnEnemyDied;
+            SceneResetManager.Instance.EnemyDied += OnEnemyDied;
     }
 
     private void OnDisable()
@@ -67,7 +67,7 @@ public class WeaponUI : MonoBehaviour
             healthSystem.HealthChanged -= UpdateHealthUI;
 
         if (SceneResetManager.Instance != null)
-            SceneResetManager.Instance.OnEnemyDied -= OnEnemyDied;
+            SceneResetManager.Instance.EnemyDied -= OnEnemyDied;
     }
 
     // ─── Enemy Counter ───────────────────────────────────────────────────────
@@ -114,8 +114,14 @@ public class WeaponUI : MonoBehaviour
             UpdateAmmoIcons(weapon.GetCurrentAmmo(), data.magazineSize);
         }
 
+        // Il crosshair rimane visibile durante il cooldown del fire rate —
+        // sparisce solo se si sta ricaricando o si è a secco. ฅ^•ﻌ•^ฅ
         if (crosshair)
-            crosshair.enabled = weapon.CanFire();
+        {
+            bool hasAmmo      = weapon.GetCurrentAmmo() > 0 || data.hasInfiniteAmmo || !data.usesAmmo;
+            bool notReloading = !weapon.IsReloading();
+            crosshair.enabled = hasAmmo && notReloading;
+        }
 
         UpdateCrosshairSize(weapon, data);
     }

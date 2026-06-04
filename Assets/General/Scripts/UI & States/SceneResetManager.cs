@@ -38,8 +38,8 @@ public class SceneResetManager : MonoBehaviour
     public UnityEvent onSceneReset;
 
     // ─── Win condition ────────────────────────────────────────────────────────
-    /// <summary>Fired ogni volta che un nemico muore (passa il count aggiornato).</summary>
-    public event Action OnEnemyDied;
+    /// <summary>Fired ogni volta che un nemico muore.</summary>
+    public event Action EnemyDied;
     /// <summary>Fired quando tutti i nemici risultano morti.</summary>
     public event Action OnAllEnemiesDead;
 
@@ -135,7 +135,7 @@ public class SceneResetManager : MonoBehaviour
 
             enemyHealthSystems.Add(hs);
             aliveEnemyCount++;
-            hs.Died += OnEnemyDied;
+            hs.Died += HandleEnemyDied;
         }
 
         Debug.Log($"[SceneResetManager] Tracking {aliveEnemyCount} enemies for win condition.");
@@ -146,16 +146,16 @@ public class SceneResetManager : MonoBehaviour
         foreach (var hs in enemyHealthSystems)
         {
             if (hs != null)
-                hs.Died -= OnEnemyDied;
+                hs.Died -= HandleEnemyDied;
         }
     }
 
-    private void OnEnemyDied()
+    private void HandleEnemyDied()
     {
         aliveEnemyCount = Mathf.Max(0, aliveEnemyCount - 1);
         Debug.Log($"[SceneResetManager] Enemy died. Alive: {aliveEnemyCount}");
 
-        OnEnemyDied?.Invoke();
+        EnemyDied?.Invoke();
 
         if (aliveEnemyCount <= 0)
             OnAllEnemiesDead?.Invoke();
@@ -193,11 +193,13 @@ public class SceneResetManager : MonoBehaviour
         if (playerHealth != null)
             playerHealth.Revive(1f);
 
-        // Riattiva tutti i MonoBehaviour del player
-        foreach (var mb in playerTransform.GetComponentsInChildren<MonoBehaviour>(true))
-        {
-            if (mb != null) mb.enabled = true;
-        }
+        // Riattiva il PlayerInput (gestisce internamente le InputAction)
+        var playerInputComp = playerTransform.GetComponent<PlayerInput>();
+        if (playerInputComp != null) playerInputComp.Revive();
+
+        // Riattiva WeaponManager
+        var wm = playerTransform.GetComponent<WeaponManager>();
+        if (wm != null) wm.enabled = true;
 
         // Riattiva Rigidbody
         Rigidbody rb = playerTransform.GetComponent<Rigidbody>();

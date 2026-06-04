@@ -11,29 +11,11 @@ internal static class PlayerInputHelper
         var player = GameManager.Instance.playerInstance;
         if (player == null) return;
 
-        var pi = player.GetComponent<PlayerInput>();
-        if (pi != null)
-        {
-            if (enabled)
-            {
-                pi.ActivateInput();
-                pi.SwitchCurrentActionMap("Player");
-            }
-            else
-            {
-                pi.SwitchCurrentActionMap("UI");
-            }
-        }
+        // Abilita/disabilita il MonoBehaviour PlayerInput — OnEnable/OnDisable
+        // gestiscono internamente tutte le InputAction e i loro listener.
+        player.enabled = enabled;
 
-        // MonoBehaviour (escludi HealthSystem per non perdere i danni)
-        foreach (var mb in player.GetComponentsInChildren<MonoBehaviour>(true))
-        {
-            if (mb == null) continue;
-            if (mb is HealthSystem) continue;
-            if (mb is PlayerInput) continue;
-            mb.enabled = enabled;
-        }
-
+        // Rigidbody
         var rb = player.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -45,8 +27,9 @@ internal static class PlayerInputHelper
             }
         }
 
-        var cc = player.GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = enabled;
+        // WeaponManager
+        var wm = player.GetComponent<WeaponManager>();
+        if (wm != null) wm.enabled = enabled;
     }
 }
 
