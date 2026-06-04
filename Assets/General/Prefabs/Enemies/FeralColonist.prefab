@@ -341,7 +341,7 @@ MonoBehaviour:
   escapeRangePriority: 2
   escapeCheckCooldown: 3
   escapeSafetyPriority: 3
-  jumpRange: 35
+  jumpRange: 20
   jumpOvershootSpeed: 0
   jumpChargeTime: 0.5
   jumpAbortTimer: 0.1
