@@ -36,7 +36,6 @@ public class UIManager : MonoBehaviour
 
     // ─── State ───────────────────────────────────────────────────────────────
     private Dictionary<UIType, IGameUI> registeredUIs = new Dictionary<UIType, IGameUI>();
-    private IGameUI currentUI = null;
     private UIType currentUIType = UIType.None;
 
     // ─── Lifecycle ───────────────────────────────────────────────────────────
@@ -65,7 +64,7 @@ public class UIManager : MonoBehaviour
             RegisterUI(ui.GetUIType(), ui);
 
         // Nascondi tutto all'avvio
-        ShowUI(UIType.None);
+        HideAllUI();
     }
 
     public void RegisterUI(UIType uiType, IGameUI uiImpl)
@@ -83,28 +82,27 @@ public class UIManager : MonoBehaviour
     }
 
     // ─── Show / Hide ─────────────────────────────────────────────────────────
+    /// <summary>
+    /// Nasconde TUTTI i pannelli registrati, poi attiva solo quello richiesto.
+    /// Evita qualsiasi sovrapposizione indipendentemente dallo stato precedente.
+    /// </summary>
     public void ShowUI(UIType uiType)
     {
-        if (currentUIType == uiType && currentUI != null) return;
+        // Nascondi sempre tutto prima di mostrare il nuovo pannello
+        foreach (var kvp in registeredUIs)
+            kvp.Value.SetActive(false);
 
-        currentUI?.SetActive(false);
         currentUIType = uiType;
 
-        if (uiType == UIType.None)
-        {
-            currentUI = null;
-            return;
-        }
+        if (uiType == UIType.None) return;
 
         if (registeredUIs.TryGetValue(uiType, out IGameUI next))
         {
-            currentUI = next;
-            currentUI.SetActive(true);
+            next.SetActive(true);
         }
         else
         {
             Debug.LogWarning($"[UIManager] UI {uiType} not registered.");
-            currentUI = null;
         }
     }
 
@@ -113,12 +111,10 @@ public class UIManager : MonoBehaviour
         foreach (var kvp in registeredUIs)
             kvp.Value.SetActive(false);
 
-        currentUI = null;
         currentUIType = UIType.None;
     }
 
     // ─── Player Binding ──────────────────────────────────────────────────────
-    /// <summary>Rebinda la HUD al player (chiamato dopo ogni reset).</summary>
     public void RegisterPlayer(PlayerInput player)
     {
         if (player == null) return;
@@ -131,8 +127,8 @@ public class UIManager : MonoBehaviour
     }
 
     // ─── Queries ─────────────────────────────────────────────────────────────
-    public UIType GetCurrentUIType() => currentUIType;
-    public bool IsUIActive(UIType uiType) => currentUIType == uiType;
+    public UIType  GetCurrentUIType()        => currentUIType;
+    public bool    IsUIActive(UIType uiType) => currentUIType == uiType;
     public IGameUI GetUI(UIType uiType)
     {
         registeredUIs.TryGetValue(uiType, out IGameUI ui);

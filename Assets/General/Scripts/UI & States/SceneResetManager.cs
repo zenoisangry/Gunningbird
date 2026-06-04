@@ -38,6 +38,8 @@ public class SceneResetManager : MonoBehaviour
     public UnityEvent onSceneReset;
 
     // ─── Win condition ────────────────────────────────────────────────────────
+    /// <summary>Fired ogni volta che un nemico muore (passa il count aggiornato).</summary>
+    public event Action OnEnemyDied;
     /// <summary>Fired quando tutti i nemici risultano morti.</summary>
     public event Action OnAllEnemiesDead;
 
@@ -152,6 +154,8 @@ public class SceneResetManager : MonoBehaviour
     {
         aliveEnemyCount = Mathf.Max(0, aliveEnemyCount - 1);
         Debug.Log($"[SceneResetManager] Enemy died. Alive: {aliveEnemyCount}");
+
+        OnEnemyDied?.Invoke();
 
         if (aliveEnemyCount <= 0)
             OnAllEnemiesDead?.Invoke();

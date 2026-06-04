@@ -6,11 +6,12 @@ public class UIWin : MonoBehaviour, IGameUI
 {
     [Header("UI Elements")]
     [SerializeField] private GameObject winPanel;
+    [SerializeField] private GameObject menuBackground;
     [SerializeField] private Button     retryButton;
     [SerializeField] private Button     mainMenuButton;
     [SerializeField] private Button     quitButton;
-    [SerializeField] private TMP_Text   titleText;    // opzionale, es. "VITTORIA!"
-    [SerializeField] private TMP_Text   subtitleText; // opzionale, es. tempo impiegato ecc.
+    [SerializeField] private TMP_Text   titleText;
+    [SerializeField] private TMP_Text   subtitleText;
 
     public void Init()
     {
@@ -21,24 +22,13 @@ public class UIWin : MonoBehaviour, IGameUI
 
     public void SetActive(bool active)
     {
-        if (winPanel != null)
-            winPanel.SetActive(active);
+        if (winPanel       != null) winPanel.SetActive(active);
+        if (menuBackground != null) menuBackground.SetActive(active);
     }
 
     public UIManager.UIType GetUIType() => UIManager.UIType.Win;
 
-    private void OnRetryClicked()
-    {
-        GameManager.Instance.RestartGame();
-    }
-
-    private void OnMainMenuClicked()
-    {
-        GameManager.Instance.ReturnToMainMenu();
-    }
-
-    private void OnQuitClicked()
-    {
-        GameManager.Instance.QuitGame();
-    }
+    private void OnRetryClicked()    => GameManager.Instance.RestartGame();
+    private void OnMainMenuClicked() => GameManager.Instance.ReturnToMainMenu();
+    private void OnQuitClicked()     => GameManager.Instance.QuitGame();
 }

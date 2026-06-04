@@ -31,16 +31,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Assegna il PlayerInput già presente in scena.")]
     public PlayerInput playerInstance;
 
-    [Header("Camera")]
-    [Tooltip("Il GameObject della camera di gioco (verrà disattivato nei menu).")]
-    public GameObject gameplayCamera;
 
-    // ─── Camera helpers (usati dai GameState) ────────────────────────────────
-    public void SetGameplayCameraActive(bool active)
-    {
-        if (gameplayCamera != null)
-            gameplayCamera.SetActive(active);
-    }
 
     // ─── State ───────────────────────────────────────────────────────────────
     public bool isGameActive  { get; private set; } = false;

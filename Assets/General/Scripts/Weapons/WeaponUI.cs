@@ -1,62 +1,91 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class WeaponUI : MonoBehaviour
 {
     [Header("UI")]
-    //[SerializeField] private TMP_Text ammoText; //ฅ^•ﻌ•^ฅ sostituito dalle icone, tenuto per il simbolo ∞
-    [SerializeField] private Image crosshair;
-    [SerializeField] private Image weaponIconImage;
-    //[SerializeField] private TMP_Text healthText; //ฅ^•ﻌ•^ฅ non serve nella modifica apportata, ma lascio per sicurezza!
-    [SerializeField] private Image healthBarFill; //Meow Meow ฅ^•ﻌ•^ฅ
+    [SerializeField] private Image    crosshair;
+    [SerializeField] private Image    weaponIconImage;
+    [SerializeField] private Image    healthBarFill;
 
-    [Header("Crosshair Spread")] //ฅ^•ﻌ•^ฅ
-    [SerializeField] private float crosshairBaseSize = 32f;
-    [SerializeField] private float crosshairMaxSize = 96f;
+    [Header("Enemy Counter")] // ฅ^•ﻌ•^ฅ
+    [SerializeField] private TMP_Text enemyCounterText;
+    [SerializeField] private string   enemyCounterFormat = "{0} nemici rimanenti";
+
+    [Header("Crosshair Spread")] // ฅ^•ﻌ•^ฅ
+    [SerializeField] private float crosshairBaseSize  = 32f;
+    [SerializeField] private float crosshairMaxSize   = 96f;
     [SerializeField] private float crosshairLerpSpeed = 10f;
     private RectTransform crosshairRect;
-    private float targetCrosshairSize;
+    private float         targetCrosshairSize;
 
-    [Header("Ammo Icons")] //ฅ^•ﻌ•^ฅ
-    // sinistra a destra
-    [SerializeField] private Image[] ammoIcons = new Image[6];
-    [SerializeField] private Color ammoActiveColor = Color.white;
-    [SerializeField] private Color ammoEmptyColor = new Color(1f, 1f, 1f, 0.15f);
-    private int lastAmmo = -1;
+    [Header("Ammo Icons")] // ฅ^•ﻌ•^ฅ
+    [SerializeField] private Image[] ammoIcons      = new Image[6];
+    [SerializeField] private Color   ammoActiveColor = Color.white;
+    [SerializeField] private Color   ammoEmptyColor  = new Color(1f, 1f, 1f, 0.15f);
+    private int lastAmmo        = -1;
     private int lastMagazineSize = -1;
 
     private WeaponManager weaponManager;
-    private HealthSystem healthSystem;
+    private HealthSystem  healthSystem;
 
+    // ─── Bind ────────────────────────────────────────────────────────────────
     public void Bind(WeaponManager wm, HealthSystem hs)
     {
         weaponManager = wm;
-        healthSystem = hs;
+        healthSystem  = hs;
 
-        // ฅ^•ﻌ•^ฅ 
         if (crosshair != null)
         {
-            crosshairRect = crosshair.GetComponent<RectTransform>();
+            crosshairRect       = crosshair.GetComponent<RectTransform>();
             targetCrosshairSize = crosshairBaseSize;
         }
 
         if (healthSystem != null)
         {
+            healthSystem.HealthChanged -= UpdateHealthUI;
             healthSystem.HealthChanged += UpdateHealthUI;
-            UpdateHealthUI(
-                healthSystem.GetHealth(),
-                healthSystem.GetMaxHealth()
-            );
+            UpdateHealthUI(healthSystem.GetHealth(), healthSystem.GetMaxHealth());
         }
+
+        // Inizializza il counter con il valore corrente dal SceneResetManager
+        if (SceneResetManager.Instance != null)
+            UpdateEnemyCounter(SceneResetManager.Instance.GetAliveEnemyCount());
+    }
+
+    private void OnEnable()
+    {
+        // Agganciati all'evento ogni volta che la HUD viene riattivata (es. dopo pausa)
+        if (SceneResetManager.Instance != null)
+            SceneResetManager.Instance.OnEnemyDied += OnEnemyDied;
     }
 
     private void OnDisable()
     {
         if (healthSystem != null)
             healthSystem.HealthChanged -= UpdateHealthUI;
+
+        if (SceneResetManager.Instance != null)
+            SceneResetManager.Instance.OnEnemyDied -= OnEnemyDied;
     }
 
+    // ─── Enemy Counter ───────────────────────────────────────────────────────
+
+    // ฅ^•ﻌ•^ฅ — chiamato dall'evento OnEnemyDied di SceneResetManager
+    private void OnEnemyDied()
+    {
+        if (SceneResetManager.Instance != null)
+            UpdateEnemyCounter(SceneResetManager.Instance.GetAliveEnemyCount());
+    }
+
+    public void UpdateEnemyCounter(int remaining)
+    {
+        if (enemyCounterText == null) return;
+        enemyCounterText.text = string.Format(enemyCounterFormat, remaining);
+    }
+
+    // ─── Update ──────────────────────────────────────────────────────────────
     private void Update()
     {
         if (weaponManager == null) return;
@@ -64,8 +93,7 @@ public class WeaponUI : MonoBehaviour
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
         if (weapon == null)
         {
-            // if (ammoText) ammoText.gameObject.SetActive(false); //ฅ^•ﻌ•^ฅ
-            SetAllIconsVisible(false); //ฅ^•ﻌ•^ฅ
+            SetAllIconsVisible(false);
             if (crosshair) crosshair.enabled = false;
             return;
         }
@@ -73,8 +101,6 @@ public class WeaponUI : MonoBehaviour
         WeaponData data = weapon.GetWeaponData();
         if (data == null) return;
 
-        // if (ammoText) { if (!data.usesAmmo) { ammoText.gameObject.SetActive(false); } else { ammoText... } }
-        //ฅ^•ﻌ•^ฅ
         if (!data.usesAmmo)
         {
             SetAllIconsVisible(false);
@@ -82,11 +108,6 @@ public class WeaponUI : MonoBehaviour
         else if (data.hasInfiniteAmmo)
         {
             SetAllIconsVisible(false);
-            // if (ammoText) //mi stava dando problemi //ฅ^•ﻌ•^ฅ
-            // {
-            //     ammoText.gameObject.SetActive(true);
-            //     ammoText.text = "∞";
-            // }
         }
         else
         {
@@ -99,6 +120,8 @@ public class WeaponUI : MonoBehaviour
         UpdateCrosshairSize(weapon, data);
     }
 
+    // ─── Ammo Icons ──────────────────────────────────────────────────────────
+
     // ฅ^•ﻌ•^ฅ
     private void UpdateAmmoIcons(int currentAmmo, int magazineSize)
     {
@@ -107,12 +130,11 @@ public class WeaponUI : MonoBehaviour
         if (magazineSize != lastMagazineSize)
         {
             lastMagazineSize = magazineSize;
-            lastAmmo = -1;
+            lastAmmo         = -1;
 
             for (int i = 0; i < ammoIcons.Length; i++)
             {
                 if (ammoIcons[i] == null) continue;
-
                 ammoIcons[i].gameObject.SetActive(i < magazineSize);
             }
         }
@@ -135,6 +157,8 @@ public class WeaponUI : MonoBehaviour
             if (icon != null) icon.gameObject.SetActive(visible);
     }
 
+    // ─── Crosshair ───────────────────────────────────────────────────────────
+
     // ฅ^•ﻌ•^ฅ
     private void UpdateCrosshairSize(BaseWeapon weapon, WeaponData data)
     {
@@ -146,28 +170,23 @@ public class WeaponUI : MonoBehaviour
         }
         else
         {
-            float spreadRatio = Mathf.Clamp01(weapon.GetCurrentSpread() / data.maxSpread);
+            float spreadRatio   = Mathf.Clamp01(weapon.GetCurrentSpread() / data.maxSpread);
             targetCrosshairSize = Mathf.Lerp(crosshairBaseSize, crosshairMaxSize, spreadRatio);
         }
 
         float currentSize = crosshairRect.sizeDelta.x;
-        float newSize = Mathf.Lerp(currentSize, targetCrosshairSize, Time.deltaTime * crosshairLerpSpeed);
+        float newSize     = Mathf.Lerp(currentSize, targetCrosshairSize, Time.deltaTime * crosshairLerpSpeed);
         crosshairRect.sizeDelta = new Vector2(newSize, newSize);
     }
 
+    // ─── Health ──────────────────────────────────────────────────────────────
     private void UpdateHealthUI(float current, float max)
     {
-        /* if (healthText == null) return;
-         healthText.text = $"HP: {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(max)}";*/ //ฅ^•ﻌ•^ฅ lascio per sicurezza, ma non serve!
-
         if (healthBarFill == null) return;
-
-        float fillValue = current / max;
-
-        healthBarFill.fillAmount = fillValue;
-        //ฅ^•ﻌ•^ฅ
+        healthBarFill.fillAmount = current / max;
     }
 
+    // ─── Weapon Icon ─────────────────────────────────────────────────────────
     public void SetWeaponIcon(Sprite icon)
     {
         if (weaponIconImage != null)

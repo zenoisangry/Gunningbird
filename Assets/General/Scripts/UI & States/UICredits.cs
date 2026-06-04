@@ -5,6 +5,7 @@ public class UICredits : MonoBehaviour, IGameUI
 {
     [Header("UI Elements")]
     [SerializeField] private GameObject creditsPanel;
+    [SerializeField] private GameObject menuBackground;
     [SerializeField] private Button     backButton;
 
     public void Init()
@@ -15,14 +16,11 @@ public class UICredits : MonoBehaviour, IGameUI
 
     public void SetActive(bool active)
     {
-        if (creditsPanel != null)
-            creditsPanel.SetActive(active);
+        if (creditsPanel   != null) creditsPanel.SetActive(active);
+        if (menuBackground != null) menuBackground.SetActive(active);
     }
 
     public UIManager.UIType GetUIType() => UIManager.UIType.Credits;
 
-    private void OnBackClicked()
-    {
-        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.MainMenu);
-    }
+    private void OnBackClicked() => GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.MainMenu);
 }

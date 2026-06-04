@@ -1,4 +1,54 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  HELPER CONDIVISO
+// ─────────────────────────────────────────────────────────────────────────────
+internal static class PlayerInputHelper
+{
+    internal static void SetEnabled(bool enabled)
+    {
+        var player = GameManager.Instance.playerInstance;
+        if (player == null) return;
+
+        var pi = player.GetComponent<PlayerInput>();
+        if (pi != null)
+        {
+            if (enabled)
+            {
+                pi.ActivateInput();
+                pi.SwitchCurrentActionMap("Player");
+            }
+            else
+            {
+                pi.SwitchCurrentActionMap("UI");
+            }
+        }
+
+        // MonoBehaviour (escludi HealthSystem per non perdere i danni)
+        foreach (var mb in player.GetComponentsInChildren<MonoBehaviour>(true))
+        {
+            if (mb == null) continue;
+            if (mb is HealthSystem) continue;
+            if (mb is PlayerInput) continue;
+            mb.enabled = enabled;
+        }
+
+        var rb = player.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = !enabled;
+            if (!enabled)
+            {
+                rb.linearVelocity  = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+        }
+
+        var cc = player.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = enabled;
+    }
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  MAIN MENU
@@ -7,19 +57,25 @@ public class GSMainMenu : IGameState
 {
     public void OnStateEnter()
     {
+        // Ferma il gioco se stavamo giocando (es. return to menu da pausa)
+        Time.timeScale = 0f;
+        PlayerInputHelper.SetEnabled(false);
+
         UIManager.Instance.ShowUI(UIManager.UIType.MainMenu);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
-        Time.timeScale   = 1f;
 
         GameManager.Instance.SetGameActive(false);
         GameManager.Instance.SetGamePaused(false);
-        GameManager.Instance.SetGameplayCameraActive(false);
     }
 
     public void OnStateUpdate() { }
-    public void OnStateExit()   { }
+
+    public void OnStateExit()
+    {
+        // Il timeScale viene ripristinato a 1 da GSGameplay
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -27,60 +83,25 @@ public class GSMainMenu : IGameState
 // ─────────────────────────────────────────────────────────────────────────────
 public class GSOptions : IGameState
 {
-    private bool _wasInGameplay;
-
     public void OnStateEnter()
     {
-        _wasInGameplay = GameManager.Instance.isGameActive;
+        // Mantieni timeScale a 0 (eravamo in pausa o al menu)
+        Time.timeScale = 0f;
+        PlayerInputHelper.SetEnabled(false);
 
         UIManager.Instance.ShowUI(UIManager.UIType.Options);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
-
-        if (_wasInGameplay)
-        {
-            Time.timeScale = 0f;
-            GameManager.Instance.SetGamePaused(true);
-            SetPlayerInput(false);
-        }
     }
 
     public void OnStateUpdate()
     {
-        // Mantieni timescale a 0 se eravamo in gameplay
-        if (_wasInGameplay)
+        if (Time.timeScale != 0f)
             Time.timeScale = 0f;
     }
 
-    public void OnStateExit()
-    {
-        if (_wasInGameplay && GameManager.Instance.isGameActive)
-            SetPlayerInput(true);
-    }
-
-    private void SetPlayerInput(bool enabled)
-    {
-        if (GameManager.Instance.playerInstance == null) return;
-
-        var uiInput = GameManager.Instance.playerInstance
-            .GetComponent<UnityEngine.InputSystem.PlayerInput>();
-
-        if (uiInput != null)
-            uiInput.SwitchCurrentActionMap(enabled ? "Player" : "UI");
-
-        foreach (var mb in GameManager.Instance.playerInstance.GetComponents<MonoBehaviour>())
-        {
-            if (mb != null && mb.GetType().Name != "HealthSystem")
-                mb.enabled = enabled;
-        }
-
-        var rb = GameManager.Instance.playerInstance.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = !enabled;
-
-        var cc = GameManager.Instance.playerInstance.GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = enabled;
-    }
+    public void OnStateExit() { }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -90,12 +111,13 @@ public class GSCredits : IGameState
 {
     public void OnStateEnter()
     {
+        Time.timeScale = 0f;
+        PlayerInputHelper.SetEnabled(false);
+
         UIManager.Instance.ShowUI(UIManager.UIType.Credits);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
-        Time.timeScale   = 1f;
-        GameManager.Instance.SetGameplayCameraActive(false);
     }
 
     public void OnStateUpdate() { }
@@ -109,25 +131,25 @@ public class GSGameplay : IGameState
 {
     public void OnStateEnter()
     {
-        UIManager.Instance.ShowUI(UIManager.UIType.Gameplay);
+        // Ripristina sempre il tempo e l'input — sia per primo avvio che per resume da pausa
+        Time.timeScale = 1f;
+        PlayerInputHelper.SetEnabled(true);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible   = false;
-        Time.timeScale   = 1f;
 
-        GameManager.Instance.SetGameplayCameraActive(true);
+        UIManager.Instance.ShowUI(UIManager.UIType.Gameplay);
 
-        // Avvia il gioco solo se non era già attivo (primo avvio, non resume da pausa)
+        // Avvia StartGame solo al primo avvio o dopo un restart (non al resume da pausa)
         if (!GameManager.Instance.isGameActive)
             GameManager.Instance.StartGame();
-
-        // Assicura che l'input del player sia sempre attivo
-        EnsurePlayerInputEnabled();
+        else
+            GameManager.Instance.SetGamePaused(false);
     }
 
     public void OnStateUpdate()
     {
-        // Corregge timescale se qualcuno lo ha modificato esternamente
+        // Guardrail: corregge timeScale se qualcosa lo ha modificato esternamente
         if (!GameManager.Instance.isGamePaused && Time.timeScale != 1f)
             Time.timeScale = 1f;
     }
@@ -136,34 +158,6 @@ public class GSGameplay : IGameState
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
-    }
-
-    private void EnsurePlayerInputEnabled()
-    {
-        if (GameManager.Instance.playerInstance == null) return;
-
-        var uiInput = GameManager.Instance.playerInstance
-            .GetComponent<UnityEngine.InputSystem.PlayerInput>();
-
-        if (uiInput != null)
-        {
-            uiInput.ActivateInput();
-            uiInput.SwitchCurrentActionMap("Player");
-        }
-
-        foreach (var mb in GameManager.Instance.playerInstance.GetComponents<MonoBehaviour>())
-        {
-            if (mb != null && !mb.enabled)
-                mb.enabled = true;
-        }
-
-        var rb = GameManager.Instance.playerInstance.GetComponent<Rigidbody>();
-        if (rb != null && rb.isKinematic)
-            rb.isKinematic = false;
-
-        var cc = GameManager.Instance.playerInstance.GetComponent<CharacterController>();
-        if (cc != null && !cc.enabled)
-            cc.enabled = true;
     }
 }
 
@@ -174,15 +168,16 @@ public class GSPause : IGameState
 {
     public void OnStateEnter()
     {
-        UIManager.Instance.ShowUI(UIManager.UIType.Pause);
-
+        // Ferma tutto subito, poi aggiorna lo stato
         Time.timeScale = 0f;
+        PlayerInputHelper.SetEnabled(false);
+
         GameManager.Instance.SetGamePaused(true);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
 
-        SetPlayerInput(false);
+        UIManager.Instance.ShowUI(UIManager.UIType.Pause);
     }
 
     public void OnStateUpdate()
@@ -193,31 +188,8 @@ public class GSPause : IGameState
 
     public void OnStateExit()
     {
-        if (GameManager.Instance.isGameActive)
-            SetPlayerInput(true);
-    }
-
-    private void SetPlayerInput(bool enabled)
-    {
-        if (GameManager.Instance.playerInstance == null) return;
-
-        var uiInput = GameManager.Instance.playerInstance
-            .GetComponent<UnityEngine.InputSystem.PlayerInput>();
-
-        if (uiInput != null)
-            uiInput.SwitchCurrentActionMap(enabled ? "Player" : "UI");
-
-        foreach (var mb in GameManager.Instance.playerInstance.GetComponents<MonoBehaviour>())
-        {
-            if (mb != null && mb.GetType().Name != "HealthSystem")
-                mb.enabled = enabled;
-        }
-
-        var rb = GameManager.Instance.playerInstance.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = !enabled;
-
-        var cc = GameManager.Instance.playerInstance.GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = enabled;
+        // Non riattiviamo qui l'input: lo fa GSGameplay.OnStateEnter()
+        // Questo evita il doppio-enable che rompeva ESC al secondo uso
     }
 }
 
@@ -228,22 +200,16 @@ public class GSGameOver : IGameState
 {
     public void OnStateEnter()
     {
-        UIManager.Instance.ShowUI(UIManager.UIType.GameOver);
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible   = true;
-        Time.timeScale   = 1f;
+        Time.timeScale = 0f;
+        PlayerInputHelper.SetEnabled(false);
 
         GameManager.Instance.SetGameActive(false);
         GameManager.Instance.SetGamePaused(false);
-        GameManager.Instance.SetGameplayCameraActive(false);
 
-        if (GameManager.Instance.playerInstance != null)
-        {
-            var uiInput = GameManager.Instance.playerInstance
-                .GetComponent<UnityEngine.InputSystem.PlayerInput>();
-            uiInput?.SwitchCurrentActionMap("UI");
-        }
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+
+        UIManager.Instance.ShowUI(UIManager.UIType.GameOver);
     }
 
     public void OnStateUpdate() { }
@@ -257,22 +223,16 @@ public class GSWin : IGameState
 {
     public void OnStateEnter()
     {
-        UIManager.Instance.ShowUI(UIManager.UIType.Win);
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible   = true;
-        Time.timeScale   = 1f;
+        Time.timeScale = 0f;
+        PlayerInputHelper.SetEnabled(false);
 
         GameManager.Instance.SetGameActive(false);
         GameManager.Instance.SetGamePaused(false);
-        GameManager.Instance.SetGameplayCameraActive(false);
 
-        if (GameManager.Instance.playerInstance != null)
-        {
-            var uiInput = GameManager.Instance.playerInstance
-                .GetComponent<UnityEngine.InputSystem.PlayerInput>();
-            uiInput?.SwitchCurrentActionMap("UI");
-        }
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
+
+        UIManager.Instance.ShowUI(UIManager.UIType.Win);
     }
 
     public void OnStateUpdate() { }
