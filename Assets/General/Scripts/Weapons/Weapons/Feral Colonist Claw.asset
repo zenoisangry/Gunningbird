@@ -56,9 +56,9 @@ MonoBehaviour:
   secondaryFireCooldown: 1
   secondaryFireAmmoCost: 1
   meleeRange: 2
-  meleeCooldown: 0.5
+  meleeCooldown: 1
   meleeAngle: 90
-  meleeHitDelay: 0.2
+  meleeHitDelay: 0.4
   useHorizontalSpread: 0
   horizontalSpreadAngle: 15
   verticalSpreadAngle: 3

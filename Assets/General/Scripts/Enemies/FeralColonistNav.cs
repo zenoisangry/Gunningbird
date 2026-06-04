@@ -107,7 +107,6 @@ public class FeralColonistNav : MonoBehaviour
         meleeAttack = GetComponent<MeleeWeapon>();
         if (meleeAttack != null && meleeAimPoint != null)
         {
-            meleeAimPoint.localPosition = new Vector3(0f, 0f, meleeAttack.GetWeaponData().meleeRange);
             meleeAttackRange = meleeAttack.GetWeaponData().meleeRange * meleeAttackRangeMultiplier;
             attackDelay = meleeAttack.GetWeaponData().meleeHitDelay;
             attackEndLag = meleeAttack.GetWeaponData().meleeCooldown;
