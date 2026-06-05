@@ -42,9 +42,17 @@ public class GSMainMenu : IGameState
 {
     public void OnStateEnter()
     {
-        // Ferma il gioco se stavamo giocando (es. return to menu da pausa)
-        Time.timeScale = 0f;
-        PlayerInputHelper.SetEnabled(false);
+        // NON settiamo timeScale = 0 al Main Menu — in Unity 6 causa
+        // mancata inizializzazione del renderer al primo frame.
+        // Il player è immobile perché l'input è disabilitato.
+        Time.timeScale = 1f;
+
+        var player = GameManager.Instance.playerInstance;
+        if (player != null)
+            player.DisableGameplayInput();
+
+        var wm = GameManager.Instance.playerInstance?.GetComponent<WeaponManager>();
+        if (wm != null) wm.enabled = false;
 
         UIManager.Instance.ShowUI(UIManager.UIType.MainMenu);
 
@@ -56,11 +64,7 @@ public class GSMainMenu : IGameState
     }
 
     public void OnStateUpdate() { }
-
-    public void OnStateExit()
-    {
-        // Il timeScale viene ripristinato a 1 da GSGameplay
-    }
+    public void OnStateExit()   { }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -70,9 +74,17 @@ public class GSOptions : IGameState
 {
     public void OnStateEnter()
     {
-        // Mantieni timeScale a 0 (eravamo in pausa o al menu)
-        Time.timeScale = 0f;
-        PlayerInputHelper.SetEnabled(false);
+        // timeScale 0 solo se eravamo in gioco (pausa) — non dal menu principale
+        if (GameManager.Instance.isGameActive)
+            Time.timeScale = 0f;
+        else
+            Time.timeScale = 1f;
+
+        var player = GameManager.Instance.playerInstance;
+        if (player != null) player.DisableGameplayInput();
+
+        var wm = GameManager.Instance.playerInstance?.GetComponent<WeaponManager>();
+        if (wm != null) wm.enabled = false;
 
         UIManager.Instance.ShowUI(UIManager.UIType.Options);
 
@@ -82,7 +94,7 @@ public class GSOptions : IGameState
 
     public void OnStateUpdate()
     {
-        if (Time.timeScale != 0f)
+        if (GameManager.Instance.isGameActive && Time.timeScale != 0f)
             Time.timeScale = 0f;
     }
 
@@ -96,8 +108,13 @@ public class GSCredits : IGameState
 {
     public void OnStateEnter()
     {
-        Time.timeScale = 0f;
-        PlayerInputHelper.SetEnabled(false);
+        Time.timeScale = 1f;
+
+        var player = GameManager.Instance.playerInstance;
+        if (player != null) player.DisableGameplayInput();
+
+        var wm = GameManager.Instance.playerInstance?.GetComponent<WeaponManager>();
+        if (wm != null) wm.enabled = false;
 
         UIManager.Instance.ShowUI(UIManager.UIType.Credits);
 

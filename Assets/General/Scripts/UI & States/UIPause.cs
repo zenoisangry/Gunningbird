@@ -9,6 +9,10 @@ public class UIPause : MonoBehaviour, IGameUI
     [SerializeField] private Button mainMenuButton;
     [SerializeField] private Button quitButton;
 
+    // RIMOSSO: InputActionReference pauseAction — gestito da PlayerInput.
+    // UIPause non deve mai chiamare pauseAction.action.Disable() perché
+    // disabilita l'action globalmente nell'asset, rompendo PlayerInput.
+
     public void Init()
     {
         if (resumeButton   != null) resumeButton.onClick.AddListener(OnResumeClicked);

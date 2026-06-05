@@ -44,20 +44,20 @@ public class UIOptions : MonoBehaviour, IGameUI
 
     public UIManager.UIType GetUIType() => UIManager.UIType.Options;
 
-    private void UpdateDisplayedValues()
-    {
-        if (volumeValueText != null && volumeSlider != null)
-            volumeValueText.text = $"{Mathf.RoundToInt(volumeSlider.value * 100)}%";
-        if (sensitivityValueText != null && sensitivitySlider != null)
-            sensitivityValueText.text = $"{sensitivitySlider.value:F2}";
-    }
-
     private void OnBackClicked()
     {
         if (GameManager.Instance.isGameActive)
             GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Pause);
         else
             GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.MainMenu);
+    }
+
+    private void UpdateDisplayedValues()
+    {
+        if (volumeValueText != null && volumeSlider != null)
+            volumeValueText.text = $"{Mathf.RoundToInt(volumeSlider.value * 100)}%";
+        if (sensitivityValueText != null && sensitivitySlider != null)
+            sensitivityValueText.text = $"{sensitivitySlider.value:F2}";
     }
 
     private void OnVolumeChanged(float value)

@@ -53,6 +53,18 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Ritarda di un frame per permettere a CinemachineBrain di inizializzarsi
+        // prima che GSMainMenu setti Time.timeScale = 0f.
+        StartCoroutine(InitStateNextFrame());
+    }
+
+    private System.Collections.IEnumerator InitStateNextFrame()
+    {
+        // Aspetta 3 frame — Cinemachine 3.x ha bisogno di almeno 2 frame
+        // per registrare la CinemachineCamera al Brain prima che timeScale vada a 0.
+        yield return null;
+        yield return null;
+        yield return null;
         GameStateManager.instance.SetCurrentGameState(startingGameState);
     }
 
