@@ -48,7 +48,7 @@ MonoBehaviour:
   baseSpread: 15
   maxSpread: 15
   spreadIncreasePerShot: 10
-  spreadDecreaseSpeed: 0
+  spreadDecreaseSpeed: 2
   recoilPattern: {x: 1, y: 1}
   recoilRecoverySpeed: 5
   secondaryFireType: 0
