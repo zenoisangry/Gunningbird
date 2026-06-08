@@ -90,14 +90,14 @@ public class WeaponUI : MonoBehaviour
             UpdateHealthBar(healthSystem.GetHealth(), healthSystem.GetMaxHealth());
         }
 
-        if (SceneResetManager.Instance != null)
-            UpdateEnemyCounter(SceneResetManager.Instance.GetAliveEnemyCount());
+        if (WinConditionTracker.Instance != null)
+            UpdateEnemyCounter(WinConditionTracker.Instance.GetAliveEnemyCount());
     }
 
     private void OnEnable()
     {
-        if (SceneResetManager.Instance != null)
-            SceneResetManager.Instance.EnemyDied += OnEnemyDied;
+        if (WinConditionTracker.Instance != null)
+            WinConditionTracker.Instance.EnemyDied += OnEnemyDied;
 
         // Forza refresh icone quando la HUD viene riattivata
         lastAmmo         = -1;
@@ -108,8 +108,8 @@ public class WeaponUI : MonoBehaviour
     {
         if (healthSystem != null)
             healthSystem.HealthChanged -= OnHealthChanged;
-        if (SceneResetManager.Instance != null)
-            SceneResetManager.Instance.EnemyDied -= OnEnemyDied;
+        if (WinConditionTracker.Instance != null)
+            WinConditionTracker.Instance.EnemyDied -= OnEnemyDied;
     }
 
     // ─── Update ──────────────────────────────────────────────────────────────
@@ -305,8 +305,8 @@ public class WeaponUI : MonoBehaviour
     // ─── Enemy Counter ───────────────────────────────────────────────────────
     private void OnEnemyDied()
     {
-        if (SceneResetManager.Instance != null)
-            UpdateEnemyCounter(SceneResetManager.Instance.GetAliveEnemyCount());
+        if (WinConditionTracker.Instance != null)
+            UpdateEnemyCounter(WinConditionTracker.Instance.GetAliveEnemyCount());
     }
 
     public void UpdateEnemyCounter(int remaining)

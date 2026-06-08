@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// GameManager – Singleton DontDestroyOnLoad.
-/// Mono-scena: player e nemici sono già in scena.
-/// Si occupa di avviare/resettare il gioco, gestire pausa e
-/// agganciare gli eventi di morte del player e vittoria.
+/// Mono-scena: restart ricarica la scena da zero.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -31,11 +30,12 @@ public class GameManager : MonoBehaviour
     [Tooltip("Assegna il PlayerInput già presente in scena.")]
     public PlayerInput playerInstance;
 
-
-
     // ─── State ───────────────────────────────────────────────────────────────
     public bool isGameActive  { get; private set; } = false;
     public bool isGamePaused  { get; private set; } = false;
+
+    private bool _pendingRestart    = false;
+    private bool _pendingMainMenu   = false;
 
     // ─── Lifecycle ───────────────────────────────────────────────────────────
     private void Awake()
@@ -49,23 +49,65 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         RegisterGameStates();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void Start()
     {
-        // Ritarda di un frame per permettere a CinemachineBrain di inizializzarsi
-        // prima che GSMainMenu setti Time.timeScale = 0f.
         StartCoroutine(InitStateNextFrame());
     }
 
     private System.Collections.IEnumerator InitStateNextFrame()
     {
-        // Aspetta 3 frame — Cinemachine 3.x ha bisogno di almeno 2 frame
-        // per registrare la CinemachineCamera al Brain prima che timeScale vada a 0.
         yield return null;
         yield return null;
         yield return null;
         GameStateManager.instance.SetCurrentGameState(startingGameState);
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        UnhookPlayerEvents();
+    }
+
+    // ─── Scene Reload Callback ───────────────────────────────────────────────
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Trova il nuovo PlayerInput nella scena appena caricata
+        playerInstance = FindAnyObjectByType<PlayerInput>();
+
+        // Re-registra le UI della nuova scena
+        UIManager.Instance.ReRegisterUIs();
+
+        isGameActive  = false;
+        isGamePaused  = false;
+        Time.timeScale = 1f;
+
+        if (_pendingRestart)
+        {
+            _pendingRestart = false;
+            StartCoroutine(StartGameNextFrame());
+        }
+        else if (_pendingMainMenu)
+        {
+            _pendingMainMenu = false;
+            StartCoroutine(GoToMainMenuNextFrame());
+        }
+    }
+
+    private System.Collections.IEnumerator StartGameNextFrame()
+    {
+        yield return null;
+        yield return null;
+        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Gameplay);
+    }
+
+    private System.Collections.IEnumerator GoToMainMenuNextFrame()
+    {
+        yield return null;
+        yield return null;
+        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.MainMenu);
     }
 
     // ─── State Registration ──────────────────────────────────────────────────
@@ -81,8 +123,6 @@ public class GameManager : MonoBehaviour
     }
 
     // ─── Public API ──────────────────────────────────────────────────────────
-
-    /// <summary>Avvia la sessione di gioco. Aggancia gli eventi sul player già in scena.</summary>
     public void StartGame()
     {
         isGameActive  = true;
@@ -92,12 +132,10 @@ public class GameManager : MonoBehaviour
         HookPlayerEvents();
         HookWinCondition();
 
-        // Rebind HUD al player
         if (playerInstance != null)
             UIManager.Instance.RegisterPlayer(playerInstance);
     }
 
-    /// <summary>Resetta la scena in-place (posizioni, salute, nemici) e ricomincia.</summary>
     public void RestartGame()
     {
         isGameActive  = false;
@@ -106,14 +144,8 @@ public class GameManager : MonoBehaviour
 
         UnhookPlayerEvents();
 
-        // Delega il reset fisico al SceneResetManager
-        if (SceneResetManager.Instance != null)
-            SceneResetManager.Instance.ResetScene();
-
-        // Riavvia la sessione
-        StartGame();
-
-        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Gameplay);
+        _pendingRestart = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void PauseGame()
@@ -147,9 +179,7 @@ public class GameManager : MonoBehaviour
         if (!context.performed) return;
 
         if (isGameActive && !isGamePaused)
-        {
             PauseGame();
-        }
         else if (isGamePaused)
         {
             if (GameStateManager.instance.IsInState(GameStateManager.GameStates.Options))
@@ -167,10 +197,8 @@ public class GameManager : MonoBehaviour
 
         UnhookPlayerEvents();
 
-        if (SceneResetManager.Instance != null)
-            SceneResetManager.Instance.ResetScene();
-
-        GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.MainMenu);
+        _pendingMainMenu = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void QuitGame()
@@ -183,14 +211,11 @@ public class GameManager : MonoBehaviour
     }
 
     // ─── Internal ────────────────────────────────────────────────────────────
-
     private void HookPlayerEvents()
     {
         if (playerInstance == null) return;
-
         HealthSystem health = playerInstance.GetHealthSystem();
         if (health == null) return;
-
         health.Died -= OnPlayerDeath;
         health.Died += OnPlayerDeath;
     }
@@ -198,7 +223,6 @@ public class GameManager : MonoBehaviour
     private void UnhookPlayerEvents()
     {
         if (playerInstance == null) return;
-
         HealthSystem health = playerInstance.GetHealthSystem();
         if (health != null)
             health.Died -= OnPlayerDeath;
@@ -206,39 +230,32 @@ public class GameManager : MonoBehaviour
 
     private void HookWinCondition()
     {
-        if (SceneResetManager.Instance != null)
+        // Con reload scena non serve SceneResetManager —
+        // Win condition gestita da WinConditionTracker in scena
+        var winTracker = FindAnyObjectByType<WinConditionTracker>();
+        if (winTracker != null)
         {
-            SceneResetManager.Instance.OnAllEnemiesDead -= OnAllEnemiesDead;
-            SceneResetManager.Instance.OnAllEnemiesDead += OnAllEnemiesDead;
+            winTracker.OnAllEnemiesDead -= OnAllEnemiesDead;
+            winTracker.OnAllEnemiesDead += OnAllEnemiesDead;
         }
     }
 
     private void OnPlayerDeath()
     {
         if (!isGameActive) return;
-
         isGameActive  = false;
         isGamePaused  = false;
-
         GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.GameOver);
     }
 
     private void OnAllEnemiesDead()
     {
         if (!isGameActive) return;
-
         isGameActive  = false;
         isGamePaused  = false;
-
         GameStateManager.instance.SetCurrentGameState(GameStateManager.GameStates.Win);
     }
 
-    // Setter interni usati dagli stati
     internal void SetGameActive(bool value)  => isGameActive  = value;
     internal void SetGamePaused(bool value)  => isGamePaused  = value;
-
-    private void OnDestroy()
-    {
-        UnhookPlayerEvents();
-    }
 }

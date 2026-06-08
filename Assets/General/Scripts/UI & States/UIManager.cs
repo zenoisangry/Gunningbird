@@ -85,6 +85,37 @@ public class UIManager : MonoBehaviour
         currentUIType = UIType.None;
     }
 
+    /// <summary>
+    /// Chiamato da GameManager dopo il reload della scena.
+    /// Trova il nuovo uiContainer nella scena caricata e ri-registra tutte le UI.
+    /// </summary>
+    public void ReRegisterUIs()
+    {
+        registeredUIs.Clear();
+        currentUIType = UIType.None;
+
+        // Cerca il container nella nuova scena
+        if (uiContainer == null)
+        {
+            var found = FindAnyObjectByType<UIManager>();
+            if (found != null && found != this)
+                uiContainer = found.uiContainer;
+        }
+
+        if (uiContainer != null)
+            AutoRegisterUIs();
+
+        // Re-registra GameplayHUD
+        if (gameplayHUD != null)
+            RegisterUI(UIType.Gameplay, gameplayHUD);
+        else
+        {
+            gameplayHUD = FindAnyObjectByType<UIGameplay>();
+            if (gameplayHUD != null)
+                RegisterUI(UIType.Gameplay, gameplayHUD);
+        }
+    }
+
     public void RegisterPlayer(PlayerInput player)
     {
         if (player == null) return;

@@ -6203,9 +6203,9 @@ MonoBehaviour:
   healthBarFill: {fileID: 6363980699810445081}
   enemyCounterText: {fileID: 4093712249097487548}
   enemyCounterFormat: '{0}'
-  crosshairBaseSize: 32
-  crosshairMaxSize: 96
-  crosshairLerpSpeed: 10
+  crosshairBaseSize: 50
+  crosshairMaxSize: 150
+  crosshairLerpSpeed: 25
   ammoIcons:
   - {fileID: 2249220788588620917}
   - {fileID: 2753927228825308607}
@@ -6215,6 +6215,11 @@ MonoBehaviour:
   - {fileID: 2194344856669868634}
   ammoActiveColor: {r: 1, g: 1, b: 1, a: 1}
   ammoEmptyColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  shakeTarget: {fileID: 6401252316718308934}
+  shakeBaseMagnitude: 20
+  shakeDuration: 0.5
+  shakeFrequency: 25
+  reloadIconInterval: 0.3
 --- !u!1 &5960027101407126462
 GameObject:
   m_ObjectHideFlags: 0

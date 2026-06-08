@@ -22,7 +22,7 @@ internal static class PlayerInputHelper
         if (rb != null)
         {
             rb.isKinematic = !enabled;
-            if (!enabled)
+            if (!enabled && !rb.isKinematic)
             {
                 rb.linearVelocity  = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
