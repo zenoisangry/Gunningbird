@@ -93,15 +93,16 @@ public class SceneResetManager : MonoBehaviour
             };
         }
 
-        // Nemici
+        // Nemici — snapshot sul root della gerarchia
         enemySnapshots.Clear();
         foreach (var enemy in enemyObjects)
         {
             if (enemy == null) continue;
+            Transform root = enemy.transform.root;
             enemySnapshots.Add(new TransformSnapshot
             {
-                position = enemy.transform.position,
-                rotation = enemy.transform.rotation
+                position = root.position,
+                rotation = root.rotation
             });
         }
     }
@@ -220,36 +221,40 @@ public class SceneResetManager : MonoBehaviour
             GameObject enemy = enemyObjects[i];
             if (enemy == null) continue;
 
-            // Ripristina transform
+            // Riattiva tutta la catena di parent dalla root al GameObject
+            Transform t = enemy.transform;
+            while (t != null)
+            {
+                if (!t.gameObject.activeSelf)
+                    t.gameObject.SetActive(true);
+                t = t.parent;
+            }
+
+            // Ripristina transform sul root
             if (i < enemySnapshots.Count)
             {
-                enemy.transform.SetPositionAndRotation(
+                Transform enemyRoot = enemy.transform.root;
+                enemyRoot.SetPositionAndRotation(
                     enemySnapshots[i].position,
                     enemySnapshots[i].rotation
                 );
             }
 
-            // Riattiva il GameObject se era stato disattivato alla morte
-            enemy.SetActive(true);
+            // Chiama ResetState() su tutti i componenti IResettable
+            foreach (var resettable in enemy.GetComponentsInChildren<IResettable>(true))
+                resettable.ResetState();
 
             // Ripristina salute
             HealthSystem hs = enemy.GetComponentInChildren<HealthSystem>();
-            if (hs != null)
-                hs.Revive(1f);
-
-            // Riattiva MonoBehaviour
-            foreach (var mb in enemy.GetComponentsInChildren<MonoBehaviour>(true))
-            {
-                if (mb != null) mb.enabled = true;
-            }
+            if (hs != null) hs.Revive(1f);
 
             // Riattiva Rigidbody
             Rigidbody rb = enemy.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.isKinematic = false;
-                rb.linearVelocity    = Vector3.zero;
-                rb.angularVelocity   = Vector3.zero;
+                rb.isKinematic     = false;
+                rb.linearVelocity  = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
             }
         }
 

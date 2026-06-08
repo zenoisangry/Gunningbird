@@ -95,12 +95,8 @@ GameObject:
   - component: {fileID: 5725789863219392728}
   - component: {fileID: 6361763353340809841}
   - component: {fileID: 3208829876065403440}
-  - component: {fileID: 4803452979974094326}
   - component: {fileID: 3869932248992660971}
-  - component: {fileID: 7381613235662854421}
   - component: {fileID: 5634534848274131423}
-  - component: {fileID: 2776859871632096189}
-  - component: {fileID: 584195175489441493}
   - component: {fileID: 6338201883956133720}
   m_Layer: 3
   m_Name: Player
@@ -149,6 +145,9 @@ MonoBehaviour:
   diveStrength: 18
   weaponManager: {fileID: 5725789863219392728}
   healthSystem: {fileID: 3208829876065403440}
+  footstepSource: {fileID: 0}
+  footstepClips: []
+  footstepInterval: 0.45
   grounded: 1
   diving: 0
   projectedPosition: {x: 0, y: 0, z: 0}
@@ -343,24 +342,6 @@ MonoBehaviour:
   explosionResistance: 0
   fireResistance: 0
   genericResistance: 0
---- !u!114 &4803452979974094326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3670304794437903089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f51a26b0ca1734a94a5b5b8432a41f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestWeaponUI
-  weaponManager: {fileID: 5725789863219392728}
-  ammoText: {fileID: 0}
-  crosshair: {fileID: 0}
-  weaponIconImage: {fileID: 0}
-  playerHealth: {fileID: 3208829876065403440}
-  healthText: {fileID: 0}
 --- !u!114 &3869932248992660971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,31 +356,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LandingParticles
   dustPrefab: {fileID: 4323696386316782106, guid: 3776d68133c085e47a8b8bccbce4bec4, type: 3}
   movement: {fileID: 3049692797684000032}
+  cameraTransform: {fileID: 0}
   minFallHeight: 2
   minImpactSpeed: -8
   onlyFromDive: 0
   groundOffset: 0.9
---- !u!114 &7381613235662854421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3670304794437903089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cc37408db43d8f4988601d629a89847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PDamageVFX
-  player: {fileID: 3049692797684000032}
-  damageOverlay: {fileID: 0}
-  cameraTransform: {fileID: 8022013687539662599}
-  audioSource: {fileID: 0}
-  maxAlpha: 0.6
-  fadeSpeed: 5
   shakeAmount: 0.1
-  lightHit: {fileID: 0}
-  heavyHit: {fileID: 0}
+  shakeDuration: 0.2
 --- !u!114 &5634534848274131423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,42 +379,6 @@ MonoBehaviour:
   - tag: Enemy
     data: {fileID: 11400000, guid: e4a30b7afe01b054b9dc18f608c0b27d, type: 2}
   defaultImpact: {fileID: 11400000, guid: 4522cd1a84643c547bdb0d64b4e5c49d, type: 2}
---- !u!114 &2776859871632096189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3670304794437903089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57f51a26b0ca1734a94a5b5b8432a41f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestWeaponUI
-  weaponManager: {fileID: 5725789863219392728}
-  ammoText: {fileID: 0}
-  crosshair: {fileID: 0}
-  weaponIconImage: {fileID: 0}
-  playerHealth: {fileID: 3208829876065403440}
-  healthText: {fileID: 0}
---- !u!114 &584195175489441493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3670304794437903089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e70adbac58730543929aec3c1c9ff49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LandingParticles
-  dustPrefab: {fileID: 4323696386316782106, guid: 3776d68133c085e47a8b8bccbce4bec4, type: 3}
-  movement: {fileID: 3049692797684000032}
-  minFallHeight: 2
-  minImpactSpeed: -8
-  onlyFromDive: 0
-  groundOffset: 0.9
 --- !u!114 &6338201883956133720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -471,6 +398,7 @@ MonoBehaviour:
   maxAlpha: 0.6
   fadeSpeed: 5
   shakeAmount: 0.1
+  shakeDuration: 0.2
   lightHit: {fileID: 0}
   heavyHit: {fileID: 0}
 --- !u!1 &8448084838656711716
