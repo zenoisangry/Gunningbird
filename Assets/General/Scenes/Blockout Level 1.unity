@@ -72563,6 +72563,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98dd92668a1c61c469dc4fde78263958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIGameplay
+--- !u!114 &1897478729 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1000511481937924046, guid: c51a3a97c79d1b44d9972eaeb9f2712a, type: 3}
+  m_PrefabInstance: {fileID: 7251915901406285269}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fdf8a3abbbbcd3479e365c1b75160cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponUI
 --- !u!1 &1898130113
 GameObject:
   m_ObjectHideFlags: 0
@@ -80613,6 +80624,14 @@ PrefabInstance:
     - target: {fileID: 3670304794437903089, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725789863219392728, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
+      propertyPath: weaponUI
+      value: 
+      objectReference: {fileID: 1897478729}
+    - target: {fileID: 5725789863219392728, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
+      propertyPath: startingWeapons.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6338201883956133720, guid: 2c4daa844c2c0b9409537fdabed3b0d8, type: 3}
       propertyPath: damageOverlay
