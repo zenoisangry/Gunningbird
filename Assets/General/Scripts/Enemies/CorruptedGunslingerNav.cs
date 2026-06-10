@@ -214,10 +214,26 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     previousPlayerProjection = player.projectedPosition;
                 }
             }
-            if (updateRotation)
+            if (!climbing)
             {
-                movementScript.RotateTowardsTarget(navigation.steeringTarget);
-                updateRotation = false;
+                if (updateRotation)
+                {
+                    movementScript.RotateTowardsTarget(navigation.steeringTarget);
+                    updateRotation = false;
+                }
+            }
+            else
+            {
+                if (navigation.steeringTarget.y > transform.position.y)
+                {
+                    movementScript.RotateTowardsTarget(navigation.steeringTarget);
+                    updateRotation = false;
+                }
+                else
+                {
+                    movementScript.RotateTowardsTarget(transform.position - navigation.steeringTarget);
+                    updateRotation = false;
+                }
             }
         }
 

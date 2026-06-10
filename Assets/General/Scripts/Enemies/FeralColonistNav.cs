@@ -238,17 +238,6 @@ public class FeralColonistNav : MonoBehaviour
 
         if (currentBehavior == FeralColonistBehavior.Closing)
         {
-            if (navigation.path.corners.Length == 2)
-            {
-                movementScript.RotateTowardsTarget(player.transform.position);
-                updateRotation = false;
-            }
-            if (updateRotation)
-            {
-                previousPlayerRotation = player.transform.position - transform.position;
-                movementScript.RotateTowardsTarget(navigation.steeringTarget);
-                updateRotation = false;
-            }
             if (player != null)
             {
                 //Check current surface;
@@ -277,10 +266,72 @@ public class FeralColonistNav : MonoBehaviour
                     previousPlayerProjection = player.projectedPosition;
                 }
             }
+            if (!climbing)
+            {
+                if (navigation.path.corners.Length == 2)
+                {
+                    movementScript.RotateTowardsTarget(player.transform.position);
+                    updateRotation = false;
+                }
+                if (updateRotation)
+                {
+                    previousPlayerRotation = player.transform.position - transform.position;
+                    movementScript.RotateTowardsTarget(navigation.steeringTarget);
+                    updateRotation = false;
+                }
+            }
+            else
+            {
+                if (navigation.steeringTarget.y > transform.position.y)
+                {
+                    movementScript.RotateTowardsTarget(navigation.steeringTarget);
+                    updateRotation = false;
+                }
+                else
+                {
+                    movementScript.RotateTowardsTarget(transform.position - navigation.steeringTarget);
+                    updateRotation = false;
+                }
+            }
         }
 
         if (currentBehavior == FeralColonistBehavior.Escaping)
         {
+            if (player != null)
+            {
+                //Check current surface;
+                navigation.SamplePathPosition(NavMesh.AllAreas, 0.1f, out hit);
+                if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
+                {
+                    climbing = false;
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Climb"))
+                    {
+                        animator.Play("Chase");
+                    }
+                }
+                else
+                {
+                    climbing = true;
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Chase"))
+                    {
+                        animator.Play("Climb");
+                    }
+                }
+            }
+            if (climbing)
+            {
+                if (navigation.steeringTarget.y > transform.position.y)
+                {
+                    movementScript.RotateTowardsTarget(navigation.steeringTarget);
+                    updateRotation = false;
+                }
+                else
+                {
+                    movementScript.RotateTowardsTarget(transform.position - navigation.steeringTarget);
+                    updateRotation = false;
+                }
+            }
+
             if (navigation.remainingDistance <= navigation.stoppingDistance)
             {
                 Debug.Log("Escape target reached");
@@ -340,7 +391,7 @@ public class FeralColonistNav : MonoBehaviour
                 break;
 
             case FeralColonistBehavior.Closing:
-                if (playerRange == 0)
+                if (playerRange == 0 && !climbing)
                 {
                     navigation.isStopped = true;
                     currentBehavior = FeralColonistBehavior.Attacking;
