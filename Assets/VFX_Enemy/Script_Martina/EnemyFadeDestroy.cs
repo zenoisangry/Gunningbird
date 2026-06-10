@@ -1,38 +1,108 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class EnemyFadeDestroy : MonoBehaviour
 {
     [SerializeField] private float fadeDuration = 5f;
+    [SerializeField] private float deathVFXDuration = 1.5f;
 
-    private static readonly int FadeAmount = Shader.PropertyToID("_FadeAmount");
+    [Header("VFX Prefabs")]
+    [SerializeField] private VisualEffectAsset bloodVFX;
+    [SerializeField] private VisualEffectAsset damageVFX;
+    [SerializeField] private VisualEffectAsset deathVFX;
+
+    private HealthSystem healthSystem;
+    private EnemyDissolve enemyDissolve;
+
+    private void Awake()
+    {
+        healthSystem = GetComponentInChildren<HealthSystem>();
+        enemyDissolve = GetComponent<EnemyDissolve>();
+
+        Debug.Log($"[EnemyFadeDestroy] HealthSystem trovato: {healthSystem != null}");
+        Debug.Log($"[EnemyFadeDestroy] EnemyDissolve trovato: {enemyDissolve != null}");
+    }
 
     private void Start()
     {
+        if (healthSystem != null)
+        {
+            healthSystem.Died += OnDied;
+            healthSystem.DamageTaken += OnDamageTaken;
+        }
+        else
+        {
+            Debug.LogWarning($"[EnemyFadeDestroy] No HealthSystem found on {gameObject.name}");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (healthSystem != null)
+        {
+            healthSystem.Died -= OnDied;
+            healthSystem.DamageTaken -= OnDamageTaken;
+        }
+    }
+
+    private void SpawnVFX(VisualEffectAsset asset, float destroyAfter)
+    {
+        if (asset == null) return;
+
+        GameObject go = new GameObject($"VFX_{asset.name}");
+        go.transform.SetPositionAndRotation(transform.position, transform.rotation);
+
+        VisualEffect vfx = go.AddComponent<VisualEffect>();
+        vfx.visualEffectAsset = asset;
+        vfx.Play();
+
+        Destroy(go, destroyAfter);
+    }
+
+    private void OnDamageTaken(float damage)
+    {
+        SpawnVFX(damageVFX, 3f);
+        SpawnVFX(bloodVFX, 3f);
+    }
+
+    private void OnDied()
+    {
+        Debug.Log("[EnemyFadeDestroy] OnDied chiamato!");
         StartCoroutine(FadeAndDestroy());
     }
 
     private IEnumerator FadeAndDestroy()
     {
-        MeshRenderer meshRenderer = GetComponentInChildren<MeshRenderer>();
-        if (meshRenderer == null)
+        Debug.Log("[EnemyFadeDestroy] FadeAndDestroy avviato!");
+
+        Rigidbody rb = GetComponentInChildren<Rigidbody>();
+        if (rb != null)
         {
-            Debug.LogError($"[EnemyFadeDestroy] Nessun MeshRenderer trovato nei children di {gameObject.name}");
-            yield break;
+            rb.isKinematic = true;
+            rb.detectCollisions = false;
         }
 
-        Material mat = meshRenderer.materials[0];
-        float elapsed = 0f;
+        // Fase 1: spawna il VFX e aspetta
+        SpawnVFX(deathVFX, deathVFXDuration + fadeDuration);
+        yield return new WaitForSeconds(deathVFXDuration);
 
-        while (elapsed < fadeDuration)
+        Debug.Log("[EnemyFadeDestroy] Dopo delay VFX!");
+
+        // Fase 2: avvia il dissolve
+        if (enemyDissolve != null)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeDuration);
-            mat.SetFloat(FadeAmount, t);
-            yield return null;
+            Debug.Log("[EnemyFadeDestroy] Chiamo StartDissolve!");
+            enemyDissolve.StartDissolve();
+        }
+        else
+        {
+            Debug.LogWarning("[EnemyFadeDestroy] Nessun EnemyDissolve trovato!");
         }
 
-        mat.SetFloat(FadeAmount, 1f);
+        // Fase 3: aspetta la fine del dissolve e distruggi
+        yield return new WaitForSeconds(fadeDuration);
+        Debug.Log("[EnemyFadeDestroy] Distruggo il nemico!");
         Destroy(gameObject);
     }
 }

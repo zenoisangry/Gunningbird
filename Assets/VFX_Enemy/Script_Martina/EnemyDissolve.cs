@@ -5,34 +5,35 @@ public class EnemyDissolve : MonoBehaviour
 {
     [SerializeField] private float fadeDuration = 5f;
 
-    private static readonly int FadeAmount = Shader.PropertyToID("_FadeAmount");
+    private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
-    private void Start()
+    public void StartDissolve()
     {
-        StartCoroutine(FadeAndDestroy());
+         Debug.Log("[EnemyDissolve] StartDissolve chiamato!");
+        StartCoroutine(DissolveCoroutine());
     }
 
-    private IEnumerator FadeAndDestroy()
+    private IEnumerator DissolveCoroutine()
     {
         SkinnedMeshRenderer meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         if (meshRenderer == null)
         {
-            Debug.LogError($"[EnemyFadeDestroy] Nessun SkinnedMeshRenderer trovato nei children di {gameObject.name}");
+            Debug.LogError($"[EnemyDissolve] Nessun SkinnedMeshRenderer trovato in {gameObject.name}");
             yield break;
         }
 
-        Material mat = meshRenderer.materials[1];
+        Material mat = meshRenderer.materials[0];
+        Color originalColor = mat.GetColor(BaseColor);
         float elapsed = 0f;
 
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / fadeDuration);
-            mat.SetFloat(FadeAmount, t);
+            float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
+            mat.SetColor(BaseColor, new Color(originalColor.r, originalColor.g, originalColor.b, alpha));
             yield return null;
         }
 
-        mat.SetFloat(FadeAmount, 1f);
-        Destroy(gameObject);
+        mat.SetColor(BaseColor, new Color(originalColor.r, originalColor.g, originalColor.b, 0f));
     }
 }
