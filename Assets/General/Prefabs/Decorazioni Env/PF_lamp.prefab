@@ -352,6 +352,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightFlickerEffect
   light: {fileID: 4992401819769554129}
-  minIntensity: 0
-  maxIntensity: 5
-  smoothing: 38
+  minIntensity: 4
+  maxIntensity: 8
+  smoothing: 28
