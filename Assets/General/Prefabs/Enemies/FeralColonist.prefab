@@ -814,10 +814,10 @@ PrefabInstance:
       addedObject: {fileID: 2320122198171958345}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2933039590139374464}
+      addedObject: {fileID: 1047773541192200824}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1047773541192200824}
+      addedObject: {fileID: 1691892002280246440}
   m_SourcePrefab: {fileID: 100100000, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
 --- !u!1 &8568202408551372416 stripped
 GameObject:
@@ -925,19 +925,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae39dcc35a8c81438145e2e7138f1f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitMaterialEffect
---- !u!114 &2933039590139374464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8568202408551372416}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce8e8b1ddfff0614e9a736f9c62acde6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDissolve
-  fadeDuration: 5
 --- !u!114 &1047773541192200824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,6 +942,19 @@ MonoBehaviour:
   bloodVFX: {fileID: 8926484042661614526, guid: 84d3f63d5b8917b4b9620f72de668f94, type: 3}
   damageVFX: {fileID: 8926484042661614526, guid: b077176e63ce80f44ba3d65dff25bf5e, type: 3}
   deathVFX: {fileID: 8926484042661614526, guid: 12aea466704a5b540b56f0a3b1b3cfb6, type: 3}
+--- !u!114 &1691892002280246440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8568202408551372416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8e8b1ddfff0614e9a736f9c62acde6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDissolve
+  fadeDuration: 5
 --- !u!4 &9053235931819641914 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2b077f9e7bde6ec47914e222e02cd8d0, type: 3}
