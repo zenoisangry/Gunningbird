@@ -47,7 +47,6 @@ public class Projectile : MonoBehaviour
         IDamageable damageable = collision.collider.GetComponentInParent<IDamageable>();
         if (damageable != null)
         {
-            Debug.Log(collision.collider.gameObject);
             bool  isHeadshot  = collision.collider.CompareTag("Head");
             float finalDamage = damage * (isHeadshot ? headshotMultiplier : 1f);
             damageable.TakeDamage(finalDamage, DamageType.Bullet);

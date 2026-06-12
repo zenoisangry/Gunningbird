@@ -245,6 +245,7 @@ public class FeralColonistNav : MonoBehaviour
                 if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
                 {
                     climbing = false;
+                    movementScript.climbing = false;
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("Climb"))
                     {
                         animator.Play("Chase");
@@ -253,8 +254,10 @@ public class FeralColonistNav : MonoBehaviour
                 else
                 {
                     climbing = true;
+                    movementScript.climbing = true;
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("Chase"))
                     {
+                        movementScript.StartClimbing(); 
                         animator.Play("Climb");
                     }
                 }
@@ -304,6 +307,7 @@ public class FeralColonistNav : MonoBehaviour
                 if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
                 {
                     climbing = false;
+                    movementScript.climbing = false;
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("Climb"))
                     {
                         animator.Play("Chase");
@@ -312,8 +316,10 @@ public class FeralColonistNav : MonoBehaviour
                 else
                 {
                     climbing = true;
+                    movementScript.climbing = true;
                     if (animator.GetCurrentAnimatorStateInfo(0).IsName("Chase"))
                     {
+                        movementScript.StartClimbing();
                         animator.Play("Climb");
                     }
                 }

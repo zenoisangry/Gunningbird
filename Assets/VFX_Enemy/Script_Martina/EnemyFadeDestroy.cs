@@ -68,13 +68,11 @@ public class EnemyFadeDestroy : MonoBehaviour
 
     private void OnDied()
     {
-        Debug.Log("[EnemyFadeDestroy] OnDied chiamato!");
         StartCoroutine(FadeAndDestroy());
     }
 
     private IEnumerator FadeAndDestroy()
     {
-        Debug.Log("[EnemyFadeDestroy] FadeAndDestroy avviato!");
 
         Rigidbody rb = GetComponentInChildren<Rigidbody>();
         if (rb != null)

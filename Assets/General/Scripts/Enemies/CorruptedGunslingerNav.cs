@@ -201,10 +201,15 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 if ((1 << NavMesh.GetAreaFromName("Climb") & hit.mask) == 0)
                 {
                     climbing = false;
+                    movementScript.climbing = false;
                 }
                 else
                 {
-                    climbing = true;
+                    if (!climbing)
+                    {
+                        movementScript.StartClimbing();
+                        climbing = true;
+                    }
                 }
                 if (updateNavigation)
                 {
