@@ -21,14 +21,12 @@ public class MapEdges : MonoBehaviour
 
     private void Update()
     {
-        if (player == null || wallRenderer == null)
-            return;
 
-        float distance = Vector3.Distance(
-            player.position,
-            transform.position
-        );
-
-        wallRenderer.enabled = distance <= revealDistance;
+        float distance = Vector3.Distance(player.position, transform.position);
+      
+        if (player == null || wallRenderer == null) return;
+        if (distance <= revealDistance) wallRenderer.enabled = true;
+        else wallRenderer.enabled = false;
     }
+
 }
