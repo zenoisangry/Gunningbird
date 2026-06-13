@@ -616,12 +616,11 @@ public class FeralColonistNav : MonoBehaviour
                 if (enemyWeaponAttack.CanAttack())
                 {
                     enemyWeaponAttack.Attack(player.transform);
+                    if (attackCoroutine != null)
+                        StopCoroutine(attackCoroutine);
+                    attackCoroutine = StartCoroutine(Attack());
+                    attacking = true;
                 }
-
-                if (attackCoroutine != null)
-                    StopCoroutine(attackCoroutine);
-                attackCoroutine = StartCoroutine(Attack());
-                attacking = true;
             }
         }
     }
@@ -629,7 +628,7 @@ public class FeralColonistNav : MonoBehaviour
     private IEnumerator Attack()
     {
         float t = 0;
-        while (t < attackDelay + attackEndLag)
+        while (t < attackEndLag)
         {
             if (isDead) yield break;
             t += Time.deltaTime;
