@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponName: Rifle
   description: 
   weaponType: 1
-  weaponIcon: {fileID: 21300000, guid: d43b9b6b048b5a549b5e6596633196a9, type: 3}
+  weaponIcon: {fileID: 21300000, guid: 78424d1133f05ba4592ef9bb41484bae, type: 3}
   weaponPrefab: {fileID: 3532154221099903998, guid: 82a436fa96ac14745912de15136623b4, type: 3}
   pickupPrefab: {fileID: 3532154221099903998, guid: 82a436fa96ac14745912de15136623b4, type: 3}
   bulletPrefab: {fileID: 8058749452768088809, guid: dadb523bfe1ed174a9c97492b42156db, type: 3}
