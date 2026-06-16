@@ -280,6 +280,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 {
                     currentBehavior = GunslingerBehavior.Closing;
                     CallOthers();
+                    animator.Play("Walk");
                 }
                 break;
 
@@ -287,10 +288,12 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange){
                     currentBehavior = GunslingerBehavior.Shooting;
                     navigation.SetDestination(transform.position);
+                    animator.Play("Shoot");
                 }
                 if (playerDistance <= shootingMinRange && canEscape)
                 {
                     FindEscapeZone();
+                    animator.Play("Walk");
                     currentBehavior = GunslingerBehavior.Escaping;
                 }
                 break;
@@ -300,6 +303,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 {
                     Debug.Log("[Gunslinger] Lost line of sight, reloading if possible");
                     enemyRangedAttack.Reload();
+                    animator.Play("Reload");
                     currentBehavior = GunslingerBehavior.Reloading;
                     break;
                 }
@@ -310,6 +314,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                         Debug.Log("[Gunslinger] Weapon empty, escaping to reload");
                         FindEscapeZone();
                         currentBehavior = GunslingerBehavior.Escaping;
+                        animator.Play("Walk");
                         break;
                     }
                     else
@@ -317,12 +322,14 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     {
                         Debug.Log("[Gunslinger] Player too close, escaping");
                         FindEscapeZone();
+                        animator.Play("Walk");
                         currentBehavior = GunslingerBehavior.Escaping;
                         break;
                     }
                     else
                     if (playerDistance > shootingMaxRange)
                     {
+                        animator.Play("Walk");
                         Debug.Log("[Gunslinger] Player too far, closing distance");
                         currentBehavior = GunslingerBehavior.Closing;
                         break;
@@ -335,6 +342,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 {
                     if (CheckLOS() && playerDistance > shootingMinRange && playerDistance <= shootingMaxRange)
                     {
+                        animator.Play("Shoot");
                         Debug.Log("[Gunslinger] Reload complete, resuming shooting");
                         navigation.SetDestination(transform.position);
                         currentBehavior = GunslingerBehavior.Shooting;
@@ -342,6 +350,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     }
                     else
                     {
+                        animator.Play("Walk");
                         Debug.Log("[Gunslinger] Reload complete, closing distance");
                         currentBehavior = GunslingerBehavior.Closing;
                         break;
@@ -356,6 +365,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     navigation.SetDestination(transform.position);
                     enemyRangedAttack.Reload();
                     currentBehavior = GunslingerBehavior.Reloading;
+                    animator.Play("Reload");
                     navigation.speed = baseSpeed;
                 }
                 break;

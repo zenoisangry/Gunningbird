@@ -9,7 +9,6 @@ public class BloodyCrowNav : MonoBehaviour
     public NavMeshAgent navAgent;
 
     private PlayerInput player;
-    public CapsuleCollider hitBox;
 
     public bool followingNav = false;
     public Vector3 target;
@@ -110,6 +109,7 @@ public class BloodyCrowNav : MonoBehaviour
             IDamageable damageable = other.GetComponentInParent<IDamageable>();
             if (damageable != null)
             {
+                Debug.Log("This should damage the player!");
                 damageable.TakeDamage(damage, DamageType.Melee);
                 Destroy(this.transform.parent.gameObject);
             }

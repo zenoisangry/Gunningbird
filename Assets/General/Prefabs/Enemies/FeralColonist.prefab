@@ -840,6 +840,7 @@ MonoBehaviour:
   horizontalConstraint: 1.5
   verticalOffset: 0
   navForwardOffset: 0
+  climbing: 0
 --- !u!54 &5787283741205741621
 Rigidbody:
   m_ObjectHideFlags: 0
