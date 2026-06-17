@@ -287,7 +287,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8a32522c465c83f419c3955c332d2038, type: 2}
+  - {fileID: 2100000, guid: 2a88679e74b575141ae5af51f9801041, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -349,7 +349,6 @@ MonoBehaviour:
   navFollowHeight: 5
   navObject: {fileID: 5526311039920142374}
   navAgent: {fileID: 680255248503217877}
-  hitBox: {fileID: 0}
   followingNav: 0
   target: {x: 0, y: 0, z: 0}
   damage: 7
