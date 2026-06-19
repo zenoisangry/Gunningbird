@@ -16,11 +16,10 @@ MonoBehaviour:
   impactDecalSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   decalSizeRange: {x: 0.08, y: 0.18}
   decalDuration: 8
-  impactSound: {fileID: 8300000, guid: 8d5a425e24ccdd546bab2c5a09c9ef14, type: 3}
+  impactSound: {fileID: 8300000, guid: 265b6dd633c7fd549a878e21d9d2bacd, type: 3}
   volume: 1
   changeMaterial: 0
-  glowColor: {r: 1, g: 1, b: 1, a: 1}
-  glowIntensity: 3
+  impactMaterial: {fileID: 0}
   materialDuration: 0.15
   activateChildEmitter: 0
   childEmitterName: 
