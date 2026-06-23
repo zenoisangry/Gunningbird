@@ -45553,7 +45553,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2833305492607681997, guid: 3773050a14e63fe469330703620e754d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1925776259}
   m_SourcePrefab: {fileID: 100100000, guid: 3773050a14e63fe469330703620e754d, type: 3}
 --- !u!1001 &1111588089
 PrefabInstance:
@@ -62793,6 +62796,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7594968127855468802, guid: 7169d17f638967b4195a810c9025f347, type: 3}
   m_PrefabInstance: {fileID: 1539492195}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1541819219 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4936968572123662987, guid: c51a3a97c79d1b44d9972eaeb9f2712a, type: 3}
+  m_PrefabInstance: {fileID: 7251915901406285269}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!1001 &1541952476
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77819,6 +77833,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e7327173a5b1e74b8eb809a90113e51, type: 3}
+--- !u!1 &1925776258 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2833305492607681997, guid: 3773050a14e63fe469330703620e754d, type: 3}
+  m_PrefabInstance: {fileID: 1107631700}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1925776259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1925776258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: babd56c7a0edd6b4fb7f534f8b3ab1e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WinConditionTracker
+  enemiesManual: []
 --- !u!1001 &1925777063
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -91822,6 +91854,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1000511481937924046, guid: c51a3a97c79d1b44d9972eaeb9f2712a, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1485433588}
+    - target: {fileID: 1000511481937924046, guid: c51a3a97c79d1b44d9972eaeb9f2712a, type: 3}
+      propertyPath: damageOverlay
+      value: 
+      objectReference: {fileID: 1541819219}
     - target: {fileID: 4044666603493141810, guid: c51a3a97c79d1b44d9972eaeb9f2712a, type: 3}
       propertyPath: m_Name
       value: UICanvas
@@ -91914,7 +91954,8 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 535802061}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6226843458604293531, guid: c51a3a97c79d1b44d9972eaeb9f2712a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

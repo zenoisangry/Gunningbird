@@ -29,18 +29,30 @@ public class WeaponUI : MonoBehaviour
     private int lastMagazineSize = -1;
 
     [Header("Health Shake")]
-    [SerializeField] private RectTransform shakeTarget; // es. il root HUD o la healthbar
-    [SerializeField] private float shakeBaseMagnitude = 8f;   // shake max a 0 HP
+    [SerializeField] private RectTransform shakeTarget;
+    [SerializeField] private float shakeBaseMagnitude = 8f;
     [SerializeField] private float shakeDuration      = 0.3f;
     [SerializeField] private float shakeFrequency     = 25f;
     private bool isShaking = false;
 
     [Header("Reload Animation")]
-    [SerializeField] private float reloadIconInterval = 0.1f; // delay tra un'icona e la successiva
-    private bool  wasReloading    = false;
-    private float reloadStartTime = 0f;
-    private int   reloadTargetAmmo = 0;
+    [SerializeField] private float reloadIconInterval = 0.1f;
+    private bool  wasReloading   = false;
     private Coroutine reloadCoroutine;
+
+    [Header("Damage VFX")]
+    [SerializeField] private Image      damageOverlay;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip  lightHit;
+    [SerializeField] private AudioClip  heavyHit;
+    [SerializeField] private float      maxOverlayAlpha  = 0.6f;
+    [SerializeField] private float      overlayFadeSpeed = 5f;
+    [SerializeField] private float      camShakeAmount   = 0.1f;
+    [SerializeField] private float      camShakeDuration = 0.2f;
+    private float     currentOverlayAlpha;
+    private Transform cameraTransform;
+    private Vector3   originalCamPos;
+    private float     camShakeTimer;
 
     private WeaponManager weaponManager;
     private HealthSystem  healthSystem;
@@ -53,8 +65,8 @@ public class WeaponUI : MonoBehaviour
 
         if (crosshair != null)
         {
-            crosshairRect     = crosshair.GetComponent<RectTransform>();
-            crosshairBaseSize = Mathf.Max(crosshairBaseSize, 16f);
+            crosshairRect       = crosshair.GetComponent<RectTransform>();
+            crosshairBaseSize   = Mathf.Max(crosshairBaseSize, 16f);
             targetCrosshairSize = crosshairBaseSize;
             if (crosshairRect != null)
                 crosshairRect.sizeDelta = new Vector2(crosshairBaseSize, crosshairBaseSize);
@@ -73,12 +85,7 @@ public class WeaponUI : MonoBehaviour
                 {
                     SetWeaponIcon(data.weaponIcon);
                     if (data.usesAmmo)
-                    {
-                        Debug.Log($"[WeaponUI] Bind — ammo:{weapon.GetCurrentAmmo()}/{data.magazineSize}");
                         UpdateAmmoIcons(weapon.GetCurrentAmmo(), data.magazineSize);
-                    }
-                    else
-                        Debug.Log($"[WeaponUI] Bind — no icons: usesAmmo:{data.usesAmmo}");
                 }
             }
         }
@@ -87,27 +94,66 @@ public class WeaponUI : MonoBehaviour
         {
             healthSystem.HealthChanged -= OnHealthChanged;
             healthSystem.HealthChanged += OnHealthChanged;
+            healthSystem.DamageTaken   -= OnDamageTaken;
+            healthSystem.DamageTaken   += OnDamageTaken;
             UpdateHealthBar(healthSystem.GetHealth(), healthSystem.GetMaxHealth());
         }
 
+        // Camera per damage VFX - auto-find, nessun riferimento serializzato
+        Camera mainCam = Camera.main;
+        if (mainCam != null)
+        {
+            cameraTransform = mainCam.transform;
+            originalCamPos  = cameraTransform.localPosition;
+        }
+
+        HookEnemyCounter();
+    }
+
+    private void HookEnemyCounter()
+    {
         if (WinConditionTracker.Instance != null)
+        {
+            WinConditionTracker.Instance.EnemyDied -= OnEnemyDied;
+            WinConditionTracker.Instance.EnemyDied += OnEnemyDied;
             UpdateEnemyCounter(WinConditionTracker.Instance.GetAliveEnemyCount());
+        }
+        else
+        {
+            StartCoroutine(HookCounterNextFrame());
+        }
+    }
+
+    private IEnumerator HookCounterNextFrame()
+    {
+        yield return null;
+        if (WinConditionTracker.Instance != null)
+        {
+            WinConditionTracker.Instance.EnemyDied -= OnEnemyDied;
+            WinConditionTracker.Instance.EnemyDied += OnEnemyDied;
+            UpdateEnemyCounter(WinConditionTracker.Instance.GetAliveEnemyCount());
+        }
     }
 
     private void OnEnable()
     {
-        if (WinConditionTracker.Instance != null)
-            WinConditionTracker.Instance.EnemyDied += OnEnemyDied;
-
-        // Forza refresh icone quando la HUD viene riattivata
         lastAmmo         = -1;
         lastMagazineSize = -1;
+
+        if (WinConditionTracker.Instance != null)
+        {
+            WinConditionTracker.Instance.EnemyDied -= OnEnemyDied;
+            WinConditionTracker.Instance.EnemyDied += OnEnemyDied;
+        }
     }
 
     private void OnDisable()
     {
         if (healthSystem != null)
+        {
             healthSystem.HealthChanged -= OnHealthChanged;
+            healthSystem.DamageTaken   -= OnDamageTaken;
+        }
         if (WinConditionTracker.Instance != null)
             WinConditionTracker.Instance.EnemyDied -= OnEnemyDied;
     }
@@ -115,6 +161,8 @@ public class WeaponUI : MonoBehaviour
     // ─── Update ──────────────────────────────────────────────────────────────
     private void Update()
     {
+        UpdateDamageVFX();
+
         if (weaponManager == null) return;
 
         BaseWeapon weapon = weaponManager.GetCurrentWeapon();
@@ -129,13 +177,9 @@ public class WeaponUI : MonoBehaviour
         if (data == null) return;
 
         if (!data.usesAmmo)
-        {
             SetAllIconsVisible(false);
-        }
         else
         {
-            // Le icone mostrano sempre il magazine — anche con munizioni infinite
-            // hasInfiniteAmmo significa riserva infinita, non magazine infinito
             HandleReloadAnimation(weapon, data);
             UpdateAmmoIcons(weapon.GetCurrentAmmo(), data.magazineSize);
         }
@@ -150,6 +194,48 @@ public class WeaponUI : MonoBehaviour
         UpdateCrosshairSize(weapon, data);
     }
 
+    // ─── Damage VFX ──────────────────────────────────────────────────────────
+    private void UpdateDamageVFX()
+    {
+        currentOverlayAlpha = Mathf.Lerp(currentOverlayAlpha, 0f, Time.deltaTime * overlayFadeSpeed);
+        if (damageOverlay != null)
+        {
+            Color c = damageOverlay.color;
+            c.a = currentOverlayAlpha;
+            damageOverlay.color = c;
+        }
+
+        if (cameraTransform != null)
+        {
+            if (camShakeTimer > 0f)
+            {
+                camShakeTimer -= Time.deltaTime;
+                Vector3 offset = Random.insideUnitSphere * camShakeAmount;
+                offset.z = 0f;
+                cameraTransform.localPosition = originalCamPos + offset;
+            }
+            else
+            {
+                cameraTransform.localPosition = originalCamPos;
+            }
+        }
+    }
+
+    private void OnDamageTaken(float damage)
+    {
+        float intensity     = Mathf.Clamp01(damage / 50f);
+        currentOverlayAlpha = Mathf.Max(currentOverlayAlpha, intensity * maxOverlayAlpha);
+        camShakeTimer       = camShakeDuration * intensity;
+
+        if (audioSource != null)
+        {
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
+            AudioClip clip = intensity > 0.5f ? heavyHit : lightHit;
+            if (clip != null)
+                audioSource.PlayOneShot(clip, Mathf.Lerp(0.5f, 1f, intensity));
+        }
+    }
+
     // ─── Reload Animation ────────────────────────────────────────────────────
     private void HandleReloadAnimation(BaseWeapon weapon, WeaponData data)
     {
@@ -157,12 +243,7 @@ public class WeaponUI : MonoBehaviour
 
         if (isReloading && !wasReloading)
         {
-            // Reload appena iniziato
-            wasReloading    = true;
-            reloadStartTime = Time.time;
-            reloadTargetAmmo = data.magazineSize;
-
-            // Spegni tutte le icone
+            wasReloading = true;
             for (int i = 0; i < ammoIcons.Length; i++)
                 if (ammoIcons[i] != null && i < data.magazineSize)
                     ammoIcons[i].color = ammoEmptyColor;
@@ -172,7 +253,6 @@ public class WeaponUI : MonoBehaviour
         }
         else if (!isReloading && wasReloading)
         {
-            // Reload finito — aggiorna forzatamente
             wasReloading     = false;
             lastAmmo         = -1;
             lastMagazineSize = -1;
@@ -182,19 +262,14 @@ public class WeaponUI : MonoBehaviour
 
     private IEnumerator AnimateReload(BaseWeapon weapon, WeaponData data)
     {
-        int magazineSize = data.magazineSize;
-        float totalTime  = data.reloadTime > 0f ? data.reloadTime : 1f;
-
-        // Intervallo tra un'icona e la successiva
-        float interval = Mathf.Min(reloadIconInterval, totalTime / Mathf.Max(magazineSize, 1));
+        int   magazineSize = data.magazineSize;
+        float totalTime    = data.reloadTime > 0f ? data.reloadTime : 1f;
+        float interval     = Mathf.Min(reloadIconInterval, totalTime / Mathf.Max(magazineSize, 1));
 
         for (int i = 0; i < magazineSize && i < ammoIcons.Length; i++)
         {
             yield return new WaitForSeconds(interval);
-
-            // Controlla che il reload sia ancora in corso
             if (weapon == null || !weapon.IsReloading()) break;
-
             if (ammoIcons[i] != null)
                 ammoIcons[i].color = ammoActiveColor;
         }
@@ -206,7 +281,7 @@ public class WeaponUI : MonoBehaviour
     private void UpdateAmmoIcons(int currentAmmo, int magazineSize)
     {
         if (ammoIcons == null || ammoIcons.Length == 0) return;
-        if (wasReloading) return; // non sovrascrivere durante l'animazione
+        if (wasReloading) return;
 
         if (magazineSize != lastMagazineSize)
         {
@@ -248,9 +323,8 @@ public class WeaponUI : MonoBehaviour
         }
 
         targetCrosshairSize = Mathf.Max(targetCrosshairSize, crosshairBaseSize);
-
-        float currentSize = crosshairRect.sizeDelta.x;
-        float newSize     = Mathf.Lerp(currentSize, targetCrosshairSize, Time.deltaTime * crosshairLerpSpeed);
+        float currentSize   = crosshairRect.sizeDelta.x;
+        float newSize       = Mathf.Lerp(currentSize, targetCrosshairSize, Time.deltaTime * crosshairLerpSpeed);
         newSize = Mathf.Max(newSize, crosshairBaseSize);
         crosshairRect.sizeDelta = new Vector2(newSize, newSize);
     }
@@ -263,12 +337,11 @@ public class WeaponUI : MonoBehaviour
 
         UpdateHealthBar(current, max);
 
-        // Shake proporzionale al danno ricevuto e alla vita rimasta
         if (newFill < previousFill && shakeTarget != null && !isShaking)
         {
-            float damageRatio  = (previousFill - newFill);           // quanto danno % ricevuto
-            float healthRatio  = 1f - newFill;                       // quanto siamo vicini alla morte
-            float magnitude    = shakeBaseMagnitude * Mathf.Lerp(0.3f, 1f, healthRatio) * Mathf.Clamp01(damageRatio * 5f);
+            float damageRatio = previousFill - newFill;
+            float healthRatio = 1f - newFill;
+            float magnitude   = shakeBaseMagnitude * Mathf.Lerp(0.3f, 1f, healthRatio) * Mathf.Clamp01(damageRatio * 5f);
             StartCoroutine(ShakeCoroutine(magnitude));
         }
     }
@@ -287,13 +360,11 @@ public class WeaponUI : MonoBehaviour
 
         while (elapsed < shakeDuration)
         {
-            float t         = elapsed / shakeDuration;
-            float dampened  = magnitude * (1f - t); // fade out progressivo
-            float offsetX   = Mathf.Sin(elapsed * shakeFrequency) * dampened;
-            float offsetY   = Mathf.Cos(elapsed * shakeFrequency * 1.3f) * dampened;
-
+            float t        = elapsed / shakeDuration;
+            float dampened = magnitude * (1f - t);
+            float offsetX  = Mathf.Sin(elapsed * shakeFrequency) * dampened;
+            float offsetY  = Mathf.Cos(elapsed * shakeFrequency * 1.3f) * dampened;
             shakeTarget.localPosition = originalPos + new Vector3(offsetX, offsetY, 0f);
-
             elapsed += Time.deltaTime;
             yield return null;
         }
