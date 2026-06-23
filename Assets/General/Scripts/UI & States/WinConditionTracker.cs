@@ -1,23 +1,25 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Traccia i nemici e notifica quando tutti sono morti.
-/// Se la lista manuale è popolata, usa quella.
-/// Altrimenti trova automaticamente tutti i HealthSystem in scena (escluso il player).
+/// Lista manuale: trascina i HealthSystem nell'Inspector.
+/// Lista vuota: auto-find escludendo il player.
 /// </summary>
 public class WinConditionTracker : MonoBehaviour
 {
     public static WinConditionTracker Instance { get; private set; }
 
     [Header("Nemici")]
-    [Tooltip("Popola manualmente per escludere oggetti indesiderati. Se vuoto, trova tutto automaticamente.")]
+    [Tooltip("Popola manualmente per escludere oggetti indesiderati. Se vuoto, auto-find.")]
     [SerializeField] private HealthSystem[] enemiesManual;
 
     public event Action OnAllEnemiesDead;
     public event Action EnemyDied;
 
     private int aliveEnemyCount = 0;
+    private readonly List<HealthSystem> trackedEnemies = new List<HealthSystem>();
 
     private void Awake()
     {
@@ -26,20 +28,29 @@ public class WinConditionTracker : MonoBehaviour
 
     private void Start()
     {
+        TrackEnemies();
+    }
+
+    private void TrackEnemies()
+    {
+        // Unsub da eventuali riferimenti precedenti
+        foreach (var hs in trackedEnemies)
+            if (hs != null) hs.Died -= OnEnemyDied;
+        trackedEnemies.Clear();
+        aliveEnemyCount = 0;
+
         HealthSystem[] toTrack;
 
         if (enemiesManual != null && enemiesManual.Length > 0)
         {
-            // Lista manuale
             toTrack = enemiesManual;
-            Debug.Log($"[WinConditionTracker] Usando lista manuale: {toTrack.Length} nemici.");
+            Debug.Log($"[WinConditionTracker] Lista manuale: {toTrack.Length} nemici.");
         }
         else
         {
-            // Auto-find — esclude il player
             PlayerInput player = FindAnyObjectByType<PlayerInput>();
             var allHS = FindObjectsByType<HealthSystem>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-            var list  = new System.Collections.Generic.List<HealthSystem>();
+            var list  = new List<HealthSystem>();
             foreach (var hs in allHS)
             {
                 if (player != null && hs.transform.root == player.transform.root) continue;
@@ -52,6 +63,7 @@ public class WinConditionTracker : MonoBehaviour
         foreach (var hs in toTrack)
         {
             if (hs == null) continue;
+            trackedEnemies.Add(hs);
             aliveEnemyCount++;
             hs.Died += OnEnemyDied;
         }
@@ -64,6 +76,12 @@ public class WinConditionTracker : MonoBehaviour
 
         if (aliveEnemyCount <= 0)
             OnAllEnemiesDead?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var hs in trackedEnemies)
+            if (hs != null) hs.Died -= OnEnemyDied;
     }
 
     public int GetAliveEnemyCount() => aliveEnemyCount;

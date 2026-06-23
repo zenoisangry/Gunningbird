@@ -49,7 +49,13 @@ public class WeaponUI : MonoBehaviour
     [SerializeField] private float      overlayFadeSpeed = 5f;
     [SerializeField] private float      camShakeAmount   = 0.1f;
     [SerializeField] private float      camShakeDuration = 0.2f;
+    [SerializeField] private float      lowHealthThreshold = 0.25f;  // sotto il 25% pulsa
+    [SerializeField] private float      pulseSpeed         = 2f;
+    [SerializeField] private float      pulseMinAlpha      = 0.05f;
+    [SerializeField] private float      pulseMaxAlpha      = 0.3f;
     private float     currentOverlayAlpha;
+    private float     currentHealth;
+    private float     maxHealth;
     private Transform cameraTransform;
     private Vector3   originalCamPos;
     private float     camShakeTimer;
@@ -197,12 +203,29 @@ public class WeaponUI : MonoBehaviour
     // ─── Damage VFX ──────────────────────────────────────────────────────────
     private void UpdateDamageVFX()
     {
-        currentOverlayAlpha = Mathf.Lerp(currentOverlayAlpha, 0f, Time.deltaTime * overlayFadeSpeed);
-        if (damageOverlay != null)
+        bool isLowHealth = maxHealth > 0f && (currentHealth / maxHealth) <= lowHealthThreshold;
+
+        if (isLowHealth && damageOverlay != null)
         {
+            // Pulsazione continua sotto il 25%
+            float pulse = (Mathf.Sin(Time.time * pulseSpeed * Mathf.PI) + 1f) * 0.5f;
+            float pulseAlpha = Mathf.Lerp(pulseMinAlpha, pulseMaxAlpha, pulse);
+            // Prende il massimo tra danno ricevuto e pulsazione
+            currentOverlayAlpha = Mathf.Lerp(currentOverlayAlpha, 0f, Time.deltaTime * overlayFadeSpeed);
+            float finalAlpha = Mathf.Max(currentOverlayAlpha, pulseAlpha);
             Color c = damageOverlay.color;
-            c.a = currentOverlayAlpha;
+            c.a = finalAlpha;
             damageOverlay.color = c;
+        }
+        else
+        {
+            currentOverlayAlpha = Mathf.Lerp(currentOverlayAlpha, 0f, Time.deltaTime * overlayFadeSpeed);
+            if (damageOverlay != null)
+            {
+                Color c = damageOverlay.color;
+                c.a = currentOverlayAlpha;
+                damageOverlay.color = c;
+            }
         }
 
         if (cameraTransform != null)
@@ -335,6 +358,9 @@ public class WeaponUI : MonoBehaviour
         float previousFill = healthBarFill != null ? healthBarFill.fillAmount : 1f;
         float newFill      = current / max;
 
+        currentHealth = current;
+        maxHealth     = max;
+
         UpdateHealthBar(current, max);
 
         if (newFill < previousFill && shakeTarget != null && !isShaking)
@@ -348,6 +374,8 @@ public class WeaponUI : MonoBehaviour
 
     private void UpdateHealthBar(float current, float max)
     {
+        currentHealth = current;
+        maxHealth     = max;
         if (healthBarFill == null) return;
         healthBarFill.fillAmount = current / max;
     }
