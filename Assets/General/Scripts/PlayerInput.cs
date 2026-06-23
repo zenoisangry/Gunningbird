@@ -29,7 +29,17 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private AudioClip[] footstepClips;
     [SerializeField] private float footstepInterval = 0.45f;
 
+    [Header("Flight Sounds")]
+    [SerializeField] private AudioSource flightSource;
+    [SerializeField] private AudioClip[] flapClips;
+    [SerializeField] private float flapInterval = 0.5f;
+
+    [Header("Dive Sound")]
+    [SerializeField] private AudioSource diveSource;
+    [SerializeField] private AudioClip diveClip;
+
     private float footstepTimer;
+    private float flapTimer;
 
     private float currentSpeed;
     private bool flying = false;
@@ -213,6 +223,7 @@ public class PlayerInput : MonoBehaviour
         SideMove();
 
         HandleFootsteps();
+        HandleFlapSounds();
 
         if (flying)
             VerticalMove();
@@ -288,6 +299,8 @@ public class PlayerInput : MonoBehaviour
             flying = false;
             body.useGravity = true;
             diving = true;
+
+            PlayDiveSound();
         }
     }
 
@@ -362,6 +375,44 @@ public class PlayerInput : MonoBehaviour
         int index = Random.Range(0, footstepClips.Length);
 
         footstepSource.PlayOneShot(footstepClips[index]);
+    }
+
+    void HandleFlapSounds()
+    {
+        if (isDead) return;
+
+        // Suona solo mentre si sta volando
+        if (!flying)
+        {
+            flapTimer = 0f;
+            return;
+        }
+
+        flapTimer -= Time.fixedDeltaTime;
+
+        if (flapTimer <= 0f)
+        {
+            PlayFlap();
+            flapTimer = flapInterval;
+        }
+    }
+
+    void PlayFlap()
+    {
+        if (flightSource == null) return;
+
+        if (flapClips == null || flapClips.Length == 0) return;
+
+        int index = Random.Range(0, flapClips.Length);
+
+        flightSource.PlayOneShot(flapClips[index]);
+    }
+
+    void PlayDiveSound()
+    {
+        if (diveSource == null || diveClip == null) return;
+
+        diveSource.PlayOneShot(diveClip);
     }
 
     void Fire(InputAction.CallbackContext ctx)
