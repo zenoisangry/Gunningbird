@@ -80,6 +80,13 @@ public class CorruptedGunslingerNav : MonoBehaviour
     private bool updateRotation = true;
     private bool updateNavigation = true;
 
+    public GameObject normalModel1;
+    public GameObject normalModel2;
+    public GameObject revolverModel;
+    public GameObject smokeModel;
+
+    private bool inSmokeForm = true;
+
     // Start is called once before the first execution of Update
     void Start()
     {
@@ -129,6 +136,7 @@ public class CorruptedGunslingerNav : MonoBehaviour
         //Set speed
         navigation.speed = baseSpeed;
         movementScript.EnableNavmeshFollow();
+        SwitchToFleshForm();
     }
 
     private void OnDestroy()
@@ -202,6 +210,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
                 {
                     climbing = false;
                     movementScript.climbing = false;
+                    SwitchToFleshForm();
+                    //AGGIUNGI switch back
                 }
                 else
                 {
@@ -209,6 +219,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     {
                         movementScript.StartClimbing();
                         climbing = true;
+                        //AGGIUNGI switch
+                        SwitchToSmokeForm();
                     }
                 }
                 if (updateNavigation)
@@ -265,6 +277,30 @@ public class CorruptedGunslingerNav : MonoBehaviour
             {
                 collider.gameObject.GetComponentInChildren<ProjectileAggro>().awake = true;
             }
+        }
+    }
+
+    private void SwitchToSmokeForm()
+    {
+        if (inSmokeForm == false)
+        {
+            normalModel1.SetActive(false);
+            normalModel2.SetActive(false);
+            revolverModel.SetActive(false);
+            smokeModel.SetActive(true);
+            inSmokeForm = true;
+        }
+    }
+
+    private void SwitchToFleshForm()
+    {
+        if (inSmokeForm == true)
+        {
+            normalModel1.SetActive(true);
+            normalModel2.SetActive(true);
+            revolverModel.SetActive(true);
+            smokeModel.SetActive(false);
+            inSmokeForm = false;
         }
     }
     private void BehaviorSwitchCheck()
@@ -367,6 +403,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
                     currentBehavior = GunslingerBehavior.Reloading;
                     animator.Play("Reload");
                     navigation.speed = baseSpeed;
+                    //AGGIUNGI switch back
+                    SwitchToFleshForm();
                 }
                 break;
 
@@ -403,6 +441,8 @@ public class CorruptedGunslingerNav : MonoBehaviour
             if (canChangeForm && ((targetZone-transform.position).magnitude) > formChangeDistance)
             {
                 navigation.speed = formChangeSpeed;
+                //AGGIUNGI switch
+                SwitchToSmokeForm();
                 StartCoroutine(FormChangeCD());
                 canChangeForm = false;
             }

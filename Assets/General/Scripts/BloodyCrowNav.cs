@@ -16,6 +16,9 @@ public class BloodyCrowNav : MonoBehaviour
     private Rigidbody rb;
     private float distance;
     private float callCD = 0;
+    private bool startedflying = false;
+
+    private Animator animator;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -23,12 +26,29 @@ public class BloodyCrowNav : MonoBehaviour
         player = FindFirstObjectByType<PlayerInput>();
         navAgent.Warp(transform.position);
         navAgent.SetDestination(player.projectedPosition);
+        animator = gameObject != null ? gameObject.GetComponentInChildren<Animator>() : GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        distance = (transform.position - player.transform.position).magnitude;
+        
+
+        if (!startedflying)
+        {
+            if (rb.linearVelocity.magnitude > 1)
+            {
+                animator.Play("Fly");
+                startedflying = true;
+            }
+        }
+        else
+        {
+            rb.MoveRotation(Quaternion.LookRotation(new Vector3(target.x, 0, target.z) - new Vector3(transform.position.x, 0, transform.position.z)));
+        }
+
+
+            distance = (transform.position - player.transform.position).magnitude;
 
         if (CheckLOS())
         {
